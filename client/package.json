@@ -33,6 +33,13 @@
   "devDependencies": {
     "eslint": "^6.6.0",
     "eslint-plugin-react": "^7.16.0",
+    "husky": "^3.0.9",
     "prettier": "^1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format && npm run lint",
+      "pre-push": "CI=true npm test"
+    }
   }
 }
