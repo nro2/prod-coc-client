@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import "./App.css";
+import './App.css';
 
 class App extends Component {
   constructor(props) {
@@ -24,47 +24,47 @@ class App extends Component {
           <h1>Submit/Get</h1>
           <p>
             <input
-            type="text"
-            placeholder="First Name"
-            name="name"
-            value={this.state.inputText}
-            onChange={this.performSubmit}
-             />
+              type="text"
+              placeholder="First Name"
+              name="name"
+              value={this.state.inputText}
+              onChange={this.performSubmit}
+            />
           </p>
           <p>
-            <button
-            value="Submit"
-            onClick={() => this.handleSubmit()}>Submit
+            <button value="Submit" onClick={() => this.handleSubmit()}>
+              Submit
             </button>
           </p>
         </form>
+        <h2>Get Result:</h2>
         <p>
           {this.createGetButton()}
-          <h2>Get Result:</h2>
+
           {this.state.pocGetResult}
         </p>
       </React.Fragment>
     );
   }
-  manageSubmit(event){
+  manageSubmit(event) {
     event.preventDefault();
   }
-  createGetButton(){
-    return(
+  createGetButton() {
+    return (
       <button value="GET" onClick={() => this.updateState()}>
-      GET
+        GET
       </button>
     );
   }
 
-  performSubmit(data){
-    this.setState({ buffer: data.target.value, inputText: data.target.value})
+  performSubmit(data) {
+    this.setState({ buffer: data.target.value, inputText: data.target.value });
   }
 
-  updateState(){
-    return(
+  updateState() {
+    return (
       <React.Fragment>
-      {this.setState({ pocGetResult: this.state.userMessage})}
+        {this.setState({ pocGetResult: this.state.userMessage })}
       </React.Fragment>
     );
   }
