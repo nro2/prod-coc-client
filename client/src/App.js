@@ -8,7 +8,7 @@ class App extends Component {
       inputText: '',
       buffer: '',
       userMessage: 'init',
-      pocGetResult: 'none',
+      pocGetResult: '',
     };
     this.managesubmit = this.manageSubmit.bind(this);
     this.performSubmit = this.performSubmit.bind(this);
@@ -40,7 +40,8 @@ class App extends Component {
         <h2>Get Result:</h2>
         <p>
           {this.createGetButton()}
-
+        </p>
+        <p>
           {this.state.pocGetResult}
         </p>
       </React.Fragment>
