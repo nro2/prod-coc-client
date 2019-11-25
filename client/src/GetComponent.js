@@ -26,7 +26,10 @@ class GetComponent extends Component{
             })
             .catch((err)=>{
                 this.setState({
-                    text: "Bad Request"
+                    text: "Bad Request",
+                    firstName: '',
+                    lastName: '',
+                    phoneNum: ''
                 });
                 console.log(err)
             });
