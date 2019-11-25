@@ -40,7 +40,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run format && npm run lint",
-      "pre-push": "cross-env NODE_ENV=production"
+      "pre-push": "cross-env CI=true npm test"
     }
   }
 }
