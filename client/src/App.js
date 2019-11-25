@@ -6,10 +6,10 @@ import {
   Link
 } from "react-router-dom";
 
-import Home from "./Home"
-import AddComponent from "./AddComponent";
-import GetComponent from "./GetComponent";
-import CommitteeComponent from "./CommitteeComponent";
+import HomeComponent from "./components/HomeComponent"
+import AddComponent from "./components/AddComponent";
+import GetComponent from "./components/GetComponent";
+import CommitteeComponent from "./components/CommitteeComponent";
 
 class App extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class App extends Component {
           </ul>
           <Switch>
             <Route path="/Home">
-                <Home />
+                <HomeComponent />
             </Route>
             <Route path="/Add">
                 <AddComponent/>
