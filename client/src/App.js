@@ -15,12 +15,20 @@ class App extends Component {
   }
 
   getItem(e){
-    axios.get('http://127.0.0.1:8080').then((response)=>{
-      let newText = response.data.firstName;
+    axios.get('http://127.0.0.1:8080',{params: {firstName: this._aName.value}})
+        .then((response)=>{
+      let user = {
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          phoneNum: response.data.phoneNum
+      };
       this.setState({
-        text: newText
+        text: user.lastName
       });
-    });
+    })
+        .catch((err)=>{
+            console.log(err)
+        });
 
     this._aName.value = "";
 
@@ -28,7 +36,8 @@ class App extends Component {
   }
 
   addItem(e){
-    axios.post('http://127.0.0.1:8080', {firstName: this._firstName.value, lastName: this._lastName.value, phoneNum:this._phoneNum.value}).then((response)=>{
+    axios.post('http://127.0.0.1:8080', {firstName: this._firstName.value, lastName: this._lastName.value, phoneNum:this._phoneNum.value})
+        .then((response)=>{
       let newText = response.data;
       this.setState({
         text2: newText
@@ -36,7 +45,10 @@ class App extends Component {
       this._firstName.value = "";
       this._lastName.value = "";
       this._phoneNum.value = "";
-    });
+    })
+        .catch((err)=>{
+            console.log(err)
+        });
 
     e.preventDefault()
   }
@@ -48,7 +60,7 @@ class App extends Component {
         <div className="App">
           <div className="header">
             <form onSubmit={this.addItem}>
-              <p>{this.state.text2}</p>
+              <p>POST response: {this.state.text2}</p>
               <input ref = {(a) => this._firstName = a}
                      placeholder="First Name">
               </input>
@@ -61,7 +73,7 @@ class App extends Component {
               <button type="submit">Post</button>
             </form>
             <form onSubmit={this.getItem}>
-              <p>{this.state.text}</p>
+              <p>Last Name from GET: {this.state.text}</p>
               <input ref = {(a) => this._aName =a}
                          placeholder="Enter first name">
               </input>
