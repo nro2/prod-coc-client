@@ -1,68 +1,75 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, {Component} from "react";
+import axios from 'axios';
 
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      inputText: '',
-      buffer: '',
-      userMessage: 'init',
-      pocGetResult: '',
+      text: "",
+      text2: ""
     };
-    this.manageSubmit = this.manageSubmit.bind(this);
-    this.performSubmit = this.performSubmit.bind(this);
-  }
-  handleSubmit() {
-    this.setState({ inputText: '', userMessage: this.state.buffer });
+
+    this.getItem = this.getItem.bind(this);
+    this.addItem = this.addItem.bind(this);
   }
 
-  manageSubmit(event) {
-    event.preventDefault();
-  }
-  createGetButton() {
-    const updateState = () => {
-      return (
-        <React.Fragment>
-          {this.setState({ pocGetResult: this.state.userMessage })}
-        </React.Fragment>
-      );
-    };
-    return (
-      <button value="GET" onClick={() => updateState()}>
-        GET
-      </button>
-    );
+  getItem(e){
+    axios.get('http://127.0.0.1:8080').then((response)=>{
+      let newText = response.data.firstName;
+      this.setState({
+        text: newText
+      });
+    });
+
+    this._aName.value = "";
+
+    e.preventDefault()
   }
 
-  performSubmit(data) {
-    this.setState({ buffer: data.target.value, inputText: data.target.value });
+  addItem(e){
+    axios.post('http://127.0.0.1:8080', {firstName: this._firstName.value, lastName: this._lastName.value, phoneNum:this._phoneNum.value}).then((response)=>{
+      let newText = response.data;
+      this.setState({
+        text2: newText
+      });
+      this._firstName.value = "";
+      this._lastName.value = "";
+      this._phoneNum.value = "";
+    });
+
+    e.preventDefault()
   }
+
+
 
   render() {
     return (
-      <React.Fragment>
-        <form onSubmit={this.manageSubmit}>
-          <h1>Submit/Get</h1>
-          <p>
-            <input
-              type="text"
-              placeholder="First Name"
-              name="name"
-              value={this.state.inputText}
-              onChange={this.performSubmit}
-            />
-          </p>
-          <p>
-            <button value="Submit" onClick={() => this.handleSubmit()}>
-              Submit
-            </button>
-          </p>
-        </form>
-        <h2>Get Result:</h2>
-        <p>{this.createGetButton()}</p>
-        <p>{this.state.pocGetResult}</p>
-      </React.Fragment>
+        <div className="App">
+          <div className="header">
+            <form onSubmit={this.addItem}>
+              <p>{this.state.text2}</p>
+              <input ref = {(a) => this._firstName = a}
+                     placeholder="First Name">
+              </input>
+              <input ref = {(a) => this._lastName = a}
+                     placeholder="Last Name">
+              </input>
+              <input ref = {(a) => this._phoneNum = a}
+                     placeholder="Phone Number">
+              </input>
+              <button type="submit">Post</button>
+            </form>
+            <form onSubmit={this.getItem}>
+              <p>{this.state.text}</p>
+              <input ref = {(a) => this._aName =a}
+                         placeholder="Enter first name">
+              </input>
+
+              <button type="submit">Get</button>
+            </form>
+            </div>
+        </div>
     );
   }
 }
