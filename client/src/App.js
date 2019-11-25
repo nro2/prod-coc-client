@@ -11,6 +11,7 @@ import {
 
 import axios from 'axios';
 import Home from "./Home"
+import AddComponent from "./AddComponent";
 
 class App extends Component {
   constructor(props) {
@@ -21,11 +22,11 @@ class App extends Component {
       text2: ""
     };
 
-    this.getItem = this.getItem.bind(this);
-    this.addItem = this.addItem.bind(this);
+    //this.getItem = this.getItem.bind(this);
+    //this.addItem = this.addItem.bind(this);
   }
 
-  getItem(e){
+  /*getItem(e){
     axios.get('http://127.0.0.1:8080',{params: {firstName: this._aName.value}})
         .then((response)=>{
       let user = {
@@ -68,7 +69,7 @@ class App extends Component {
         });
 
     e.preventDefault()
-  }
+  }*/
 
 
   render(){
@@ -79,10 +80,16 @@ class App extends Component {
             <li>
               <Link to="/Home">Home</Link>
             </li>
+            <li>
+              <Link to="/Add">Add Staff</Link>
+            </li>
           </ul>
           <Switch>
             <Route path="/Home">
                 <Home />
+            </Route>
+            <Route path="/Add">
+                <AddComponent/>
             </Route>
           </Switch>
         </div>
