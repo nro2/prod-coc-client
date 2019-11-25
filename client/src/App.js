@@ -27,7 +27,10 @@ class App extends Component {
       });
     })
         .catch((err)=>{
-            console.log(err)
+          this.setState({
+            text: "User not found"
+          });
+          console.log(err)
         });
 
     this._aName.value = "";
@@ -47,6 +50,9 @@ class App extends Component {
       this._phoneNum.value = "";
     })
         .catch((err)=>{
+          this.setState({
+            text2: "Insert was not successful"
+          });
             console.log(err)
         });
 
