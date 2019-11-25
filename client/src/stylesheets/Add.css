@@ -1,0 +1,17 @@
+.Add {
+    padding: 25px;
+    background-color: rgba(247, 255, 246, 0.85);
+    font-family: sans-serif;
+}
+.Add p, h1, form, input {
+    font-family: "Tibetan Machine Uni";
+}
+
+.Add button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px 0px 10px 10px;
+    background-color: #76881d;
+    color: #FFF;
+    border: 2px solid #76881d;
+}
