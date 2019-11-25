@@ -8,40 +8,17 @@ class AddComponent extends Component{
             text: ''
         };
 
-        this.getItem = this.getItem.bind(this);
         this.addItem = this.addItem.bind(this);
     }
 
-    getItem(e){
-        axios.get('http://127.0.0.1:8080',{params: {firstName: this._aName.value}})
-            .then((response)=>{
-                let user = {
-                    firstName: response.data.firstName,
-                    lastName: response.data.lastName,
-                    phoneNum: response.data.phoneNum
-                };
-                this.setState({
-                    text: user.lastName
-                });
-            })
-            .catch((err)=>{
-                this.setState({
-                    text: "Bad Request"
-                });
-                console.log(err)
-            });
 
-        this._aName.value = "";
-
-        e.preventDefault()
-    }
 
     addItem(e){
         axios.post('http://127.0.0.1:8080', {firstName: this._firstName.value, lastName: this._lastName.value, phoneNum:this._phoneNum.value})
             .then((response)=>{
                 let newText = response.data;
                 this.setState({
-                    text2: newText
+                    text: newText
                 });
                 this._firstName.value = "";
                 this._lastName.value = "";
@@ -49,7 +26,7 @@ class AddComponent extends Component{
             })
             .catch((err)=>{
                 this.setState({
-                    text2: "Insert was not successful"
+                    text: "Insert was not successful"
                 });
                 console.log(err)
             });
@@ -60,6 +37,7 @@ class AddComponent extends Component{
         return(
             <div className="Add">
                 <h1>Add staff here</h1>
+                <p>Message: {this.state.text}</p>
                 <form onSubmit={this.addItem}>
                     <input ref = {(a) => this._firstName = a}
                            placeholder="First Name">
