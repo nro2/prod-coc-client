@@ -1,26 +1,70 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputText: '',
+      buffer: '',
+      userMessage: 'init',
+      pocGetResult: '',
+    };
+    this.manageSubmit = this.manageSubmit.bind(this);
+    this.performSubmit = this.performSubmit.bind(this);
+  }
+  handleSubmit() {
+    this.setState({ inputText: '', userMessage: this.state.buffer });
+  }
+
+  manageSubmit(event) {
+    event.preventDefault();
+  }
+  createGetButton() {
+    const updateState = () => {
+      return (
+        <React.Fragment>
+          {this.setState({ pocGetResult: this.state.userMessage })}
+        </React.Fragment>
+      );
+    };
+    return (
+      <button value="GET" onClick={() => updateState()}>
+        GET
+      </button>
+    );
+  }
+
+  performSubmit(data) {
+    this.setState({ buffer: data.target.value, inputText: data.target.value });
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <form onSubmit={this.manageSubmit}>
+          <h1>Submit/Get</h1>
+          <p>
+            <input
+              type="text"
+              placeholder="First Name"
+              name="name"
+              value={this.state.inputText}
+              onChange={this.performSubmit}
+            />
+          </p>
+          <p>
+            <button value="Submit" onClick={() => this.handleSubmit()}>
+              Submit
+            </button>
+          </p>
+        </form>
+        <h2>Get Result:</h2>
+        <p>{this.createGetButton()}</p>
+        <p>{this.state.pocGetResult}</p>
+      </React.Fragment>
+    );
+  }
 }
 
 export default App;

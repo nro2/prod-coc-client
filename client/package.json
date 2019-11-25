@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.2.0"
+    "react-scripts": "^3.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,7 +31,8 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^6.6.0",
+    "cross-env": "^6.0.3",
+    "eslint": "^6.7.0",
     "eslint-plugin-react": "^7.16.0",
     "husky": "^3.0.9",
     "prettier": "^1.19.1"
@@ -39,7 +40,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run format && npm run lint",
-      "pre-push": "CI=true npm test"
+      "pre-push": "cross-env CI=true npm test"
     }
   }
 }
