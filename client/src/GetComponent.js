@@ -44,6 +44,7 @@ class GetComponent extends Component{
                     <input ref = {(a)=> this._aName = a}
                            placeholder="Enter first name here">
                     </input>
+                    <button type="submit">Submit</button>
                 </form>
                 <p>First Name: {this.state.firstName}</p>
                 <p>Last Name:{this.state.lastName}</p>

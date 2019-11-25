@@ -3,10 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation
+  Link
 } from "react-router-dom";
 
 import Home from "./Home"
@@ -53,36 +50,6 @@ class App extends Component {
       </Router>
     );
   }
-
-  /*render() {
-    return (
-        <div className="App">
-          <div className="header">
-            <form onSubmit={this.addItem}>
-              <p>POST response: {this.state.text2}</p>
-              <input ref = {(a) => this._firstName = a}
-                     placeholder="First Name">
-              </input>
-              <input ref = {(a) => this._lastName = a}
-                     placeholder="Last Name">
-              </input>
-              <input ref = {(a) => this._phoneNum = a}
-                     placeholder="Phone Number">
-              </input>
-              <button type="submit">Post</button>
-            </form>
-            <form onSubmit={this.getItem}>
-              <p>Last Name from GET: {this.state.text}</p>
-              <input ref = {(a) => this._aName =a}
-                         placeholder="Enter first name">
-              </input>
-
-              <button type="submit">Get</button>
-            </form>
-            </div>
-        </div>
-    );
-  }*/
 }
 
 export default App;
