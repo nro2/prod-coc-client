@@ -16,7 +16,8 @@ class CommitteeComponent extends Component{
     getCommittees(){
         axios.get('http://127.0.0.1:8080/committees')
             .then((response)=>{
-                let committeeArray = response.data.committees;
+                console.log(response.data);
+                let committeeArray = response.data;
                 this.setState({
                     committees: committeeArray
                 })
@@ -30,7 +31,7 @@ class CommitteeComponent extends Component{
     }
 
     createCommittee(item){
-        return <li key={item.key}>{item.text}</li>
+        return <li key={item.key}>{item.committee}</li>
     }
 
     componentDidMount() {
