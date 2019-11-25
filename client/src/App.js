@@ -1,5 +1,16 @@
 import React, {Component} from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
+} from "react-router-dom";
+
 import axios from 'axios';
+import Home from "./Home"
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +39,7 @@ class App extends Component {
     })
         .catch((err)=>{
           this.setState({
-            text: "User not found"
+            text: "Bad Request"
           });
           console.log(err)
         });
@@ -60,8 +71,26 @@ class App extends Component {
   }
 
 
+  render(){
+    return(
+      <Router>
+        <div>
+          <ul>
+            <li>
+              <Link to="/Home">Home</Link>
+            </li>
+          </ul>
+          <Switch>
+            <Route path="/Home">
+                <Home />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 
-  render() {
+  /*render() {
     return (
         <div className="App">
           <div className="header">
@@ -89,7 +118,7 @@ class App extends Component {
             </div>
         </div>
     );
-  }
+  }*/
 }
 
 export default App;
