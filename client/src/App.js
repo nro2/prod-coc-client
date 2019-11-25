@@ -10,7 +10,7 @@ class App extends Component {
       userMessage: 'init',
       pocGetResult: '',
     };
-    this.managesubmit = this.manageSubmit.bind(this);
+    this.manageSubmit = this.manageSubmit.bind(this);
     this.performSubmit = this.performSubmit.bind(this);
   }
   handleSubmit() {
@@ -21,8 +21,15 @@ class App extends Component {
     event.preventDefault();
   }
   createGetButton() {
+    const updateState = () => {
+      return (
+        <React.Fragment>
+          {this.setState({ pocGetResult: this.state.userMessage })}
+        </React.Fragment>
+      );
+    };
     return (
-      <button value="GET" onClick={() => this.updateState()}>
+      <button value="GET" onClick={() => updateState()}>
         GET
       </button>
     );
@@ -31,15 +38,6 @@ class App extends Component {
   performSubmit(data) {
     this.setState({ buffer: data.target.value, inputText: data.target.value });
   }
-
-  updateState() {
-    return (
-      <React.Fragment>
-        {this.setState({ pocGetResult: this.state.userMessage })}
-      </React.Fragment>
-    );
-  }
-
 
   render() {
     return (
