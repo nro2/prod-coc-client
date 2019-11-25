@@ -44,6 +44,7 @@ class CommitteeComponent extends Component{
         return(
             <div className="Committees">
                 <h1>List of Committees</h1>
+                <p>{this.state.text}</p>
                 {listItems}
             </div>
         )
