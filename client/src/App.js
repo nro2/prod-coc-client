@@ -17,6 +17,30 @@ class App extends Component {
     this.setState({ inputText: '', userMessage: this.state.buffer });
   }
 
+  manageSubmit(event) {
+    event.preventDefault();
+  }
+  createGetButton() {
+    return (
+      <button value="GET" onClick={() => this.updateState()}>
+        GET
+      </button>
+    );
+  }
+
+  performSubmit(data) {
+    this.setState({ buffer: data.target.value, inputText: data.target.value });
+  }
+
+  updateState() {
+    return (
+      <React.Fragment>
+        {this.setState({ pocGetResult: this.state.userMessage })}
+      </React.Fragment>
+    );
+  }
+
+
   render() {
     return (
       <React.Fragment>
@@ -38,34 +62,8 @@ class App extends Component {
           </p>
         </form>
         <h2>Get Result:</h2>
-        <p>
-          {this.createGetButton()}
-        </p>
-        <p>
-          {this.state.pocGetResult}
-        </p>
-      </React.Fragment>
-    );
-  }
-  manageSubmit(event) {
-    event.preventDefault();
-  }
-  createGetButton() {
-    return (
-      <button value="GET" onClick={() => this.updateState()}>
-        GET
-      </button>
-    );
-  }
-
-  performSubmit(data) {
-    this.setState({ buffer: data.target.value, inputText: data.target.value });
-  }
-
-  updateState() {
-    return (
-      <React.Fragment>
-        {this.setState({ pocGetResult: this.state.userMessage })}
+        <p>{this.createGetButton()}</p>
+        <p>{this.state.pocGetResult}</p>
       </React.Fragment>
     );
   }
