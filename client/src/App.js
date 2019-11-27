@@ -30,10 +30,10 @@ class App extends Component {
               <Link to="/Home">Home</Link>
             </li>
             <li>
-              <Link to="/Add">Add Staff</Link>
+              <Link to="/Add">Add Faculty</Link>
             </li>
             <li>
-              <Link to="/Get">Get Staff</Link>
+              <Link to="/Get">Get Faculty</Link>
             </li>
             <li>
               <Link to="/Committees">Committees</Link>
