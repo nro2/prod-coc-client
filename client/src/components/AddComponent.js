@@ -37,7 +37,7 @@ class AddComponent extends Component{
     render(){
         return(
             <div className="Add">
-                <h1>Add staff here</h1>
+                <h1>Add faculty here</h1>
                 <p>Message: {this.state.text}</p>
                 <form onSubmit={this.addItem}>
                     <input ref = {(a) => this._firstName = a}

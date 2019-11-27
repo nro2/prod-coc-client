@@ -42,7 +42,7 @@ class GetComponent extends Component{
     render(){
         return(
             <div className="Get">
-                <h1>Get staff info here</h1>
+                <h1>Get faculty info here</h1>
                 <p>Message:{this.state.text}</p>
                 <form onSubmit={this.getItem}>
                     <input ref = {(a)=> this._aName = a}
