@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+    Redirect,
   Link
 } from "react-router-dom";
 
@@ -53,6 +54,7 @@ class App extends Component {
                 <CommitteeComponent/>
             </Route>
           </Switch>
+          <Redirect to="/Home" />
         </div>
       </Router>
     );
