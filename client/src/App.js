@@ -1,29 +1,28 @@
-import React, {Component} from "react";
+import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-    Redirect,
-  Link
-} from "react-router-dom";
+  Redirect,
+  Link,
+} from 'react-router-dom';
 
-import HomeComponent from "./components/HomeComponent"
-import AddComponent from "./components/AddComponent";
-import GetComponent from "./components/GetComponent";
-import CommitteeComponent from "./components/CommitteeComponent";
+import HomeComponent from './components/HomeComponent';
+import AddComponent from './components/AddComponent';
+import GetComponent from './components/GetComponent';
+import CommitteeComponent from './components/CommitteeComponent';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      text: ""
+      text: '',
     };
   }
 
-
-  render(){
-    return(
+  render() {
+    return (
       <Router>
         <div>
           <ul>
@@ -42,16 +41,16 @@ class App extends Component {
           </ul>
           <Switch>
             <Route path="/Home">
-                <HomeComponent />
+              <HomeComponent />
             </Route>
             <Route path="/Add">
-                <AddComponent/>
+              <AddComponent />
             </Route>
             <Route path="/Get">
-                <GetComponent/>
+              <GetComponent />
             </Route>
             <Route path="/Committees">
-                <CommitteeComponent/>
+              <CommitteeComponent />
             </Route>
           </Switch>
           <Redirect to="/Home" />
