@@ -1,68 +1,61 @@
 import React, { Component } from 'react';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  Link,
+} from 'react-router-dom';
+
+import HomeComponent from './components/HomeComponent';
+import AddComponent from './components/AddComponent';
+import GetComponent from './components/GetComponent';
+import CommitteeComponent from './components/CommitteeComponent';
 
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      inputText: '',
-      buffer: '',
-      userMessage: 'init',
-      pocGetResult: '',
+      text: '',
     };
-    this.manageSubmit = this.manageSubmit.bind(this);
-    this.performSubmit = this.performSubmit.bind(this);
-  }
-  handleSubmit() {
-    this.setState({ inputText: '', userMessage: this.state.buffer });
-  }
-
-  manageSubmit(event) {
-    event.preventDefault();
-  }
-  createGetButton() {
-    const updateState = () => {
-      return (
-        <React.Fragment>
-          {this.setState({ pocGetResult: this.state.userMessage })}
-        </React.Fragment>
-      );
-    };
-    return (
-      <button value="GET" onClick={() => updateState()}>
-        GET
-      </button>
-    );
-  }
-
-  performSubmit(data) {
-    this.setState({ buffer: data.target.value, inputText: data.target.value });
   }
 
   render() {
     return (
-      <React.Fragment>
-        <form onSubmit={this.manageSubmit}>
-          <h1>Submit/Get</h1>
-          <p>
-            <input
-              type="text"
-              placeholder="First Name"
-              name="name"
-              value={this.state.inputText}
-              onChange={this.performSubmit}
-            />
-          </p>
-          <p>
-            <button value="Submit" onClick={() => this.handleSubmit()}>
-              Submit
-            </button>
-          </p>
-        </form>
-        <h2>Get Result:</h2>
-        <p>{this.createGetButton()}</p>
-        <p>{this.state.pocGetResult}</p>
-      </React.Fragment>
+      <Router>
+        <div>
+          <ul>
+            <li>
+              <Link to="/Home">Home</Link>
+            </li>
+            <li>
+              <Link to="/Add">Add Faculty</Link>
+            </li>
+            <li>
+              <Link to="/Get">Get Faculty</Link>
+            </li>
+            <li>
+              <Link to="/Committees">Committees</Link>
+            </li>
+          </ul>
+          <Switch>
+            <Route path="/Home">
+              <HomeComponent />
+            </Route>
+            <Route path="/Add">
+              <AddComponent />
+            </Route>
+            <Route path="/Get">
+              <GetComponent />
+            </Route>
+            <Route path="/Committees">
+              <CommitteeComponent />
+            </Route>
+          </Switch>
+          <Redirect to="/Home" />
+        </div>
+      </Router>
     );
   }
 }
