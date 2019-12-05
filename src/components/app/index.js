@@ -6,11 +6,12 @@ import {
   Redirect,
   Link,
 } from 'react-router-dom';
+import './app.css';
 
-import AddFacultyComponent from './components/add-faculty';
-import CommitteesComponent from './components/committees';
-import GetFacultyComponent from './components/get-faculty';
-import HomeComponent from './components/home';
+import AddFacultyComponent from '../add-faculty';
+import CommitteesComponent from '../committees';
+import GetFacultyComponent from '../get-faculty';
+import HomeComponent from '../home';
 
 class App extends Component {
   constructor(props) {
