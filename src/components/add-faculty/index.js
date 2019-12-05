@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import '../stylesheets/Add.css';
+import './add-faculty.css';
 
-class AddComponent extends Component {
+class AddFacultyComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,10 +19,9 @@ class AddComponent extends Component {
         lastName: this._lastName.value,
         phoneNum: this._phoneNum.value,
       })
-      .then(response => {
-        let newText = response.data;
+      .then(() => {
         this.setState({
-          text: newText,
+          text: 'Data insert was a success',
         });
         this._firstName.value = '';
         this._lastName.value = '';
@@ -43,9 +42,9 @@ class AddComponent extends Component {
         <h1>Add faculty here</h1>
         <p>Message: {this.state.text}</p>
         <form onSubmit={this.addItem}>
-          <input ref={a => (this._firstName = a)} placeholder="First Name"></input>
-          <input ref={a => (this._lastName = a)} placeholder="Last Name"></input>
-          <input ref={a => (this._phoneNum = a)} placeholder="Phone Number"></input>
+          <input ref={a => (this._firstName = a)} placeholder="First Name" />
+          <input ref={a => (this._lastName = a)} placeholder="Last Name" />
+          <input ref={a => (this._phoneNum = a)} placeholder="Phone Number" />
           <button type="submit">Add</button>
         </form>
       </div>
@@ -53,4 +52,4 @@ class AddComponent extends Component {
   }
 }
 
-export default AddComponent;
+export default AddFacultyComponent;

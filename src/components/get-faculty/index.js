@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import '../stylesheets/Get.css';
+import './get-faculty.css';
 
-class GetComponent extends Component {
+class GetFacultyComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,10 +46,7 @@ class GetComponent extends Component {
         <h1>Get faculty info here</h1>
         <p>Message:{this.state.text}</p>
         <form onSubmit={this.getItem}>
-          <input
-            ref={a => (this._aName = a)}
-            placeholder="Enter first name here"
-          ></input>
+          <input ref={a => (this._aName = a)} placeholder="Enter first name here" />
           <button type="submit">Submit</button>
         </form>
         <p>First Name: {this.state.firstName}</p>
@@ -60,4 +57,4 @@ class GetComponent extends Component {
   }
 }
 
-export default GetComponent;
+export default GetFacultyComponent;
