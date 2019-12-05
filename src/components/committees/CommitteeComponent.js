@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import '../stylesheets/Committees.css';
+import '../../stylesheets/Committees.css';
 class CommitteeComponent extends Component {
   constructor(props) {
     super(props);
