@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './Committees.css';
+import './committees.css';
 
 class CommitteesComponent extends Component {
   constructor(props) {
