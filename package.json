@@ -37,11 +37,12 @@
     "eslint": "^6.7.0",
     "eslint-plugin-react": "^7.16.0",
     "husky": "^3.0.9",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format && npm run lint",
+      "pre-commit": "pretty-quick --staged && npm run lint",
       "pre-push": "cross-env CI=true npm test"
     }
   }
