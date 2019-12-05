@@ -43,9 +43,9 @@ class AddFacultyComponent extends Component {
         <h1>Add faculty here</h1>
         <p>Message: {this.state.text}</p>
         <form onSubmit={this.addItem}>
-          <input ref={a => (this._firstName = a)} placeholder="First Name"></input>
-          <input ref={a => (this._lastName = a)} placeholder="Last Name"></input>
-          <input ref={a => (this._phoneNum = a)} placeholder="Phone Number"></input>
+          <input ref={a => (this._firstName = a)} placeholder="First Name" />
+          <input ref={a => (this._lastName = a)} placeholder="Last Name" />
+          <input ref={a => (this._phoneNum = a)} placeholder="Phone Number" />
           <button type="submit">Add</button>
         </form>
       </div>

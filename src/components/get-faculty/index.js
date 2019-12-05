@@ -46,10 +46,7 @@ class GetFacultyComponent extends Component {
         <h1>Get faculty info here</h1>
         <p>Message:{this.state.text}</p>
         <form onSubmit={this.getItem}>
-          <input
-            ref={a => (this._aName = a)}
-            placeholder="Enter first name here"
-          ></input>
+          <input ref={a => (this._aName = a)} placeholder="Enter first name here" />
           <button type="submit">Submit</button>
         </form>
         <p>First Name: {this.state.firstName}</p>
