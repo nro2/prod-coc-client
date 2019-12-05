@@ -19,10 +19,9 @@ class AddFacultyComponent extends Component {
         lastName: this._lastName.value,
         phoneNum: this._phoneNum.value,
       })
-      .then(response => {
-        let newText = response.data;
+      .then(() => {
         this.setState({
-          text: newText,
+          text: 'Data insert was a success',
         });
         this._firstName.value = '';
         this._lastName.value = '';
