@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import '../../stylesheets/Committees.css';
-class CommitteeComponent extends Component {
+
+class CommitteesComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,4 +53,4 @@ class CommitteeComponent extends Component {
   }
 }
 
-export default CommitteeComponent;
+export default CommitteesComponent;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import '../../stylesheets/Add.css';
 
-class AddComponent extends Component {
+class AddFacultyComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,4 +53,4 @@ class AddComponent extends Component {
   }
 }
 
-export default AddComponent;
+export default AddFacultyComponent;

@@ -7,10 +7,10 @@ import {
   Link,
 } from 'react-router-dom';
 
-import HomeComponent from './components/HomeComponent';
-import AddComponent from './components/AddComponent';
-import GetComponent from './components/GetComponent';
-import CommitteeComponent from './components/CommitteeComponent';
+import AddFacultyComponent from './components/add-faculty';
+import CommitteesComponent from './components/committees';
+import GetFacultyComponent from './components/get-faculty';
+import HomeComponent from './components/home';
 
 class App extends Component {
   constructor(props) {
@@ -27,33 +27,33 @@ class App extends Component {
         <div>
           <ul>
             <li>
-              <Link to="/Home">Home</Link>
+              <Link to="/home">Home</Link>
             </li>
             <li>
-              <Link to="/Add">Add Faculty</Link>
+              <Link to="/add-faculty">Add Faculty</Link>
             </li>
             <li>
-              <Link to="/Get">Get Faculty</Link>
+              <Link to="/get-faculty">Get Faculty</Link>
             </li>
             <li>
-              <Link to="/Committees">Committees</Link>
+              <Link to="/committees">Committees</Link>
             </li>
           </ul>
           <Switch>
-            <Route path="/Home">
+            <Route path="/home">
               <HomeComponent />
             </Route>
-            <Route path="/Add">
-              <AddComponent />
+            <Route path="/add-faculty">
+              <AddFacultyComponent />
             </Route>
-            <Route path="/Get">
-              <GetComponent />
+            <Route path="/get-faculty">
+              <GetFacultyComponent />
             </Route>
-            <Route path="/Committees">
-              <CommitteeComponent />
+            <Route path="/committees">
+              <CommitteesComponent />
             </Route>
           </Switch>
-          <Redirect to="/Home" />
+          <Redirect to="/home" />
         </div>
       </Router>
     );
