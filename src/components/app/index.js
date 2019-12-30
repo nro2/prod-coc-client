@@ -8,10 +8,10 @@ import {
 } from 'react-router-dom';
 import './app.css';
 
-import AddFacultyComponent from '../add-faculty';
-import CommitteesComponent from '../committees';
-import GetFacultyComponent from '../get-faculty';
-import HomeComponent from '../home';
+import AddFaculty from '../add-faculty';
+import Committees from '../committees';
+import GetFaculty from '../get-faculty';
+import Home from '../home';
 
 class App extends Component {
   constructor(props) {
@@ -42,16 +42,16 @@ class App extends Component {
           </ul>
           <Switch>
             <Route path="/home">
-              <HomeComponent />
+              <Home />
             </Route>
             <Route path="/add-faculty">
-              <AddFacultyComponent />
+              <AddFaculty />
             </Route>
             <Route path="/get-faculty">
-              <GetFacultyComponent />
+              <GetFaculty />
             </Route>
             <Route path="/committees">
-              <CommitteesComponent />
+              <Committees />
             </Route>
           </Switch>
           <Redirect to="/home" />
