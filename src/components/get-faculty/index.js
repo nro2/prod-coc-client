@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './get-faculty.css';
 
 class GetFaculty extends Component {
   constructor(props) {
