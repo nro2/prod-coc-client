@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Empty, Select } from 'antd';
+import { Empty, Result, Select } from 'antd';
 import './committees.css';
 
 const { Option } = Select;
@@ -10,8 +10,7 @@ class Committees extends Component {
     super(props);
     this.state = {
       committees: [],
-      errorMessage: '',
-      errorCode: '',
+      error: {},
       loading: true,
     };
 
@@ -27,11 +26,13 @@ class Committees extends Component {
           committees: response.data,
           loading: false,
           selected: 0,
+          error: {},
         });
       })
       .catch(err => {
         this.setState({
-          errorMessage: err,
+          error: { message: err.response.data.error, code: err.response.status },
+          loading: false,
         });
       });
   }
@@ -45,6 +46,31 @@ class Committees extends Component {
   componentDidMount() {
     this.fetchCommittees();
   }
+
+  renderBody = () => {
+    if (this.state.selected === 0) {
+      return <Empty />;
+    }
+
+    if (Object.keys(this.state.error).length !== 0) {
+      return (
+        <Result
+          status="500"
+          title={this.state.error.code}
+          subTitle={this.state.error.message}
+        />
+      );
+    }
+
+    return (
+      // TODO: render an actual committee component here (CF1-52)
+      JSON.stringify(
+        this.state.committees.find(
+          committee => committee.committee_id === this.state.selected
+        )
+      )
+    );
+  };
 
   render() {
     const options = this.state.committees.map(committee => (
@@ -72,18 +98,7 @@ class Committees extends Component {
             {options}
           </Select>
         </div>
-        <div>
-          {this.state.selected === 0 ? (
-            <Empty />
-          ) : (
-            // TODO: display this committee data in a nicer way
-            JSON.stringify(
-              this.state.committees.find(
-                committee => committee.committee_id === this.state.selected
-              )
-            )
-          )}
-        </div>
+        <div>{this.renderBody()}</div>
       </div>
     );
   }
