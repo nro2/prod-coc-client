@@ -1,10 +1,1 @@
-body {
-  padding: 10px;
-  background-color: rgba(118, 136, 29, 0.85);
-  font-family: sans-serif;
-}
-
-root {
-  display: flex;
-  justify-content: center;
-}
+@import '~antd/dist/antd.css';
