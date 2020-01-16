@@ -49,26 +49,34 @@ class Committees extends Component {
 
   renderBody = () => {
     if (this.state.selected === 0) {
-      return <Empty />;
+      return (
+        <div className="aligner-item">
+          <Empty />
+        </div>
+      );
     }
 
     if (Object.keys(this.state.error).length !== 0) {
       return (
-        <Result
-          status="500"
-          title={this.state.error.code}
-          subTitle={this.state.error.message}
-        />
+        <div className="aligner-item">
+          <Result
+            status="500"
+            title={this.state.error.code}
+            subTitle={this.state.error.message}
+          />
+        </div>
       );
     }
 
     return (
       // TODO: render an actual committee component here (CF1-52)
-      JSON.stringify(
-        this.state.committees.find(
-          committee => committee.committee_id === this.state.selected
-        )
-      )
+      <div>
+        {JSON.stringify(
+          this.state.committees.find(
+            committee => committee.committee_id === this.state.selected
+          )
+        )}
+      </div>
     );
   };
 
@@ -80,11 +88,11 @@ class Committees extends Component {
     ));
 
     return (
-      <div>
+      <div className="aligner">
         <div>
           <Select
+            className="aligner-item aligner-item--top-left select"
             showSearch
-            style={{ width: 300 }}
             placeholder="Select a committee"
             optionFilterProp="children"
             onChange={this.handleChange}
@@ -98,7 +106,7 @@ class Committees extends Component {
             {options}
           </Select>
         </div>
-        <div>{this.renderBody()}</div>
+        {this.renderBody()}
       </div>
     );
   }
