@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+//import { Menu, Dropdown, Icon } from 'antd';
 
 class AddFaculty extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class AddFaculty extends Component {
         firstName: this._firstName.value,
         lastName: this._lastName.value,
         phoneNum: this._phoneNum.value,
+        jobTitle: this._jobTitle.value,
       })
       .then(() => {
         this.setState({
@@ -24,7 +26,10 @@ class AddFaculty extends Component {
         });
         this._firstName.value = '';
         this._lastName.value = '';
+        this._email.value = '';
+        this._jobTitle.value = '';
         this._phoneNum.value = '';
+        //        this._senateDivision = '';
       })
       .catch(err => {
         this.setState({
@@ -35,6 +40,7 @@ class AddFaculty extends Component {
 
     e.preventDefault();
   }
+
   render() {
     return (
       <div className="Add">
@@ -43,7 +49,10 @@ class AddFaculty extends Component {
         <form onSubmit={this.addItem}>
           <input ref={a => (this._firstName = a)} placeholder="First Name" />
           <input ref={a => (this._lastName = a)} placeholder="Last Name" />
+          <input ref={a => (this._email = a)} placeholder="Email" />
+          <input ref={a => (this._jobTitle = a)} placeholder="Job Title" />
           <input ref={a => (this._phoneNum = a)} placeholder="Phone Number" />
+
           <button type="submit">Add</button>
         </form>
       </div>
