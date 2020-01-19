@@ -35,6 +35,7 @@ class AddFaculty extends Component {
 
     e.preventDefault();
   }
+
   render() {
     return (
       <div className="Add">
