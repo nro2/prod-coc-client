@@ -42,7 +42,6 @@ class AddFaculty extends Component {
     this.setState({
       selected: value,
     });
-    this._senateDivision = value;
   }
 
   componentDidMount() {
