@@ -8,6 +8,7 @@ class GetFaculty extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      facultyMembers: [],
       text: '',
       firstName: '',
       lastName: '',
@@ -16,8 +17,10 @@ class GetFaculty extends Component {
     };
 
     this.getItem = this.getItem.bind(this);
+    this.fetchFaculty = this.fetchFaculty.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
+
   getItem(e) {
     axios
       .get('http://127.0.0.1:8080', { params: { firstName: this._aName.value } })
@@ -44,11 +47,39 @@ class GetFaculty extends Component {
     e.preventDefault();
   }
 
+  /*Gets the list of all faculty members for drop down select*/
+  fetchFaculty() {
+    axios
+      .get('http://localhost:8080/faculty')
+      .then(response => {
+        this.setState({
+          facultyMembers: response.data,
+          loading: false,
+          selected: 0,
+          error: {},
+        });
+      })
+      .catch(err => {
+        this.setState({
+          error: { message: err.response.data.error, code: err.response.status },
+          loading: false,
+        });
+      });
+  }
+
   handleChange(value) {
     this.setState({
       selected: value,
     });
   }
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.setState({
+      showInfo: true,
+      selected: null,
+    });
+  };
 
   renderBody = () => {
     if (this.state.selected === 0) {
@@ -72,60 +103,57 @@ class GetFaculty extends Component {
     }
 
     return (
-      // TODO: render an actual committee component here (CF1-52)
       <div>
         {JSON.stringify(
-          this.state.firstName.find(
-            faculty => faculty.firstName === this.state.selected
+          this.state.facultyMembers.find(
+            faculty =>
+              faculty.firstName + ' ' + faculty.lastName === this.state.selected
           )
         )}
       </div>
     );
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.setState({
-      showInfo: true,
-      selected: null,
-    });
-  };
-
   render() {
-    const options /*this.state.firstName.map(faculty => (
-      <Option key={faculty.firstName} value={faculty.firstName}>
-        {faculty.firstName}
-      </Option>*/ = (
-      /*
-      <Option key={this.state.firstName} value={this.state.firstName}>
+    const options = this.state.facultyMembers.map(faculty => (
+      <Option
+        key={faculty.firstName + ' ' + faculty.lastName}
+        value={faculty.firstName + ' ' + faculty.lastName}
+      >
+        {faculty.firstName + ' ' + faculty.lastName}
+      </Option>
+    ));
 
-      </Option>*/
-      <Option value={this.state.firstName}>person1</Option>
-    );
     return (
       <div className="Get">
-        <h1>Get faculty info here</h1>
-        <p>Message:{this.state.text}</p>
+        <div>
+          <h1>Get faculty info here</h1>
+          {/*<p>Message:{this.state.text}</p>
+          <form onSubmit={this.getItem}>
+            <input ref={a => (this._aName = a)} placeholder="Faculty member name" />
+            <button type="submit">Submit</button>
+          </form>*/}
+          <div>
+            <Select
+              showSearch
+              className="aligner-item-center select"
+              placeholder="Search for a faculty member"
+              optionFilterProp="children"
+              onChange={this.handleChange}
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                0
+              }
+              dropdownMatchSelectWidth={false}
+              size="large"
+              loading={this.state.loading}
+            >
+              {options}
+            </Select>
+          </div>
+          {/*this.renderBody()*/}
+        </div>
         {/*
-        <form onSubmit={this.getItem}>
-          <input ref={a => (this._aName = a)} placeholder="Faculty member name" />
-          <button type="submit">Submit</button>
-        </form>*/}
-        <Select
-          showSearch
-          className="aligner-item-center select"
-          placeholder="Search for a faculty member"
-          optionFilterProp="children"
-          onChange={this.handleChange}
-          filterOption={(input, option) =>
-            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }
-          dropdownMatchSelectWidth={false}
-          size="large"
-          loading={this.state.loading}
-        >
-          {options}
-        </Select>
         <button type="submit" onClick={this.handleSubmit}>
           Submit
         </button>
@@ -139,7 +167,7 @@ class GetFaculty extends Component {
               Phone Number: {this.state.phoneNum}
             </p>
           )}
-        </form>
+        </form>*/}
       </div>
     );
   }
