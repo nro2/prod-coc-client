@@ -106,8 +106,7 @@ class GetFaculty extends Component {
       <div>
         {JSON.stringify(
           this.state.facultyMembers.find(
-            faculty =>
-              faculty.firstName + ' ' + faculty.lastName === this.state.selected
+            faculty => faculty.full_name === this.state.selected
           )
         )}
       </div>
@@ -116,11 +115,8 @@ class GetFaculty extends Component {
 
   render() {
     const options = this.state.facultyMembers.map(faculty => (
-      <Option
-        key={faculty.firstName + ' ' + faculty.lastName}
-        value={faculty.firstName + ' ' + faculty.lastName}
-      >
-        {faculty.firstName + ' ' + faculty.lastName}
+      <Option key={faculty.full_name} value={faculty.full_name}>
+        {faculty.full_name}
       </Option>
     ));
 
