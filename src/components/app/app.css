@@ -1,1 +1,42 @@
 @import '~antd/dist/antd.css';
+
+.aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.aligner-item {
+  align-items: flex-start;
+  max-width: 50%;
+}
+
+.aligner-item--top-left {
+  align-self: flex-start;
+  left: 0;
+  top: 0;
+  position: absolute;
+}
+
+.content {
+  margin: 24px 16px;
+  padding: 24px;
+  background: #fff;
+  min-height: 280px;
+}
+
+.footer {
+  text-align: center;
+}
+
+.header {
+  background: #fff;
+  padding: 0px 0px 0px 16px;
+}
+
+.layout {
+  min-height: 100vh;
+}
