@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
-import { Table, Button, Divider, Form, Popconfirm, Input, InputNumber } from 'antd';
+import {
+  Table,
+  Button,
+  Divider,
+  Form,
+  Popconfirm,
+  Input,
+  InputNumber,
+  Avatar,
+  Typography,
+  notification,
+} from 'antd';
+const { Paragraph } = Typography;
 //import axios from 'axios';
 
 var textStyle = {
@@ -10,7 +22,7 @@ var textStyle = {
 var mock = {
   name: "John d'Arc Lorenz IV",
   jobTitle: 'Cat Connoisseur',
-  senateDiv: 'I am the not senate',
+  senateDiv: 'I am not the senate',
   departments: ['Computer Science', 'Journalism'],
   expertise: 'Sleep',
   email: '1337h4x69@winning.com',
@@ -25,6 +37,8 @@ const mockFaculty = [
     description: 'stuff and things',
   },
 ];
+/*
+// Dont need this, but keeping it anyways just in case for testing
 const data = [];
 for (let i = 0; i < 100; i++) {
   data.push({
@@ -34,6 +48,7 @@ for (let i = 0; i < 100; i++) {
     address: `London Park no. ${i}`,
   });
 }
+*/
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -87,7 +102,7 @@ class EditableTable extends React.Component {
     this.state = {
       mockFaculty,
       editingKey: '',
-      data,
+      //      data,
       saved: false,
     };
     //    alert(this.props.currentCommittee[0].key);
@@ -132,25 +147,35 @@ class EditableTable extends React.Component {
             <span>
               <EditableContext.Consumer>
                 {form => (
-                  <a
+                  <Button
+                    type="link"
                     onClick={() => this.save(form, record.key)}
                     style={{ marginRight: 8 }}
                   >
                     Save
-                  </a>
+                  </Button>
                 )}
               </EditableContext.Consumer>
               <Popconfirm
                 title="Cancel without saving?"
                 onConfirm={() => this.cancel(record.key)}
               >
-                <a>Cancel</a>
+                <Button type="link">Cancel</Button>
               </Popconfirm>
             </span>
           ) : (
-            <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
-              Edit
-            </a>
+            <span>
+              <Button
+                type="primary"
+                disabled={editingKey !== ''}
+                onClick={() => this.edit(record.key)}
+                ghost
+              >
+                Edit
+              </Button>
+              <Divider type="vertical" />
+              <Button type="danger">Delete</Button>
+            </span>
           );
         },
       },
@@ -177,12 +202,13 @@ class EditableTable extends React.Component {
           ...row,
         });
         this.setState({ mockFaculty: newData, editingKey: '' });
+        this.props.handler(); // handler is placed here to prevent undesirable behavior
       } else {
         newData.push(row);
         this.setState({ mockFaculty: newData, editingKey: '' });
+        this.props.handler(); // handler is placed here to prevent undesirable behavior
       }
     });
-    this.props.handler();
   }
 
   edit(key) {
@@ -263,11 +289,12 @@ class FacultyInfo extends Component {
         key: 'x',
         render: () => (
           <span>
-            <a>Delete</a>
             <Divider type="vertical" />
-            <a>Add</a>
+            <Button type="primary" ghost>
+              Edit
+            </Button>
             <Divider type="vertical" />
-            <a>Edit</a>
+            <Button type="danger">Delete</Button>
           </span>
         ),
       },
@@ -288,8 +315,23 @@ class FacultyInfo extends Component {
       loading: false,
       editingKey: '',
       saved: false,
+      facultyName: mock.name,
+      facultyEmail: mock.email,
+      facultyPhone: mock.phone,
+      facultyDepartments: mock.departments,
+      facultySenate: mock.senateDiv,
+      facultyJob: mock.jobTitle,
+      facultyExpert: mock.expertise,
+      str: 'editable',
+      deptList: '',
     };
-    this.handler = this.handler.bind(this);
+    this.handler = this.handler.bind(this); // Whenever start/end dates are modified.
+    this.onFacultyEdit = this.onFacultyEdit.bind(this); // Whenever faculty info is modified.
+  }
+  onFacultyEdit(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
   }
   // When the 'update' button is clicked, we start the loading process.
   start = () => {
@@ -298,22 +340,52 @@ class FacultyInfo extends Component {
     setTimeout(() => {
       this.setState({
         // De-select the checked boxes, and notify DOM
-        selectedRowKeys: [],
         loading: false,
       });
     }, 1000);
+    this.openNotification('topRight'); // Push a notification to the user
   };
-  onSelectChange = selectedRowKeys => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    this.setState({ selectedRowKeys }); //
+  openNotification = placement => {
+    notification.info({
+      message: `Success!`,
+      description: `${this.state.facultyName}'s profile has been updated!`,
+      placement,
+    });
   };
+  sayHello = () => {
+    alert('Current departments:' + this.state.facultyDepartments);
+  };
+  addDepartment = toAdd => {
+    return null;
+  };
+  removeDepartment = toRemove => {
+    let localDepts = this.state.facultyDepartments.filter(title => {
+      return title !== toRemove;
+    });
+    console.log('Department removed:', toRemove);
+    this.setState({ facultyDepartments: localDepts });
+  };
+  onPhoneChange = facultyPhone => {
+    // on edit change to phone #
+    console.log('Phone changed:', facultyPhone);
+    if (facultyPhone !== this.state.facultyPhone) {
+      // Check to see if data was actually changed
+      this.handler();
+      this.setState({ facultyPhone });
+    }
+  };
+  onSenateChange = facultySenate => {
+    // on edit change to senate division
+    console.log('Senate changed:', facultySenate);
+    if (facultySenate !== this.state.facultySenate) {
+      // Check to see if data was actually changed
+      this.handler();
+      this.setState({ facultySenate });
+    }
+  };
+
   render() {
-    const { loading, selectedRowKeys } = this.state;
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
+    const { loading } = this.state;
     return (
       <React.Fragment>
         {/* React.Fragment is a great way to cut down on <div> clutter*/}
@@ -323,41 +395,47 @@ class FacultyInfo extends Component {
           mock.email,
           mock.phone,
           mock.senateDiv,
-          mock.departments,
+          this.state.facultyDepartments, // Passing state data so that it's interactive!
           mock.expertise
         )}
-        <h1>Currently a part of:</h1>
-        {/*TODO: Place button into a function to reduce clutter*/}
-        <Button
-          type="primary"
-          onClick={this.start}
-          disabled={!this.state.saved}
-          loading={loading}
-        >
-          Update
-        </Button>
-        <span style={{ marginLeft: 8 }}>
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-        </span>
-        <EditableFormTable
-          handler={this.handler}
-          currentCommittee={this.facultyData}
-        />
-        {/*this.loadCurrentCommittees(rowSelection, this.state.data, this.state.cols)*/}
-        <h1>Committees Chosen:</h1>
+
+        {this.loadCurrentCommittees(this.state.data, this.state.cols)}
         {this.loadChosenCommittees(this.state.data, this.state.cols)}
-        <h1>Committees interested in:</h1>
         {this.loadInterestedCommittees(this.state.data, this.state.cols)}
+        {this.loadUpdateButton(this.start, this.state.saved, loading)}
       </React.Fragment>
+    );
+  }
+  loadUpdateButton(start, saved, loading) {
+    // TODO: Add a 'reset' button to revert all changes
+    return (
+      <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
+        Save Changes
+      </Button>
     );
   }
   loadFaculti(name, jobTitle, email, phone, senateDiv, departments, expertise) {
     // Currently expects departments arg as a list of strings
-    var localDepts = departments.map(departments => <li>{departments}</li>);
+    var localDepts = departments.map(departments => (
+      <li>
+        {departments}
+        <Button
+          type="link"
+          onClick={() => {
+            this.removeDepartment(departments);
+          }}
+          size="small"
+        >
+          x
+        </Button>
+      </li>
+    ));
     // Maps the departments list as an HTML list to localDepts
     return (
       <span>
         <h1>
+          <Avatar size={64} icon="user" />
+          <Divider type="vertical" />
           {name}
           <Divider type="vertical" />
           <i style={textStyle}>{jobTitle}</i>
@@ -365,46 +443,79 @@ class FacultyInfo extends Component {
           <span style={textStyle}>{expertise + ' expert'}</span>
         </h1>
         <b style={{ fontSize: '90%' }}>Senate: </b>
-        {senateDiv + '\n'}
+        <Paragraph editable={{ onChange: this.onSenateChange }}>
+          {this.state.facultySenate}
+        </Paragraph>
         <Divider type="horizontal" orientation="left">
           Contact Information
         </Divider>
         <p style={textStyle}>
           <ul>
             <li>{email + '\n'}</li>
-            <li>{phone + '\n'}</li>
+            <li>
+              <Paragraph editable={{ onChange: this.onPhoneChange }}>
+                {this.state.facultyPhone}
+              </Paragraph>
+            </li>
           </ul>
           <Divider type="horizontal" orientation="left">
             Departments
           </Divider>
-          <ul>{localDepts}</ul>
+          <ul>
+            {localDepts}
+            <Button type="link" onClick={this.sayHello} size="small">
+              Add
+            </Button>
+          </ul>
+
+          <Divider type="vertical" />
         </p>
       </span>
     ); // Everything above is HTML/AntDesign magic to make it look pretty. This is ONLY Faculti info.
   }
-  loadCurrentCommittees(rowsSelected, facultyData, columnData) {
-    // load current committees that this faculty member is a part of
+  loadCurrentCommittees() {
+    // load current committees that this faculty member is a part of, start/end dates are editable
     return (
-      <Table
-        rowSelection={rowsSelected}
-        dataSource={facultyData}
-        columns={columnData}
-      />
+      <span>
+        <Button type="primary" icon="plus" size="small"></Button>
+        <Divider type="vertical" />
+        <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
+        <EditableFormTable
+          handler={this.handler}
+          currentCommittee={this.facultyData}
+        />
+      </span>
     );
   }
   loadChosenCommittees(facultyData, columnData) {
     // Loads the chosen comittee table
-    return <Table dataSource={facultyData} columns={columnData} />;
+    return (
+      <span>
+        <Button type="primary" icon="plus" size="small"></Button>
+        <Divider type="vertical" />
+        <h1 style={{ display: 'inline' }}>Committees Chosen:</h1>
+        <Table dataSource={facultyData} columns={columnData} />
+      </span>
+    );
   }
   loadInterestedCommittees(facultyData, columnData) {
     // loads the interested committee table
-    return <Table dataSource={facultyData} columns={columnData} />;
+    return (
+      <span>
+        <Button type="primary" icon="plus" size="small"></Button>
+        <Divider type="vertical" />
+        <h1 style={{ display: 'inline' }}>Committees interested in:</h1>
+        <Table dataSource={facultyData} columns={columnData} />
+      </span>
+    );
   }
   handler() {
+    // handler is triggered by child state whenever start/end dates are edited and saved
     this.setState({
       saved: true,
     });
   }
+  facultyEdit() {} // triggered by another component whenever faculty info is edited
 }
 
 export default FacultyInfo;
