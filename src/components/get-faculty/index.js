@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Empty, Result, Select } from 'antd';
+import { Empty, Result, Select, Descriptions, Divider } from 'antd';
 
 const { Option } = Select;
 
@@ -14,6 +14,7 @@ class GetFaculty extends Component {
       lastName: '',
       phoneNum: '',
       showInfo: false,
+      email: '',
     };
 
     this.getItem = this.getItem.bind(this);
@@ -70,20 +71,13 @@ class GetFaculty extends Component {
   handleChange(value) {
     this.setState({
       selected: value,
+      showInfo: true,
     });
   }
 
   componentDidMount() {
     this.fetchFaculty();
   }
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.setState({
-      showInfo: true,
-      selected: null,
-    });
-  };
 
   renderBody = () => {
     if (this.state.selected === 0) {
@@ -110,6 +104,7 @@ class GetFaculty extends Component {
       <div>
         {JSON.stringify(
           this.state.facultyMembers.find(
+            faculty => faculty.full_name === this.state.selected,
             faculty => faculty.email === this.state.selected
           )
         )}
@@ -119,24 +114,19 @@ class GetFaculty extends Component {
 
   render() {
     const options = this.state.facultyMembers.map(faculty => (
-      <Option key={faculty.email} value={faculty.email}>
+      <Option key={faculty.full_name} value={faculty.full_name}>
         {faculty.full_name}
       </Option>
     ));
 
     return (
-      <div className="Get">
+      <div className="aligner">
         <div>
           <h1>Get faculty info here</h1>
-          {/*<p>Message:{this.state.text}</p>
-          <form onSubmit={this.getItem}>
-            <input ref={a => (this._aName = a)} placeholder="Faculty member name" />
-            <button type="submit">Submit</button>
-          </form>*/}
           <div>
             <Select
+              className="aligner-item aligner-item-center select"
               showSearch
-              className="aligner-item-center select"
               placeholder="Search for a faculty member"
               optionFilterProp="children"
               onChange={this.handleChange}
@@ -150,23 +140,24 @@ class GetFaculty extends Component {
             >
               {options}
             </Select>
+            {this.state.showInfo && (
+              <div>
+                <Divider orientation="left">
+                  {this.state.selected + "'s Info"}
+                </Divider>
+                <Descriptions>
+                  <Descriptions.Item label="Name">
+                    {this.state.selected}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Email">{}</Descriptions.Item>
+                  <Descriptions.Item label="Phone">{}</Descriptions.Item>
+                  <Descriptions.Item label="Job Title">{}</Descriptions.Item>
+                  <Descriptions.Item label="Senate Division">{}</Descriptions.Item>
+                </Descriptions>
+              </div>
+            )}
           </div>
         </div>
-        {/*
-        <button type="submit" onClick={this.handleSubmit}>
-          Submit
-        </button>
-        <form id="show-faculty-info">
-          {this.state.showInfo && (
-            <p>
-              First Name:{this.state.firstName}
-              <br></br>
-              Last Name:{this.state.lastName}
-              <br></br>
-              Phone Number: {this.state.phoneNum}
-            </p>
-          )}
-        </form>*/}
       </div>
     );
   }
