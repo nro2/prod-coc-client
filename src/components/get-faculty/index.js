@@ -73,6 +73,10 @@ class GetFaculty extends Component {
     });
   }
 
+  componentDidMount() {
+    this.fetchFaculty();
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.setState({
@@ -106,7 +110,7 @@ class GetFaculty extends Component {
       <div>
         {JSON.stringify(
           this.state.facultyMembers.find(
-            faculty => faculty.full_name === this.state.selected
+            faculty => faculty.email === this.state.selected
           )
         )}
       </div>
@@ -115,7 +119,7 @@ class GetFaculty extends Component {
 
   render() {
     const options = this.state.facultyMembers.map(faculty => (
-      <Option key={faculty.full_name} value={faculty.full_name}>
+      <Option key={faculty.email} value={faculty.email}>
         {faculty.full_name}
       </Option>
     ));
@@ -147,7 +151,6 @@ class GetFaculty extends Component {
               {options}
             </Select>
           </div>
-          {/*this.renderBody()*/}
         </div>
         {/*
         <button type="submit" onClick={this.handleSubmit}>
