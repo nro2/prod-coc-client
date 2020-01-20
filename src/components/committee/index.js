@@ -101,7 +101,52 @@ class Committee extends Component {
         ),
       },
     ];
-    this.data = [mock.name, mock.description, mock.totalSlots, mock.committeeSlots];
+    this.committeeData = [
+      mock.name,
+      mock.description,
+      mock.totalSlots,
+      mock.committeeSlots,
+    ];
+  }
+  start = () => {
+    this.setState({ loading: true, saved: false });
+    setTimeout(() => {
+      this.setState({
+        selectedRowKeys: [],
+        loading: false,
+      });
+    }, 1000);
+  };
+  onSelectChange = selectedRowKeys => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.setState({ selectedRowKeys });
+  };
+  render() {
+    const { selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
+    const hasSelected = selectedRowKeys.length > 0;
+    return (
+      <React.Fragment>
+        {this.loadCommittee(
+          mock.name,
+          mock.description,
+          mock.totalSlots,
+          mock.committeeSlots
+        )}
+        <h1>Slots</h1>
+        <span style={{ marginLeft: 8 }}>
+          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
+        </span>
+        {this.loadSlots(rowSelection, this.committeeData, this.slotCol)}
+        <h1>Requirements</h1>
+        {this.loadRequirements(this.committeeData, this.reqCol)}
+        <h1>Members</h1>
+        {this.loadMembers(this.committeeData, this.membersCol)}
+      </React.Fragment>
+    );
   }
 }
 
