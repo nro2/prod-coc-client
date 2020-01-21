@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { Table } from 'antd';
 //import axios from 'axios';
-//import { Table, Button, Divider } from 'antd';
 
 var mock = {
   name: 'Committee on Space Exploration',
   description: 'About exploring space',
   totalSlots: '10',
+  filledSlots: '5',
   committeeSlots: [
     {
       senateShortname: 'BP',
@@ -106,47 +107,52 @@ class Committee extends Component {
       mock.description,
       mock.totalSlots,
       mock.committeeSlots,
+      mock.filledSlots,
     ];
   }
   start = () => {
     this.setState({ loading: true, saved: false });
     setTimeout(() => {
       this.setState({
-        selectedRowKeys: [],
         loading: false,
       });
     }, 1000);
   };
-  onSelectChange = selectedRowKeys => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    this.setState({ selectedRowKeys });
-  };
   render() {
-    const { selectedRowKeys } = this.state;
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
-    const hasSelected = selectedRowKeys.length > 0;
     return (
       <React.Fragment>
         {this.loadCommittee(
           mock.name,
           mock.description,
           mock.totalSlots,
-          mock.committeeSlots
+          mock.committeeSlots,
+          mock.filledSlots
         )}
         <h1>Slots</h1>
-        <span style={{ marginLeft: 8 }}>
-          {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
-        </span>
-        {this.loadSlots(rowSelection, this.committeeData, this.slotCol)}
+        {this.loadSlots(this.committeeData, this.slotCol)}
         <h1>Requirements</h1>
         {this.loadRequirements(this.committeeData, this.reqCol)}
         <h1>Members</h1>
         {this.loadMembers(this.committeeData, this.membersCol)}
       </React.Fragment>
     );
+  }
+  loadCommittee(name, description) {
+    return (
+      <span>
+        <h1>{name}</h1>
+        {description + '\n'}
+      </span>
+    );
+  }
+  loadSlots(committeeData, columnData) {
+    return <Table dataSource={committeeData} columns={columnData} />;
+  }
+  loadRequirements(committeeData, columnData) {
+    return <Table dataSource={committeeData} columns={columnData} />;
+  }
+  loadMembers(committeeData, columnData) {
+    return <Table dataSource={committeeData} columns={columnData} />;
   }
 }
 

@@ -11,6 +11,7 @@ import './app.css';
 import AddFaculty from '../add-faculty';
 import Committees from '../committees';
 import GetFaculty from '../get-faculty';
+import Committee from '../committee';
 import Home from '../home';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -39,7 +40,7 @@ class App extends Component {
             onCollapse={this.onCollapse}
           >
             <div className="logo" />
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+            <Menu theme="dark" defaultSelectedKeys={['5']} mode="inline">
               <Menu.Item key="1">
                 <Icon type="home" />
                 <span>Home</span>
@@ -60,6 +61,11 @@ class App extends Component {
                 <span>Committees</span>
                 <Link to="/committees" />
               </Menu.Item>
+              <Menu.Item key="5">
+                <Icon type="user" />
+                <span>Committee</span>
+                <Link to="/committee" />
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout>
@@ -70,8 +76,9 @@ class App extends Component {
                 <Route path="/add-faculty" component={AddFaculty} />
                 <Route path="/get-faculty" component={GetFaculty} />
                 <Route path="/committees" component={Committees} />
+                <Route path="/committee" component={Committee} />
               </Switch>
-              <Redirect to="/home" />
+              <Redirect to="/committee" />
             </Content>
             <Footer className="footer">Ant Design ©2016 Created by Ant UED</Footer>
           </Layout>
