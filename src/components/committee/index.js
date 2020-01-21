@@ -9,22 +9,26 @@ var mock = {
   filledSlots: '5',
   committeeSlots: [
     {
+      key: '1',
       senateShortname: 'BP',
       slotRequirements: 3,
     },
     {
+      key: '2',
       senateShortname: 'AO',
       slotRequirements: 7,
     },
   ],
   committeeAssignment: [
     {
+      key: '1',
       facultyName: 'Boaty McBoatface',
       email: 'boat@gmail.com',
       start_date: '2019-1-1',
       end_date: '2020-1-1',
     },
     {
+      key: '2',
       facultyName: 'Grace Hopper',
       email: 'ghopper@gmail.com',
       start_date: '2019-1-1',
@@ -33,13 +37,28 @@ var mock = {
   ],
 };
 
+var johnMock = [
+  {
+    key: '1', // <-- Be sure to attach key elements to your data, otherwise the Table component cant read it
+    totalSlots: '10',
+    filledSlots: '5',
+    trashData: 'this shouldnt show up in the table at all',
+  },
+  {
+    key: '2', // <--
+    totalSlots: '10',
+    filledSlots: '23',
+    coolCats: 'or impede it in any way',
+  },
+];
+
 class Committee extends Component {
   constructor(props) {
     super(props);
     this.slotCol = [
       {
         title: 'Filled',
-        dataIndex: 'filledSlots',
+        dataIndex: 'filledSlots', // <-- as long as the dataIndex matches the variable names it will display in the table
         key: 'filledSlots',
       },
       {
@@ -129,7 +148,7 @@ class Committee extends Component {
           mock.filledSlots
         )}
         <h1>Slots</h1>
-        {this.loadSlots(this.committeeData, this.slotCol)}
+        {this.loadSlots(johnMock, this.slotCol)}
         <h1>Requirements</h1>
         {this.loadRequirements(this.committeeData, this.reqCol)}
         <h1>Members</h1>
@@ -139,10 +158,10 @@ class Committee extends Component {
   }
   loadCommittee(name, description) {
     return (
-      <span>
+      <h1>
         <h1>{name}</h1>
         {description + '\n'}
-      </span>
+      </h1>
     );
   }
   loadSlots(committeeData, columnData) {

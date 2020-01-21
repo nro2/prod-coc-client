@@ -1,5 +1,6 @@
 @import '~antd/dist/antd.css';
 
+/*
 .aligner {
   display: flex;
   align-items: center;
@@ -8,7 +9,7 @@
   width: 100%;
   position: relative;
 }
-
+*/
 .aligner-item {
   align-items: flex-start;
   max-width: 50%;
