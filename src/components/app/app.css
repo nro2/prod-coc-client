@@ -14,6 +14,11 @@
   max-width: 50%;
 }
 
+.aligner-item-center {
+  align-items: flex-start;
+  max-width: 100%;
+}
+
 .aligner-item--top-left {
   align-self: flex-start;
   left: 0;
