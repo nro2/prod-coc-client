@@ -46,5 +46,6 @@
       "pre-commit": "pretty-quick --staged && npm run lint",
       "pre-push": "cross-env CI=true npm test"
     }
-  }
+  },
+  "proxy": "http://localhost:8080"
 }
