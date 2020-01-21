@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Empty, Result, Select, Descriptions, Divider } from 'antd';
+import { Select, Descriptions, Divider } from 'antd';
 
 const { Option } = Select;
 
@@ -17,35 +17,8 @@ class GetFaculty extends Component {
       email: '',
     };
 
-    this.getItem = this.getItem.bind(this);
     this.fetchFaculty = this.fetchFaculty.bind(this);
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  getItem(e) {
-    axios
-      .get('http://127.0.0.1:8080', { params: { firstName: this._aName.value } })
-      .then(response => {
-        this.setState({
-          text: 'Success',
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-          phoneNum: response.data.phoneNum,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          text: 'Bad Request',
-          firstName: '',
-          lastName: '',
-          phoneNum: '',
-        });
-        console.log(err);
-      });
-
-    this._aName.value = '';
-
-    e.preventDefault();
   }
 
   /*Gets the list of all faculty members for drop down select*/
@@ -79,42 +52,9 @@ class GetFaculty extends Component {
     this.fetchFaculty();
   }
 
-  renderBody = () => {
-    if (this.state.selected === 0) {
-      return (
-        <div className="aligner-item">
-          <Empty />
-        </div>
-      );
-    }
-
-    if (Object.keys(this.state.error).length !== 0) {
-      return (
-        <div className="aligner-item">
-          <Result
-            status="500"
-            title={this.state.error.code}
-            subTitle={this.state.error.message}
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        {JSON.stringify(
-          this.state.facultyMembers.find(
-            faculty => faculty.full_name === this.state.selected,
-            faculty => faculty.email === this.state.selected
-          )
-        )}
-      </div>
-    );
-  };
-
   render() {
     const options = this.state.facultyMembers.map(faculty => (
-      <Option key={faculty.full_name} value={faculty.full_name}>
+      <Option key={faculty.email} value={faculty.full_name}>
         {faculty.full_name}
       </Option>
     ));
