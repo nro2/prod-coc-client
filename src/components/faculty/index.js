@@ -80,10 +80,10 @@ class FacultyInfo extends Component {
     this.state = {
       data: this.facultyData,
       cols: this.columns,
-      selectedRowKeys: [],
       loading: false,
       editingKey: '',
       saved: false,
+      committeeIDList: [],
       facultyName: mock.name,
       facultyEmail: mock.email,
       facultyPhone: mock.phone,
@@ -91,10 +91,66 @@ class FacultyInfo extends Component {
       facultySenate: mock.senateDiv,
       facultyJob: mock.jobTitle,
       facultyExpert: mock.expertise,
-      deptList: '',
+      facultyID: -1,
     };
     this.handler = this.handler.bind(this); // Whenever start/end dates are modified.
     this.onFacultyEdit = this.onFacultyEdit.bind(this); // Whenever faculty info is modified.
+  }
+  componentDidMount() {
+    if (!this.props.email) {
+      this.setState({ facultyEmail: 'non-specified' });
+    } else {
+      this.getFacultyByEmail(this.props.email);
+    }
+  }
+  retrieveSenateData(senateShortName) {
+    axios
+      .get(`http://127.0.0.1:8080/senate-division/${senateShortName}`)
+      .then(response => {
+        console.log(response.data);
+        let senateInfo = response.data;
+        //        alert(response.data.name);
+        //        return response.data;
+        this.setState({
+          facultySenate: senateInfo.name,
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  retrieveAllCommitteeData(email) {
+    axios
+      .get(`http://127.0.0.1:8080/committee-assignment/faculty/${email}`)
+      .then(response => {
+        console.log(response.data);
+        let currentCommittees = response.data;
+        //       alert(currentCommittees.length);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  getFacultyByEmail(email) {
+    axios
+      .get(`http://127.0.0.1:8080/faculty/${email}`)
+      .then(response => {
+        console.log(response.data);
+        let facultyObject = response.data;
+        this.retrieveSenateData(facultyObject.senate_division_short_name);
+        this.setState({
+          facultyName: facultyObject.full_name,
+          facultyEmail: facultyObject.email,
+          facultyPhone: facultyObject.phone_num,
+          facultyJob: facultyObject.job_title,
+          // facultySenate update handled by retrieveSenateData()
+        });
+      })
+      .catch(err => {
+        alert(err);
+        console.log(err);
+      });
+    this.retrieveAllCommitteeData(email);
   }
   onFacultyEdit(e) {
     this.setState({
@@ -158,11 +214,11 @@ class FacultyInfo extends Component {
       <React.Fragment>
         {/* React.Fragment is a great way to cut down on <div> clutter*/}
         {this.loadFaculti(
-          mock.name,
-          mock.jobTitle,
-          mock.email,
-          mock.phone,
-          mock.senateDiv,
+          this.state.facultyName,
+          this.state.facultyJob,
+          this.state.facultyEmail,
+          this.state.facultyPhone,
+          this.state.senateDiv,
           this.state.facultyDepartments, // Passing state data so that it's interactive!
           mock.expertise
         )}
@@ -215,6 +271,15 @@ class FacultyInfo extends Component {
           <Button type="link" onClick={this.sayHello} size="small">
             Change
           </Button>
+          <Button
+            size="small"
+            onClick={() => {
+              this.getFacultyByEmail('wolsborn@pdx.edu');
+            }}
+            ghost
+          >
+            John's Secret 'test-anything' Button
+          </Button>
         </h1>
         <p style={{ fontSize: '90%' }}>
           <b>Senate: </b>
@@ -253,8 +318,6 @@ class FacultyInfo extends Component {
               </Button>
             </Dropdown>
           </ul>
-
-          <Divider type="vertical" />
         </p>
       </span>
     ); // Everything above is HTML/AntDesign magic to make it look pretty. This is ONLY Faculti info.
