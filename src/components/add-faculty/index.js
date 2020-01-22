@@ -1,6 +1,20 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Empty, Result, Select /*Menu, Dropdown, Icon*/ } from 'antd';
+import {
+  Empty,
+  Result,
+  Select,
+  Form,
+  Input,
+  // Button,
+  //Icon,
+  //Tooltip,
+  //Cascader,
+  //Row,
+  //Col,
+  //Checkbox,
+  // AutoComplete /*Menu, Dropdown, Icon*/,
+} from 'antd';
 
 const { Option } = Select;
 
@@ -12,11 +26,24 @@ class AddFaculty extends Component {
       text: '',
       error: {},
       loading: true,
+      _firstName: '',
+      buffer: '',
+      _lastName: '',
+      _email: 'rat',
+      _jobTitle: 'asd',
+      _phoneNum: 'asd',
+      _senateDivision: 'AO',
+      _fullName: '',
     };
 
     this.addItem = this.addItem.bind(this);
     this.fetchDivisions = this.fetchDivisions.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleFnameChange = this.handleFnameChange.bind(this);
+    this.handleLnameChange = this.handleLnameChange.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleJobChange = this.handleJobChange.bind(this);
+    this.handlePhoneChange = this.handlePhoneChange.bind(this);
   }
 
   fetchDivisions() {
@@ -40,9 +67,25 @@ class AddFaculty extends Component {
 
   handleChange(value) {
     this.setState({
-      selected: value,
+      senateDivision: value,
     });
   }
+
+  handleFnameChange = event => {
+    this.setState({ _firstName: event.target.value });
+  };
+  handleLnameChange = event => {
+    this.setState({ _lastName: event.target.value });
+  };
+  handleEmailChange = event => {
+    this.setState({ _email: event.target.value });
+  };
+  handleJobChange = event => {
+    this.setState({ _jobTitle: event.target.value });
+  };
+  handlePhoneChange = event => {
+    this.setState({ _phoneNum: event.target.value });
+  };
 
   componentDidMount() {
     this.fetchDivisions();
@@ -70,26 +113,26 @@ class AddFaculty extends Component {
   };
 
   addItem(e) {
-    this._fullName.value = `${this._firstName.value} ${this.lastName.value}`;
+    //   this.state._fullName = `${this.state._firstName} ${this.state.lastName}`;
     axios
       .post('http://localhost:8080/faculty', {
-        fullName: this._fullName.value,
-        email: this._email.value,
-        jobTitle: this._jobTitle.value,
-        phoneNum: this._phoneNum.value,
-        senateDivision: this._senateDivision,
+        fullName: this.state._firstName + ' ' + this.state._lastName,
+        email: this.state._email,
+        jobTitle: this.state._jobTitle,
+        phoneNum: this.state._phoneNum,
+        senateDivision: this.state.senateDivision,
       })
       .then(() => {
-        this.setState({
+        /*       this.setState({
           text: 'Data insert was a success',
-        });
-        this._firstName.value = '';
-        this._lastName.value = '';
-        this._email.value = '';
-        this._jobTitle.value = '';
-        this._phoneNum.value = '';
-        this._senateDivision = '';
-        this._fullName = '';
+          _firstName: '',
+          _lastName: '',
+          _email: '',
+          _jobTitle: '',
+          _phoneNum: '',
+          _senateDivision: '',
+          _fullName: '',
+        });*/
       })
       .catch(err => {
         this.setState({
@@ -102,6 +145,7 @@ class AddFaculty extends Component {
   }
 
   render() {
+    //   const { getFieldDecorator} = this.props.form;
     const options = this.state.senateDivisions.map(senate_division => (
       <Option
         key={senate_division.senate_division_short_name}
@@ -114,13 +158,34 @@ class AddFaculty extends Component {
     return (
       <div className="Add">
         <h1>Add faculty here</h1>
-        <p>Message: {this.state.text}</p>
-        <form onSubmit={this.addItem}>
-          <input ref={a => (this._firstName = a)} placeholder="First Name" />
-          <input ref={a => (this._lastName = a)} placeholder="Last Name" />
-          <input ref={a => (this._email = a)} placeholder="Email" />
-          <input ref={a => (this._jobTitle = a)} placeholder="Job Title" />
-          <input ref={a => (this._phoneNum = a)} placeholder="Phone Number" />
+
+        <Form onSubmit={this.addItem}>
+          <Input
+            placeholder="First Name"
+            size="small"
+            //value ={this.state.fullName}
+            onChange={this.handleFnameChange}
+          />
+          <Input
+            placeholder="Last Name"
+            size="small"
+            onChange={this.handleLnameChange}
+          />
+          <Input
+            placeholder="Email"
+            size="small"
+            onChange={this.handleEmailChange}
+          />
+          <Input
+            placeholder="Job Title"
+            size="small"
+            onChange={this.handleJobChange}
+          />
+          <Input
+            placeholder="Phone Number"
+            size="small"
+            onChange={this.handlePhoneChange}
+          />
           <Select
             className="aligner-item aligner-item--bottom-left select"
             showSearch
@@ -138,7 +203,8 @@ class AddFaculty extends Component {
           </Select>
 
           <button type="submit">Submit</button>
-        </form>
+        </Form>
+        <p>Message: {this.state.text}</p>
       </div>
     );
   }
