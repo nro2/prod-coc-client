@@ -13,7 +13,7 @@ import {
   Dropdown,
 } from 'antd';
 import axios from 'axios';
-const { Paragraph, Text } = Typography;
+const { Paragraph } = Typography;
 
 var textStyle = {
   color: 'black',
@@ -42,6 +42,7 @@ const EditableContext = React.createContext();
 class FacultyInfo extends Component {
   constructor(props) {
     super(props);
+    //  this.currentCommitteeTable = React.createRef();
     this.columns = [
       {
         title: 'Name',
@@ -72,17 +73,19 @@ class FacultyInfo extends Component {
     this.facultyData = [
       {
         key: '1',
-        committee: 'Computer Science Committee',
+        committee: 'mock-data-committee',
         slots: '0',
         description: 'stuff and things',
       },
     ];
     this.state = {
       data: this.facultyData,
+      currCommitteeData: [],
       cols: this.columns,
       loading: false,
       editingKey: '',
       saved: false,
+      noFacultyLoaded: false,
       committeeIDList: [],
       facultyName: mock.name,
       facultyEmail: mock.email,
@@ -98,19 +101,33 @@ class FacultyInfo extends Component {
   }
   componentDidMount() {
     if (!this.props.email) {
-      this.setState({ facultyEmail: 'non-specified' });
+      this.setState({
+        facultyEmail: 'non-specified',
+        facultyName: 'Faculty name',
+        facultyPhone: '(000)-000-0000',
+        facultyDepartments: [
+          {
+            key: 1,
+            name: 'none',
+          },
+        ],
+        facultySenate: 'Faculty Senate',
+        facultyJob: 'Faculty Job',
+        facultyExpert: 'Faculty Expertise',
+        noFacultyLoaded: true,
+        facultyID: -1,
+      });
     } else {
       this.getFacultyByEmail(this.props.email);
     }
   }
   retrieveSenateData(senateShortName) {
+    // Old retrieval method
     axios
       .get(`http://127.0.0.1:8080/senate-division/${senateShortName}`)
       .then(response => {
         console.log(response.data);
-        let senateInfo = response.data;
-        //        alert(response.data.name);
-        //        return response.data;
+        let senateInfo = response.data; // assigns response promise
         this.setState({
           facultySenate: senateInfo.name,
         });
@@ -119,19 +136,26 @@ class FacultyInfo extends Component {
         console.log(err);
       });
   }
-  retrieveAllCommitteeData(email) {
-    axios
+  retrieveCommitteeByID(id) {
+    // queries for a specific committee using the ID
+    return axios.get(`http://127.0.0.1:8080/committee/${id}`).catch(err => {
+      console.log(err);
+    });
+  }
+  retrieveCommitteeAssignments(email) {
+    // queries for committees that a faculty is assigned to
+    return axios
       .get(`http://127.0.0.1:8080/committee-assignment/faculty/${email}`)
-      .then(response => {
-        console.log(response.data);
-        let currentCommittees = response.data;
-        //       alert(currentCommittees.length);
-      })
       .catch(err => {
         console.log(err);
       });
   }
-  getFacultyByEmail(email) {
+  // TODO: Consider promise chaining..
+  getFacultyByEmail = async email => {
+    var i = 0;
+    var idList = [];
+    var currentCommitteeList = [];
+    var currCommittee = [];
     axios
       .get(`http://127.0.0.1:8080/faculty/${email}`)
       .then(response => {
@@ -150,8 +174,23 @@ class FacultyInfo extends Component {
         alert(err);
         console.log(err);
       });
-    this.retrieveAllCommitteeData(email);
-  }
+    const ids = await this.retrieveCommitteeAssignments(email);
+    for (i = 0; i < ids.data.length; i++) {
+      idList.push(ids.data[i].committee_id);
+      currCommittee = await this.retrieveCommitteeByID(idList[i]);
+      currentCommitteeList.push({
+        key: `${i}`,
+        committee: currCommittee.data.name,
+        slots: currCommittee.data.total_slots,
+        description: currCommittee.data.description,
+        startDate: ids.data[i].start_date,
+        endDate: ids.data[i].end_date,
+      });
+    }
+    this.setState({
+      currCommitteeData: currentCommitteeList,
+    });
+  };
   onFacultyEdit(e) {
     this.setState({
       [e.target.name]: e.target.value,
@@ -177,10 +216,8 @@ class FacultyInfo extends Component {
     });
   };
   sayHello = () => {
-    alert('Current departments:' + this.state.facultyDepartments);
-  };
-  addDepartment = toAdd => {
-    return null;
+    // Used for debugging, or as a placeholder
+    alert('Hello! I am not yet implemented.');
   };
   removeDepartment = toRemove => {
     let localDepts = this.state.facultyDepartments.filter(title => {
@@ -218,22 +255,22 @@ class FacultyInfo extends Component {
           this.state.facultyJob,
           this.state.facultyEmail,
           this.state.facultyPhone,
-          this.state.senateDiv,
+          this.state.facultySenate,
           this.state.facultyDepartments, // Passing state data so that it's interactive!
-          mock.expertise
+          this.state.facultyExpert
         )}
-        {this.loadCurrentCommittees(this.state.data, this.state.cols)}
+        {this.loadCurrentCommittees(this.state.currCommitteeData, this.state.cols)}
         {this.loadChosenCommittees(this.state.data, this.state.cols)}
         {this.loadInterestedCommittees(this.state.data, this.state.cols)}
         {this.loadUpdateButton(this.start, this.state.saved, loading)}
       </React.Fragment>
     );
   }
-  testText() {
-    return <Text editable="true">Touch me!</Text>;
-  }
+  /**************************************************************/
+  // Everything below this point focuses on rendering components.
+  /**************************************************************/
   loadUpdateButton(start, saved, loading) {
-    // TODO: Add a 'reset' button to revert all changes
+    // TODO: Add a 'reset' button to revert all changes?
     return (
       <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
         Save Changes
@@ -243,8 +280,8 @@ class FacultyInfo extends Component {
   loadFaculti(name, jobTitle, email, phone, senateDiv, departments, expertise) {
     // Currently expects departments arg as a list of strings
     var localDepts = departments.map(departments => (
-      <li>
-        {departments}
+      <li key={departments.id}>
+        {departments.name}
         <Button
           type="link"
           onClick={() => {
@@ -266,19 +303,10 @@ class FacultyInfo extends Component {
           <Divider type="vertical" />
           <i style={textStyle}>{jobTitle}</i>
           <Divider type="vertical" />
-          <span style={textStyle}>{expertise + ' expert'}</span>
+          <span style={textStyle}>{expertise}</span>
           <Divider type="vertical" />
           <Button type="link" onClick={this.sayHello} size="small">
             Change
-          </Button>
-          <Button
-            size="small"
-            onClick={() => {
-              this.getFacultyByEmail('wolsborn@pdx.edu');
-            }}
-            ghost
-          >
-            John's Secret 'test-anything' Button
           </Button>
         </h1>
         <p style={{ fontSize: '90%' }}>
@@ -287,8 +315,17 @@ class FacultyInfo extends Component {
             style={{ display: 'inline' }}
             editable={{ onChange: this.onSenateChange }}
           >
-            {this.state.facultySenate}
+            {senateDiv}
           </Paragraph>
+          <Divider type="vertical" />
+          <Button
+            size="small"
+            onClick={() => {
+              this.getFacultyByEmail('wolsborn@pdx.edu');
+            }}
+          >
+            Retrieve Joshy
+          </Button>
         </p>
         <Divider type="horizontal" orientation="left">
           Contact Information
@@ -298,7 +335,7 @@ class FacultyInfo extends Component {
             <li>{email + '\n'}</li>
             <li>
               <Paragraph editable={{ onChange: this.onPhoneChange }}>
-                {this.state.facultyPhone}
+                {phone}
               </Paragraph>
             </li>
           </ul>
@@ -307,6 +344,7 @@ class FacultyInfo extends Component {
           </Divider>
           <ul>
             {localDepts}
+            {/*TODO: make button have departments in the dropdown, and disabled when no faculty member is selected*/}
             <Dropdown disabled>
               <Button
                 type="link"
@@ -331,7 +369,7 @@ class FacultyInfo extends Component {
         <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
         <EditableFormTable
           handler={this.handler}
-          currentCommittee={this.facultyData}
+          currentCommittee={this.state.currCommitteeData}
         />
       </span>
     );
@@ -364,7 +402,6 @@ class FacultyInfo extends Component {
       saved: true,
     });
   }
-  facultyEdit() {} // triggered by another component whenever faculty info is edited
 }
 
 class EditableCell extends React.Component {
@@ -380,9 +417,9 @@ class EditableCell extends React.Component {
       editing,
       dataIndex,
       title,
-      inputType,
+      //      inputType,
       record,
-      index,
+      //      index,
       children,
       ...restProps
     } = this.props;
@@ -417,6 +454,7 @@ class EditableTable extends React.Component {
     super(props);
     this.state = {
       mockFaculty,
+      currCommitteeData: this.props.currentCommittee,
       editingKey: '',
       //      data,
       saved: false,
@@ -497,9 +535,19 @@ class EditableTable extends React.Component {
       },
     ];
   }
-
+  /*
+  componentDidUpdate(prevProps) {
+    if (this.props.currCommitteeData !== prevProps.currentCommittee) {
+      alert('in');
+      this.setState({ currCommitteeData: this.prevProps.currCommitteeData });
+    }
+  }
+*/
+  // TODO: Find a new way of updating child state, as this method is deprecated
+  componentWillReceiveProps(newProps) {
+    this.setState({ currCommitteeData: newProps.currentCommittee });
+  }
   isEditing = record => record.key === this.state.editingKey;
-
   cancel = () => {
     this.setState({ editingKey: '' });
   };
@@ -509,7 +557,7 @@ class EditableTable extends React.Component {
       if (error) {
         return;
       }
-      const newData = [...this.state.mockFaculty];
+      const newData = [...this.state.currCommitteeData];
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
         const item = newData[index];
@@ -517,11 +565,11 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         });
-        this.setState({ mockFaculty: newData, editingKey: '' });
+        this.setState({ currCommitteeData: newData, editingKey: '' });
         this.props.handler(); // handler is placed here to prevent undesirable behavior
       } else {
         newData.push(row);
-        this.setState({ mockFaculty: newData, editingKey: '' });
+        this.setState({ currCommitteeData: newData, editingKey: '' });
         this.props.handler(); // handler is placed here to prevent undesirable behavior
       }
     });
@@ -559,7 +607,7 @@ class EditableTable extends React.Component {
         <Table
           components={components}
           bordered
-          dataSource={this.state.mockFaculty}
+          dataSource={this.state.currCommitteeData}
           columns={columns}
           rowClassName="editable-row"
           pagination={{
