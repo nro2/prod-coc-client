@@ -11,6 +11,7 @@ import {
   Typography,
   notification,
   Dropdown,
+  Menu,
 } from 'antd';
 import axios from 'axios';
 const { Paragraph } = Typography;
@@ -70,6 +71,8 @@ class FacultyInfo extends Component {
         ),
       },
     ];
+    this.departmentsMenu = '';
+    this.committeesMenu = '';
     this.facultyData = [
       {
         key: '1',
@@ -81,6 +84,10 @@ class FacultyInfo extends Component {
     this.state = {
       data: this.facultyData,
       currCommitteeData: [],
+      allCommittees: [],
+      allDepartments: [],
+      //     interestedCommitteeData: [], // empty for now ..
+      //     chosenCommitteeData: [], // empty for now ..
       cols: this.columns,
       loading: false,
       editingKey: '',
@@ -100,7 +107,10 @@ class FacultyInfo extends Component {
     this.onFacultyEdit = this.onFacultyEdit.bind(this); // Whenever faculty info is modified.
   }
   componentDidMount() {
+    this.retrieveDropdownOptions(); // begins retrieving all committees and departments
+    //  menu = this.createDepartmentMenu();
     if (!this.props.email) {
+      // if no email is supplied in props, load placeholder data
       this.setState({
         facultyEmail: 'non-specified',
         facultyName: 'Faculty name',
@@ -118,8 +128,46 @@ class FacultyInfo extends Component {
         facultyID: -1,
       });
     } else {
+      // otherwise, immediately retrieve all of the data for this faculti
       this.getFacultyByEmail(this.props.email);
     }
+  }
+  retrieveDropdownOptions = async () => {
+    const committees = await this.retrieveAllCommittees();
+    const departments = await this.retrieveAllDepartments();
+    var committeeList = []; // initialize lists to send to component state
+    var departmentList = [];
+    var length = committees.data.length;
+    var i = 0;
+    for (i = 0; i < length; i++) {
+      committeeList.push({
+        id: committees.data[i].committee_id,
+        name: committees.data[i].name,
+      });
+    }
+    length = departments.data.length;
+    for (i = 0; i < length; i++) {
+      departmentList.push({
+        id: departments.data[i].department_id,
+        name: departments.data[i].name,
+      });
+    }
+    this.setState({
+      // we do it this way because best practice is to treat the component state as immutable
+      allCommittees: committeeList,
+      allDepartments: departmentList,
+    });
+    //    this.departmentsMenu = this.createDepartmentMenu();
+  };
+  retrieveAllCommittees() {
+    return axios.get(`http://127.0.0.1:8080/committees`).catch(err => {
+      console.log(err);
+    });
+  }
+  retrieveAllDepartments() {
+    return axios.get(`http://127.0.0.1:8080/departments`).catch(err => {
+      console.log(err);
+    });
   }
   retrieveSenateData(senateShortName) {
     // Old retrieval method
@@ -142,6 +190,14 @@ class FacultyInfo extends Component {
       console.log(err);
     });
   }
+  retrieveDepartmentAssignments(email) {
+    // queries for departments a faculti is a part of
+    return axios
+      .get(`http://127.0.0.1:8080/department-associations/faculty/${email}`)
+      .catch(err => {
+        console.log(err);
+      });
+  }
   retrieveCommitteeAssignments(email) {
     // queries for committees that a faculty is assigned to
     return axios
@@ -150,12 +206,20 @@ class FacultyInfo extends Component {
         console.log(err);
       });
   }
+  retrieveDepartmentByID(id) {
+    return axios.get(`http://127.0.0.1:8080/department/${id}`).catch(err => {
+      console.log(err);
+    });
+  }
   // TODO: Consider promise chaining..
   getFacultyByEmail = async email => {
     var i = 0;
     var idList = [];
+    var dptIdList = [];
     var currentCommitteeList = [];
-    var currCommittee = [];
+    var currCommittee = '';
+    var currDepartment = '';
+    var currDepartmentList = [];
     axios
       .get(`http://127.0.0.1:8080/faculty/${email}`)
       .then(response => {
@@ -175,6 +239,7 @@ class FacultyInfo extends Component {
         console.log(err);
       });
     const ids = await this.retrieveCommitteeAssignments(email);
+    const departmentIds = await this.retrieveDepartmentAssignments(email);
     for (i = 0; i < ids.data.length; i++) {
       idList.push(ids.data[i].committee_id);
       currCommittee = await this.retrieveCommitteeByID(idList[i]);
@@ -187,8 +252,19 @@ class FacultyInfo extends Component {
         endDate: ids.data[i].end_date,
       });
     }
+    dptIdList = departmentIds.data.department_ids;
+    for (i = 0; i < dptIdList.length; i++) {
+      currDepartment = await this.retrieveDepartmentByID(dptIdList[i]);
+      currDepartmentList.push({
+        key: dptIdList[i],
+        name: currDepartment.data.name,
+      });
+      // currently ignoring the department's description,
+      // may need to add in the future
+    }
     this.setState({
       currCommitteeData: currentCommitteeList,
+      facultyDepartments: currDepartmentList,
     });
   };
   onFacultyEdit(e) {
@@ -244,19 +320,61 @@ class FacultyInfo extends Component {
       this.setState({ facultySenate });
     }
   };
-
+  onDepartmentAdd = toAdd => {
+    // expects department object as argument
+    console.log('Department added:', toAdd);
+    var length = this.state.facultyDepartments.length;
+    var i = 0;
+    var onList = false;
+    for (i = 0; i < length; i++) {
+      // check if already on faculti's list
+      if (toAdd.name == this.state.facultyDepartments[i].name) {
+        onList = true;
+      }
+    }
+    if (onList == false) {
+      this.state.facultyDepartments.push(toAdd);
+    }
+  };
+  createDepartmentMenu() {
+    var departments = this.state.allDepartments;
+    var departmentsMenu = departments.map(departments => (
+      <Menu.Item key={departments.id}>
+        <a style={{ fontSize: '75%' }}>{departments.name}</a>
+      </Menu.Item>
+    ));
+    return <Menu>{departmentsMenu}</Menu>;
+  }
+  createCommitteesMenu() {
+    var committees = this.state.allCommittees;
+    var committeesMenu = committees.map(committees => (
+      <Menu.Item key={committees.id}>
+        <a style={{ fontSize: '75%' }}>{committees.name}</a>
+      </Menu.Item>
+    ));
+    return <Menu>{committeesMenu}</Menu>;
+  }
+  /*******************************************************/
+  // Everything above this point manipulates data, or
+  // sends queries to the server
+  /*******************************************************/
   render() {
     const { loading } = this.state;
+    this.departmentsMenu = this.createDepartmentMenu();
+    this.committeesMenu = this.createCommitteesMenu();
     return (
       <React.Fragment>
-        {/* React.Fragment is a great way to cut down on <div> clutter*/}
+        {/*
+        Lots of arguments for LoadFaculti() to reduce the 'this.state.stuff'
+        syntax that would make LoadFaculti unreadable
+        */}
         {this.loadFaculti(
           this.state.facultyName,
           this.state.facultyJob,
           this.state.facultyEmail,
           this.state.facultyPhone,
           this.state.facultySenate,
-          this.state.facultyDepartments, // Passing state data so that it's interactive!
+          this.state.facultyDepartments,
           this.state.facultyExpert
         )}
         {this.loadCurrentCommittees(this.state.currCommitteeData, this.state.cols)}
@@ -280,7 +398,7 @@ class FacultyInfo extends Component {
   loadFaculti(name, jobTitle, email, phone, senateDiv, departments, expertise) {
     // Currently expects departments arg as a list of strings
     var localDepts = departments.map(departments => (
-      <li key={departments.id}>
+      <li key={departments.key}>
         {departments.name}
         <Button
           type="link"
@@ -345,11 +463,11 @@ class FacultyInfo extends Component {
           <ul>
             {localDepts}
             {/*TODO: make button have departments in the dropdown, and disabled when no faculty member is selected*/}
-            <Dropdown disabled>
+            <Dropdown overlay={this.departmentsMenu}>
               <Button
                 type="link"
                 icon="down"
-                onClick={this.addDepartment}
+                //onClick={() => this.onDepartmentAdd()}
                 size="small"
               >
                 Add
@@ -364,7 +482,9 @@ class FacultyInfo extends Component {
     // load current committees that this faculty member is a part of, start/end dates are editable
     return (
       <span>
-        <Button type="primary" icon="plus" size="small"></Button>
+        <Dropdown overlay={this.committeesMenu}>
+          <Button type="primary" icon="plus" size="small"></Button>
+        </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
         <EditableFormTable
@@ -378,7 +498,9 @@ class FacultyInfo extends Component {
     // Loads the chosen comittee table
     return (
       <span>
-        <Button type="primary" icon="plus" size="small"></Button>
+        <Dropdown overlay={this.committeesMenu}>
+          <Button type="primary" icon="plus" size="small"></Button>
+        </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Committees Chosen:</h1>
         <Table dataSource={facultyData} bordered columns={columnData} />
@@ -389,7 +511,9 @@ class FacultyInfo extends Component {
     // loads the interested committee table
     return (
       <span>
-        <Button type="primary" icon="plus" size="small"></Button>
+        <Dropdown overlay={this.committeesMenu}>
+          <Button type="primary" icon="plus" size="small"></Button>
+        </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Committees interested in:</h1>
         <Table dataSource={facultyData} bordered columns={columnData} />
