@@ -16,6 +16,8 @@ import {
   // AutoComplete /*Menu, Dropdown, Icon*/,
 } from 'antd';
 
+//import { Empty, Result, Select /*Menu, Dropdown, Icon*/ } from 'antd';
+
 const { Option } = Select;
 
 class AddFaculty extends Component {
@@ -26,6 +28,7 @@ class AddFaculty extends Component {
       text: '',
       error: {},
       loading: true,
+
       _firstName: '',
       buffer: '',
       _lastName: '',
@@ -45,6 +48,22 @@ class AddFaculty extends Component {
     this.handleJobChange = this.handleJobChange.bind(this);
     this.handlePhoneChange = this.handlePhoneChange.bind(this);
   }
+
+  handleFnameChange = event => {
+    this.setState({ _firstName: event.target.value });
+  };
+  handleLnameChange = event => {
+    this.setState({ _lastName: event.target.value });
+  };
+  handleEmailChange = event => {
+    this.setState({ _email: event.target.value });
+  };
+  handleJobChange = event => {
+    this.setState({ _jobTitle: event.target.value });
+  };
+  handlePhoneChange = event => {
+    this.setState({ _phoneNum: event.target.value });
+  };
 
   fetchDivisions() {
     axios
@@ -70,22 +89,6 @@ class AddFaculty extends Component {
       senateDivision: value,
     });
   }
-
-  handleFnameChange = event => {
-    this.setState({ _firstName: event.target.value });
-  };
-  handleLnameChange = event => {
-    this.setState({ _lastName: event.target.value });
-  };
-  handleEmailChange = event => {
-    this.setState({ _email: event.target.value });
-  };
-  handleJobChange = event => {
-    this.setState({ _jobTitle: event.target.value });
-  };
-  handlePhoneChange = event => {
-    this.setState({ _phoneNum: event.target.value });
-  };
 
   componentDidMount() {
     this.fetchDivisions();
@@ -125,6 +128,7 @@ class AddFaculty extends Component {
       .then(() => {
         /*       this.setState({
           text: 'Data insert was a success',
+
           _firstName: '',
           _lastName: '',
           _email: '',
