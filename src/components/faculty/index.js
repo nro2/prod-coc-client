@@ -13,6 +13,7 @@ import {
   Dropdown,
   Menu,
 } from 'antd';
+//import './faculty.css';
 import axios from 'axios';
 const { Paragraph } = Typography;
 
@@ -137,15 +138,16 @@ class FacultyInfo extends Component {
     const departments = await this.retrieveAllDepartments();
     var committeeList = []; // initialize lists to send to component state
     var departmentList = [];
-    var length = committees.data.length;
+    //var length = committees.data.length;
     var i = 0;
+    var length = 0;
     for (i = 0; i < length; i++) {
       committeeList.push({
         id: committees.data[i].committee_id,
         name: committees.data[i].name,
       });
     }
-    length = departments.data.length;
+    //    length = departments.data.length;
     for (i = 0; i < length; i++) {
       departmentList.push({
         id: departments.data[i].department_id,
@@ -160,19 +162,26 @@ class FacultyInfo extends Component {
     //    this.departmentsMenu = this.createDepartmentMenu();
   };
   retrieveAllCommittees() {
-    return axios.get(`http://127.0.0.1:8080/committees`).catch(err => {
-      console.log(err);
-    });
+    return axios
+      .get(`/api/committees`)
+      .then(response => {
+        alert(response);
+        console.log(response);
+      })
+      .catch(err => {
+        console.log(err);
+        alert(err);
+      });
   }
   retrieveAllDepartments() {
-    return axios.get(`http://127.0.0.1:8080/departments`).catch(err => {
+    return axios.get(`/api/departments`).catch(err => {
       console.log(err);
     });
   }
   retrieveSenateData(senateShortName) {
     // Old retrieval method
     axios
-      .get(`http://127.0.0.1:8080/senate-division/${senateShortName}`)
+      .get(`/api/senate-division/${senateShortName}`)
       .then(response => {
         console.log(response.data);
         let senateInfo = response.data; // assigns response promise
@@ -186,28 +195,24 @@ class FacultyInfo extends Component {
   }
   retrieveCommitteeByID(id) {
     // queries for a specific committee using the ID
-    return axios.get(`http://127.0.0.1:8080/committee/${id}`).catch(err => {
+    return axios.get(`/api/committee/${id}`).catch(err => {
       console.log(err);
     });
   }
   retrieveDepartmentAssignments(email) {
     // queries for departments a faculti is a part of
-    return axios
-      .get(`http://127.0.0.1:8080/department-associations/faculty/${email}`)
-      .catch(err => {
-        console.log(err);
-      });
+    return axios.get(`/api/department-associations/faculty/${email}`).catch(err => {
+      console.log(err);
+    });
   }
   retrieveCommitteeAssignments(email) {
     // queries for committees that a faculty is assigned to
-    return axios
-      .get(`http://127.0.0.1:8080/committee-assignment/faculty/${email}`)
-      .catch(err => {
-        console.log(err);
-      });
+    return axios.get(`/api/committee-assignment/faculty/${email}`).catch(err => {
+      console.log(err);
+    });
   }
   retrieveDepartmentByID(id) {
-    return axios.get(`http://127.0.0.1:8080/department/${id}`).catch(err => {
+    return axios.get(`/api/department/${id}`).catch(err => {
       console.log(err);
     });
   }
@@ -221,7 +226,7 @@ class FacultyInfo extends Component {
     var currDepartment = '';
     var currDepartmentList = [];
     axios
-      .get(`http://127.0.0.1:8080/faculty/${email}`)
+      .get(`/api/faculty/${email}`)
       .then(response => {
         console.log(response.data);
         let facultyObject = response.data;
@@ -240,7 +245,8 @@ class FacultyInfo extends Component {
       });
     const ids = await this.retrieveCommitteeAssignments(email);
     const departmentIds = await this.retrieveDepartmentAssignments(email);
-    for (i = 0; i < ids.data.length; i++) {
+    var length = 0; // ids.data.length
+    for (i = 0; i < length; i++) {
       idList.push(ids.data[i].committee_id);
       currCommittee = await this.retrieveCommitteeByID(idList[i]);
       currentCommitteeList.push({
