@@ -33,7 +33,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout className="layout">
           <Sider
             collapsible
             collapsed={this.state.collapsed}
@@ -69,15 +69,8 @@ class App extends Component {
             </Menu>
           </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0, paddingLeft: 16 }} />
-            <Content
-              style={{
-                margin: '24px 16px',
-                padding: 24,
-                background: '#fff',
-                minHeight: 280,
-              }}
-            >
+            <Header className="header" />
+            <Content className="aligner content">
               <Switch>
                 <Route path="/home" component={Home} />
                 <Route path="/add-faculty" component={AddFaculty} />
@@ -87,9 +80,7 @@ class App extends Component {
               </Switch>
               <Redirect to="/faculty" />
             </Content>
-            <Footer style={{ textAlign: 'center' }}>
-              Ant Design ©2016 Created by Ant UED
-            </Footer>
+            <Footer className="footer">Ant Design ©2016 Created by Ant UED</Footer>
           </Layout>
         </Layout>
       </Router>

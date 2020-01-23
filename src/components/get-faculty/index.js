@@ -1,56 +1,103 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Select, Descriptions, Divider } from 'antd';
+
+const { Option } = Select;
 
 class GetFaculty extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      facultyMembers: [],
       text: '',
       firstName: '',
       lastName: '',
       phoneNum: '',
+      showInfo: false,
+      email: '',
     };
 
-    this.getItem = this.getItem.bind(this);
+    this.fetchFaculty = this.fetchFaculty.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
-  getItem(e) {
+
+  /*Gets the list of all faculty members for drop down select*/
+  fetchFaculty() {
     axios
-      .get('http://127.0.0.1:8080', { params: { firstName: this._aName.value } })
+      .get('/api/faculty')
       .then(response => {
         this.setState({
-          text: 'Success',
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-          phoneNum: response.data.phoneNum,
+          facultyMembers: response.data,
+          loading: false,
+          selected: 0,
+          error: {},
         });
       })
       .catch(err => {
         this.setState({
-          text: 'Bad Request',
-          firstName: '',
-          lastName: '',
-          phoneNum: '',
+          error: { message: err.response.data.error, code: err.response.status },
+          loading: false,
         });
-        console.log(err);
       });
+  }
 
-    this._aName.value = '';
+  handleChange(value) {
+    this.setState({
+      selected: value,
+      showInfo: true,
+    });
+  }
 
-    e.preventDefault();
+  componentDidMount() {
+    this.fetchFaculty();
   }
 
   render() {
+    const options = this.state.facultyMembers.map(faculty => (
+      <Option key={faculty.email} value={faculty.full_name}>
+        {faculty.full_name}
+      </Option>
+    ));
+
     return (
-      <div className="Get">
-        <h1>Get faculty info here</h1>
-        <p>Message:{this.state.text}</p>
-        <form onSubmit={this.getItem}>
-          <input ref={a => (this._aName = a)} placeholder="Enter first name here" />
-          <button type="submit">Submit</button>
-        </form>
-        <p>First Name: {this.state.firstName}</p>
-        <p>Last Name:{this.state.lastName}</p>
-        <p>Phone Number: {this.state.phoneNum}</p>
+      <div className="aligner">
+        <div>
+          <h1>Get faculty info here</h1>
+          <div>
+            <Select
+              className="aligner-item aligner-item-center select"
+              showSearch
+              placeholder="Search for a faculty member"
+              optionFilterProp="children"
+              onChange={this.handleChange}
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                0
+              }
+              dropdownMatchSelectWidth={false}
+              size="large"
+              loading={this.state.loading}
+            >
+              {options}
+            </Select>
+            {this.state.showInfo && (
+              <div>
+                <Divider orientation="left">
+                  {this.state.selected + "'s Info"}
+                </Divider>
+                <Descriptions>
+                  <Descriptions.Item label="Name">
+                    {this.state.selected}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Email">{}</Descriptions.Item>
+                  <Descriptions.Item label="Phone">{}</Descriptions.Item>
+                  <Descriptions.Item label="Job Title">{}</Descriptions.Item>
+                  <Descriptions.Item label="Senate Division">{}</Descriptions.Item>
+                </Descriptions>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     );
   }

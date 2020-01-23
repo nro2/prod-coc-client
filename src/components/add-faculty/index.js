@@ -13,7 +13,7 @@ class AddFaculty extends Component {
 
   addItem(e) {
     axios
-      .post('http://127.0.0.1:8080', {
+      .post('/api', {
         firstName: this._firstName.value,
         lastName: this._lastName.value,
         phoneNum: this._phoneNum.value,
@@ -35,6 +35,7 @@ class AddFaculty extends Component {
 
     e.preventDefault();
   }
+
   render() {
     return (
       <div className="Add">

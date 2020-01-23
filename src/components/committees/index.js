@@ -1,52 +1,112 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Empty, Result, Select } from 'antd';
+import './committees.css';
+
+const { Option } = Select;
 
 class Committees extends Component {
   constructor(props) {
     super(props);
     this.state = {
       committees: [],
-      text: '',
+      error: {},
+      loading: true,
     };
 
-    this.getCommittees = this.getCommittees.bind(this);
-    this.createCommittee = this.createCommittee.bind(this);
+    this.fetchCommittees = this.fetchCommittees.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-  getCommittees() {
+  fetchCommittees() {
     axios
-      .get('http://127.0.0.1:8080/committees')
+      .get('/api/committees')
       .then(response => {
-        console.log(response.data);
-        let committeeArray = response.data;
         this.setState({
-          committees: committeeArray,
+          committees: response.data,
+          loading: false,
+          selected: 0,
+          error: {},
         });
       })
       .catch(err => {
         this.setState({
-          text: 'Could not retrieve committees',
+          error: { message: err.response.data.error, code: err.response.status },
+          loading: false,
         });
-        console.log(err);
       });
   }
 
-  createCommittee(item) {
-    return <li key={item.key}>{item.committee}</li>;
+  handleChange(value) {
+    this.setState({
+      selected: value,
+    });
   }
 
   componentDidMount() {
-    this.getCommittees();
+    this.fetchCommittees();
   }
 
-  render() {
-    let items = this.state.committees;
-    let listItems = items.map(this.createCommittee);
+  renderBody = () => {
+    if (this.state.selected === 0) {
+      return (
+        <div className="aligner-item">
+          <Empty />
+        </div>
+      );
+    }
+
+    if (Object.keys(this.state.error).length !== 0) {
+      return (
+        <div className="aligner-item">
+          <Result
+            status="500"
+            title={this.state.error.code}
+            subTitle={this.state.error.message}
+          />
+        </div>
+      );
+    }
+
     return (
-      <div className="Committees">
-        <h1>List of Committees</h1>
-        <p>{this.state.text}</p>
-        {listItems}
+      // TODO: render an actual committee component here (CF1-52)
+      <div>
+        {JSON.stringify(
+          this.state.committees.find(
+            committee => committee.committee_id === this.state.selected
+          )
+        )}
+      </div>
+    );
+  };
+
+  render() {
+    const options = this.state.committees.map(committee => (
+      <Option key={committee.committee_id} value={committee.committee_id}>
+        {committee.name}
+      </Option>
+    ));
+
+    return (
+      <div className="aligner">
+        <div>
+          <Select
+            className="aligner-item aligner-item--top-left select"
+            showSearch
+            placeholder="Select a committee"
+            optionFilterProp="children"
+            onChange={this.handleChange}
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            dropdownMatchSelectWidth={false}
+            size="large"
+            loading={this.state.loading}
+          >
+            {options}
+          </Select>
+        </div>
+        {this.renderBody()}
       </div>
     );
   }
