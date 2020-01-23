@@ -1,6 +1,7 @@
+/*
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Select, Descriptions, Divider } from 'antd';
+import { Select } from 'antd';
 
 const { Option } = Select;
 
@@ -8,28 +9,21 @@ class GetReports extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      facultyMembers: [],
-      text: '',
-      firstName: '',
-      lastName: '',
-      phoneNum: '',
-      showInfo: false,
-      email: '',
+      committees: [],
+      commiteeInfo: [],
     };
 
-    this.fetchFaculty = this.fetchFaculty.bind(this);
+    this.fetchCommitee = this.fetchFaculty.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  /*Gets the list of all faculty members for drop down select*/
-  fetchFaculty() {
+  fetchCommittee() {
     axios
-      .get('/api/faculty')
+      .get('/api/committees')
       .then(response => {
         this.setState({
-          facultyMembers: response.data,
+          committees: response.data,
           loading: false,
-          selected: 0,
           error: {},
         });
       })
@@ -43,7 +37,6 @@ class GetReports extends Component {
 
   handleChange(value) {
     this.setState({
-      selected: value,
       showInfo: true,
     });
   }
@@ -60,47 +53,15 @@ class GetReports extends Component {
     ));
 
     return (
-      <div className="aligner">
         <div>
-          <h1>Get committee info here</h1>
-          <div>
-            <Select
-              className="aligner-item aligner-item-center select"
-              showSearch
-              placeholder="Search for a faculty member"
-              optionFilterProp="children"
-              onChange={this.handleChange}
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                0
-              }
-              dropdownMatchSelectWidth={false}
-              size="large"
-              loading={this.state.loading}
-            >
+            <h1>Get committee info here</h1>
+            <div>
               {options}
-            </Select>
-            {this.state.showInfo && (
-              <div>
-                <Divider orientation="left">
-                  {this.state.selected + "'s Info"}
-                </Divider>
-                <Descriptions>
-                  <Descriptions.Item label="Name">
-                    {this.state.selected}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Email">{}</Descriptions.Item>
-                  <Descriptions.Item label="Phone">{}</Descriptions.Item>
-                  <Descriptions.Item label="Job Title">{}</Descriptions.Item>
-                  <Descriptions.Item label="Senate Division">{}</Descriptions.Item>
-                </Descriptions>
-              </div>
-            )}
-          </div>
+            </div>
         </div>
-      </div>
     );
   }
 }
 
 export default GetReports;
+*/
