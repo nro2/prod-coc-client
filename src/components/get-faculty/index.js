@@ -24,7 +24,7 @@ class GetFaculty extends Component {
   /*Gets the list of all faculty members for drop down select*/
   fetchFaculty() {
     axios
-      .get('http://localhost:8080/faculty')
+      .get('/api/faculty')
       .then(response => {
         this.setState({
           facultyMembers: response.data,
