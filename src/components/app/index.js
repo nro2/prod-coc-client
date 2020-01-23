@@ -12,6 +12,7 @@ import AddFaculty from '../add-faculty';
 import Committees from '../committees';
 import GetFaculty from '../get-faculty';
 import Home from '../home';
+import GetReports from '../get-reports';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -60,6 +61,11 @@ class App extends Component {
                 <span>Committees</span>
                 <Link to="/committees" />
               </Menu.Item>
+              <Menu.Item key="5">
+                <Icon type="appstore" />
+                <span>Reports</span>
+                <Link to="/reports" />
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout>
@@ -70,6 +76,7 @@ class App extends Component {
                 <Route path="/add-faculty" component={AddFaculty} />
                 <Route path="/get-faculty" component={GetFaculty} />
                 <Route path="/committees" component={Committees} />
+                <Route path="/reports" component={GetReports} />
               </Switch>
               <Redirect to="/home" />
             </Content>
