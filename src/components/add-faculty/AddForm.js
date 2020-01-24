@@ -1,4 +1,4 @@
-import { Form, Input, Empty, Result, Select, Button } from 'antd';
+import { Form, Input, Select, Button } from 'antd';
 import React from 'react';
 //  import ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -11,11 +11,11 @@ class AddForm extends React.Component {
     this.state = {
       confirmDirty: false,
       senateDivisions: [],
+      departments: [],
       text: '',
       error: {},
       loading: true,
 
-      autoCompleteResult: [],
       _firstName: '',
       buffer: '',
       _lastName: '',
@@ -24,11 +24,14 @@ class AddForm extends React.Component {
       _phoneNum: '',
       _senateDivision: '',
       _fullName: '',
+      _departments: [],
     };
 
     //  this.addItem = this.addItem.bind(this);
     this.fetchDivisions = this.fetchDivisions.bind(this);
+    this.fetchDepartments = this.fetchDepartments.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeD = this.handleChange.bind(this);
     this.handleFnameChange = this.handleFnameChange.bind(this);
     this.handleLnameChange = this.handleLnameChange.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -72,34 +75,39 @@ class AddForm extends React.Component {
 
   handleChange(value) {
     this.setState({
-      senateDivision: value,
+      _senateDivision: value,
     });
+  }
+
+  handleChangeD(value) {
+    this.setState({
+      _departments: value,
+    });
+  }
+
+  fetchDepartments() {
+    axios
+      .get('/api/departments')
+      .then(response => {
+        this.setState({
+          departments: response.data,
+          loading: false,
+          selected: 0,
+          error: {},
+        });
+      })
+      .catch(err => {
+        this.setState({
+          error: { message: err.response.data.error, code: err.response.status },
+          loading: false,
+        });
+      });
   }
 
   componentDidMount() {
     this.fetchDivisions();
+    this.fetchDepartments();
   }
-  renderBody = () => {
-    if (this.state.selected === 0) {
-      return (
-        <div className="aligner-item">
-          <Empty />
-        </div>
-      );
-    }
-
-    if (Object.keys(this.state.error).length !== 0) {
-      return (
-        <div className="aligner-item">
-          <Result
-            status="500"
-            title={this.state.error.code}
-            subTitle={this.state.error.message}
-          />
-        </div>
-      );
-    }
-  };
 
   handleSubmit = e => {
     axios
@@ -108,7 +116,8 @@ class AddForm extends React.Component {
         email: this.state._email,
         jobTitle: this.state._jobTitle,
         phoneNum: this.state._phoneNum,
-        senateDivision: this.state.senateDivision,
+        senateDivision: this.state._senateDivision,
+        departmens: this.state._departments,
       })
       .then(() => {
         this.setState({
@@ -123,7 +132,6 @@ class AddForm extends React.Component {
       });
 
     e.preventDefault();
-    e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
@@ -134,23 +142,6 @@ class AddForm extends React.Component {
   handleConfirmBlur = e => {
     const { value } = e.target;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  compareToFirstPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('Two passwords that you enter is inconsistent!');
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
   };
 
   handleWebsiteChange = value => {
@@ -165,31 +156,6 @@ class AddForm extends React.Component {
     this.setState({ autoCompleteResult });
   };
 
-  addItem(e) {
-    //   this.state._fullName = `${this.state._firstName} ${this.state.lastName}`;
-    axios
-      .post('/api/faculty', {
-        fullName: this.state._firstName + ' ' + this.state._lastName,
-        email: this.state._email,
-        jobTitle: this.state._jobTitle,
-        phoneNum: this.state._phoneNum,
-        senateDivision: this.state.senateDivision,
-      })
-      .then(() => {
-        this.setState({
-          text: 'Data insert was a success',
-        });
-      })
-      .catch(err => {
-        this.setState({
-          text: 'Insert was not successful',
-        });
-        console.log(err);
-      });
-
-    e.preventDefault();
-  }
-
   render() {
     const options = this.state.senateDivisions.map(senate_division => (
       <Option
@@ -197,6 +163,11 @@ class AddForm extends React.Component {
         value={senate_division.senate_division_short_name}
       >
         {senate_division.senate_division_short_name}
+      </Option>
+    ));
+    const optionsD = this.state.departments.map(departments => (
+      <Option key={departments.name} value={departments.name}>
+        {departments.name}
       </Option>
     ));
 
@@ -295,6 +266,23 @@ class AddForm extends React.Component {
             {options}
           </Select>
         </Form.Item>
+        <Form.Item label="Department">
+          <Select
+            className="aligner-item aligner-item--bottom-left select"
+            showSearch
+            placeholder="Select a Department"
+            optionFilterProp="children"
+            onChange={this.handleChangeD}
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            dropdownMatchSelectWidth={false}
+            //size="small"
+            loading={this.state.loading}
+          >
+            {optionsD}
+          </Select>
+        </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
@@ -308,8 +296,3 @@ class AddForm extends React.Component {
 }
 
 export default Form.create()(AddForm);
-//const WrappedRegistrationForm = Form.create({ name: 'register' })(AddForm);
-
-//ReactDOM.render(<WrappedRegistrationForm />, mountNode);
-
-// export default AddForm;
