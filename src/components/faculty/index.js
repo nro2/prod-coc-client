@@ -13,7 +13,7 @@ import {
   Dropdown,
   Menu,
 } from 'antd';
-//import './faculty.css';
+//import './faculty.css'; // for page-specific styling, not implemented yet..
 import axios from 'axios';
 const { Paragraph } = Typography;
 
@@ -22,30 +22,14 @@ var textStyle = {
   fontSize: '85%',
   whiteSpace: 'pre-line',
 };
-var mock = {
-  name: "John d'Arc Lorenz IV",
-  jobTitle: 'Cat Connoisseur',
-  senateDiv: 'I am not the senate',
-  departments: ['Computer Science', 'Journalism'],
-  expertise: 'Sleep',
-  email: '1337h4x69@winning.com',
-  phone: '503-xxx-xxxx',
-};
-const mockFaculty = [
-  {
-    key: '1',
-    committee: 'Computer Science Committee',
-    slots: '0',
-    description: 'stuff and things',
-  },
-];
+
 const EditableContext = React.createContext();
 
 class FacultyInfo extends Component {
   constructor(props) {
     super(props);
-    //  this.currentCommitteeTable = React.createRef();
     this.columns = [
+      // this is for our columns in our <Table> component
       {
         title: 'Name',
         dataIndex: 'committee',
@@ -72,8 +56,8 @@ class FacultyInfo extends Component {
         ),
       },
     ];
-    this.departmentsMenu = '';
-    this.committeesMenu = '';
+    this.departmentsMenu = ''; // holds our dropdown lists
+    this.committeesMenu = ''; // holds our dropdown lists
     this.facultyData = [
       {
         key: '1',
@@ -95,21 +79,26 @@ class FacultyInfo extends Component {
       saved: false,
       noFacultyLoaded: false,
       committeeIDList: [],
-      facultyName: mock.name,
-      facultyEmail: mock.email,
-      facultyPhone: mock.phone,
-      facultyDepartments: mock.departments,
-      facultySenate: mock.senateDiv,
-      facultyJob: mock.jobTitle,
-      facultyExpert: mock.expertise,
+      facultyName: 'non-specified',
+      facultyEmail: 'Faculty name',
+      facultyPhone: '(000)-000-0000',
+      facultyDepartments: [{ key: 1, name: 'none' }],
+      facultySenate: 'Faculty Senate',
+      facultyJob: 'Faculty Job',
+      facultyExpert: 'Faculty Expertise',
       facultyID: -1,
     };
     this.handler = this.handler.bind(this); // Whenever start/end dates are modified.
     this.onFacultyEdit = this.onFacultyEdit.bind(this); // Whenever faculty info is modified.
   }
   componentDidMount() {
-    this.retrieveDropdownOptions(); // begins retrieving all committees and departments
-    //  menu = this.createDepartmentMenu();
+    // This method immediately loads when the Faculty Info component is first rendered.
+    // For more information search "React component lifecycle diagram". Below is the order we retrieve data in:
+    // 1. All committee and department data. We then set the state.
+    // 2. All faculty data. We then set the state.
+    // 3. All associations. We then set the state.
+    // TODO: I will reduce the number of times setState is called on render from ~3-4 to 1.
+    this.retrieveDropdownOptions();
     if (!this.props.email) {
       // if no email is supplied in props, load placeholder data
       this.setState({
@@ -136,18 +125,19 @@ class FacultyInfo extends Component {
   retrieveDropdownOptions = async () => {
     const committees = await this.retrieveAllCommittees();
     const departments = await this.retrieveAllDepartments();
-    var committeeList = []; // initialize lists to send to component state
+    var committeeList = [];
     var departmentList = [];
-    //var length = committees.data.length;
+    var length = committees.data.length;
     var i = 0;
-    var length = 0;
+    // Begin manipulating our promise objects for the data we want.
+    // They work the same as any other object would.
     for (i = 0; i < length; i++) {
       committeeList.push({
         id: committees.data[i].committee_id,
         name: committees.data[i].name,
       });
     }
-    //    length = departments.data.length;
+    length = departments.data.length;
     for (i = 0; i < length; i++) {
       departmentList.push({
         id: departments.data[i].department_id,
@@ -155,31 +145,27 @@ class FacultyInfo extends Component {
       });
     }
     this.setState({
-      // we do it this way because best practice is to treat the component state as immutable
+      // Generate local lists and only modify states through setState.
+      // We must treat states as immutable.
+      // This is the way.
       allCommittees: committeeList,
       allDepartments: departmentList,
     });
-    //    this.departmentsMenu = this.createDepartmentMenu();
   };
   retrieveAllCommittees() {
-    return axios
-      .get(`/api/committees`)
-      .then(response => {
-        alert(response);
-        console.log(response);
-      })
-      .catch(err => {
-        console.log(err);
-        alert(err);
-      });
+    // queries for all committees, returns the promise
+    return axios.get(`/api/committees`).catch(err => {
+      console.log(err);
+    });
   }
   retrieveAllDepartments() {
+    // queries for all departments, returns the promise
     return axios.get(`/api/departments`).catch(err => {
       console.log(err);
     });
   }
   retrieveSenateData(senateShortName) {
-    // Old retrieval method
+    // TODO: change to follow the format of the other retrieval methods
     axios
       .get(`/api/senate-division/${senateShortName}`)
       .then(response => {
@@ -194,29 +180,30 @@ class FacultyInfo extends Component {
       });
   }
   retrieveCommitteeByID(id) {
-    // queries for a specific committee using the ID
+    // queries for a specific committee using the ID, returns the promise object
     return axios.get(`/api/committee/${id}`).catch(err => {
       console.log(err);
     });
   }
   retrieveDepartmentAssignments(email) {
-    // queries for departments a faculti is a part of
+    // queries for departments a faculti is a part of, returns the promise object
     return axios.get(`/api/department-associations/faculty/${email}`).catch(err => {
       console.log(err);
     });
   }
   retrieveCommitteeAssignments(email) {
-    // queries for committees that a faculty is assigned to
+    // queries for committees that a faculty is assigned to, returns the promise object
     return axios.get(`/api/committee-assignment/faculty/${email}`).catch(err => {
       console.log(err);
     });
   }
   retrieveDepartmentByID(id) {
+    // queries for a department given its ID, returns the promise object
     return axios.get(`/api/department/${id}`).catch(err => {
       console.log(err);
     });
   }
-  // TODO: Consider promise chaining..
+  // TODO: Change from 3 setStates to 1 setState in onComponentMount()
   getFacultyByEmail = async email => {
     var i = 0;
     var idList = [];
@@ -240,7 +227,6 @@ class FacultyInfo extends Component {
         });
       })
       .catch(err => {
-        alert(err);
         console.log(err);
       });
     const ids = await this.retrieveCommitteeAssignments(email);
@@ -269,6 +255,7 @@ class FacultyInfo extends Component {
       // may need to add in the future
     }
     this.setState({
+      // Once all of our committees and departments are sorted, we can finally set their state.
       currCommitteeData: currentCommitteeList,
       facultyDepartments: currDepartmentList,
     });
@@ -319,6 +306,7 @@ class FacultyInfo extends Component {
   };
   onSenateChange = facultySenate => {
     // on edit change to senate division
+    // TODO: Change this to a dropdown like with committees and departments
     console.log('Senate changed:', facultySenate);
     if (facultySenate !== this.state.facultySenate) {
       // Check to see if data was actually changed
@@ -327,7 +315,7 @@ class FacultyInfo extends Component {
     }
   };
   onDepartmentAdd = toAdd => {
-    // expects department object as argument
+    // expects department object as argument, and appends our faculty member's department associations
     console.log('Department added:', toAdd);
     var length = this.state.facultyDepartments.length;
     var i = 0;
@@ -339,10 +327,12 @@ class FacultyInfo extends Component {
       }
     }
     if (onList == false) {
+      // if not, we add it.
       this.state.facultyDepartments.push(toAdd);
     }
   };
   createDepartmentMenu() {
+    // Manipulates departments into menu items, and then returns it as a menu object
     var departments = this.state.allDepartments;
     var departmentsMenu = departments.map(departments => (
       <Menu.Item key={departments.id}>
@@ -352,6 +342,7 @@ class FacultyInfo extends Component {
     return <Menu>{departmentsMenu}</Menu>;
   }
   createCommitteesMenu() {
+    // Manipulates committees into menu items, and then returns it as a menu object
     var committees = this.state.allCommittees;
     var committeesMenu = committees.map(committees => (
       <Menu.Item key={committees.id}>
@@ -402,7 +393,8 @@ class FacultyInfo extends Component {
     );
   }
   loadFaculti(name, jobTitle, email, phone, senateDiv, departments, expertise) {
-    // Currently expects departments arg as a list of strings
+    // .map() list function is relating the department name to it's own specific delete button
+    // and placing it in an HTML list that we call later
     var localDepts = departments.map(departments => (
       <li key={departments.key}>
         {departments.name}
@@ -473,7 +465,7 @@ class FacultyInfo extends Component {
               <Button
                 type="link"
                 icon="down"
-                //onClick={() => this.onDepartmentAdd()}
+                onClick={() => this.sayHello()}
                 size="small"
               >
                 Add
@@ -489,7 +481,12 @@ class FacultyInfo extends Component {
     return (
       <span>
         <Dropdown overlay={this.committeesMenu}>
-          <Button type="primary" icon="plus" size="small"></Button>
+          <Button
+            type="primary"
+            icon="plus"
+            size="small"
+            onClick={() => this.sayHello()}
+          ></Button>
         </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
@@ -505,7 +502,12 @@ class FacultyInfo extends Component {
     return (
       <span>
         <Dropdown overlay={this.committeesMenu}>
-          <Button type="primary" icon="plus" size="small"></Button>
+          <Button
+            type="primary"
+            icon="plus"
+            size="small"
+            onClick={() => this.sayHello()}
+          ></Button>
         </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Committees Chosen:</h1>
@@ -518,7 +520,12 @@ class FacultyInfo extends Component {
     return (
       <span>
         <Dropdown overlay={this.committeesMenu}>
-          <Button type="primary" icon="plus" size="small"></Button>
+          <Button
+            type="primary"
+            icon="plus"
+            size="small"
+            onClick={() => this.sayHello()}
+          ></Button>
         </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Committees interested in:</h1>
@@ -528,6 +535,7 @@ class FacultyInfo extends Component {
   }
   handler() {
     // handler is triggered by child state whenever start/end dates are edited and saved
+    // this is what allows the 'save changes button' to be enabled when changes are made
     this.setState({
       saved: true,
     });
@@ -547,9 +555,7 @@ class EditableCell extends React.Component {
       editing,
       dataIndex,
       title,
-      //      inputType,
       record,
-      //      index,
       children,
       ...restProps
     } = this.props;
@@ -583,13 +589,10 @@ class EditableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mockFaculty,
       currCommitteeData: this.props.currentCommittee,
       editingKey: '',
-      //      data,
       saved: false,
     };
-    //    alert(this.props.currentCommittee[0].key);
     this.columns = [
       {
         title: 'Name',
@@ -665,14 +668,6 @@ class EditableTable extends React.Component {
       },
     ];
   }
-  /*
-  componentDidUpdate(prevProps) {
-    if (this.props.currCommitteeData !== prevProps.currentCommittee) {
-      alert('in');
-      this.setState({ currCommitteeData: this.prevProps.currCommitteeData });
-    }
-  }
-*/
   // TODO: Find a new way of updating child state, as this method is deprecated
   componentWillReceiveProps(newProps) {
     this.setState({ currCommitteeData: newProps.currentCommittee });
