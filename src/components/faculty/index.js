@@ -231,7 +231,7 @@ class FacultyInfo extends Component {
       });
     const ids = await this.retrieveCommitteeAssignments(email);
     const departmentIds = await this.retrieveDepartmentAssignments(email);
-    var length = 0; // ids.data.length
+    var length = ids.data.length;
     for (i = 0; i < length; i++) {
       idList.push(ids.data[i].committee_id);
       currCommittee = await this.retrieveCommitteeByID(idList[i]);
@@ -589,7 +589,7 @@ class EditableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currCommitteeData: this.props.currentCommittee,
+      currCommitteeData: '',
       editingKey: '',
       saved: false,
     };
