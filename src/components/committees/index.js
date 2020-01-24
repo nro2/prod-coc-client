@@ -20,7 +20,7 @@ class Committees extends Component {
 
   fetchCommittees() {
     axios
-      .get('http://localhost:8080/committees')
+      .get('/api/committees')
       .then(response => {
         this.setState({
           committees: response.data,
