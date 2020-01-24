@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Input, Popconfirm, Form, InputNumber } from 'antd';
 //import axios from 'axios';
-/*
-const reqData = [
+/*const reqData = [
   {
     key: '1',
     senateShortname: 'BP',
@@ -33,7 +32,7 @@ const memberData = [
     end_date: '2020-1-1',
     senateDivision: 'AO',
   },
-];
+];*/
 const slotData = [
   {
     key: '1',
@@ -46,7 +45,6 @@ const slotData = [
     filledSlots: '23',
   },
 ];
-*/
 var mock = {
   name: 'Committee on Space Exploration',
   description: 'About exploring space',
@@ -344,6 +342,38 @@ class Committee extends Component {
         },
       },
     ];
+    this.reqData = [
+      {
+        key: '1',
+        senateShortname: 'BP',
+        slotFilled: 1,
+        slotRequirements: 3,
+      },
+      {
+        key: '2',
+        senateShortname: 'AO',
+        slotFilled: 5,
+        slotRequirements: 7,
+      },
+    ];
+    this.memberData = [
+      {
+        key: '1',
+        facultyName: 'Boaty McBoatface',
+        email: 'boat@gmail.com',
+        start_date: '2019-1-1',
+        end_date: '2020-1-1',
+        senateDivision: 'BO',
+      },
+      {
+        key: '2',
+        facultyName: 'Grace Hopper',
+        email: 'ghopper@gmail.com',
+        start_date: '2019-1-1',
+        end_date: '2020-1-1',
+        senateDivision: 'AO',
+      },
+    ];
     this.state = {
       data: this.slotData,
       cols: this.slotCol,
@@ -371,13 +401,21 @@ class Committee extends Component {
           mock.filledSlots
         )}
         <h1>Slots</h1>
-        {this.loadSlots(this.slotData, this.slotCol)}
+        {this.loadSlots(slotData, this.slotCol)}
         <h1>Requirements</h1>
         {/*{this.loadRequirements(this.reqData, this.reqCol)}*/}
-        <EditableFormTable handler={this.handler} currentCommittee={this.reqData} />
+        <EditableFormTable
+          handler={this.handler}
+          currentCommittee={this.reqData}
+          columns={this.reqCol}
+        />
         <h1>Members</h1>
         {/*{this.loadMembers(this.memberData, this.membersCol)}*/}
-        <EditableFormTable handler={this.handler} currentCommittee={this.reqData} />
+        <EditableFormTable
+          handler={this.handler}
+          currentCommittee={this.memberData}
+          columns={this.membersCol}
+        />
         {this.loadCommittee}
       </React.Fragment>
     );
@@ -399,6 +437,11 @@ class Committee extends Component {
   }
   loadMembers(memberData, columnData) {
     return <Table dataSource={memberData} columns={columnData} />;
+  }
+  handler() {
+    this.setState({
+      saved: true,
+    });
   }
 }
 
