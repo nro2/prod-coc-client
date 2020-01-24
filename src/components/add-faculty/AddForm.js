@@ -117,7 +117,7 @@ class AddForm extends React.Component {
         jobTitle: this.state._jobTitle,
         phoneNum: this.state._phoneNum,
         senateDivision: this.state._senateDivision,
-        departmens: this.state._departments,
+        departments: this.state._departments,
       })
       .then(() => {
         this.setState({
@@ -268,6 +268,7 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="Department">
           <Select
+            mode="multiple"
             className="aligner-item aligner-item--bottom-left select"
             showSearch
             placeholder="Select a Department"
