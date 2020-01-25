@@ -4,7 +4,6 @@ import React from 'react';
 import axios from 'axios';
 
 const { Option } = Select;
-const { OptionD } = Select;
 
 class AddForm extends React.Component {
   constructor(props) {
@@ -16,6 +15,7 @@ class AddForm extends React.Component {
       text: '',
       error: {},
       loading: true,
+      loading2: true,
 
       _firstName: '',
       buffer: '',
@@ -92,7 +92,7 @@ class AddForm extends React.Component {
       .then(response => {
         this.setState({
           departments: response.data,
-          loading: false,
+          loading2: false,
           selected: 0,
           error: {},
         });
@@ -167,9 +167,9 @@ class AddForm extends React.Component {
       </Option>
     ));
     const optionsD = this.state.departments.map(departments => (
-      <OptionD key={departments.name} value={departments.name}>
+      <Option key={departments.name} value={departments.name}>
         {departments.name}
-      </OptionD>
+      </Option>
     ));
 
     const { getFieldDecorator } = this.props.form;
@@ -252,14 +252,14 @@ class AddForm extends React.Component {
         </Form.Item>
         <Form.Item label="Senate Division">
           <Select
-            className="aligner-item aligner-item--bottom-left select"
+            //className="aligner-item aligner-item--bottom-left select"
             showSearch
             placeholder="Select a senate division"
             optionFilterProp="children"
             onChange={this.handleChange}
-            /*filterOption={(input, option) =>
+            filterOption={(input, option) =>
               option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }*/
+            }
             dropdownMatchSelectWidth={false}
             //size="small"
             loading={this.state.loading}
@@ -270,14 +270,14 @@ class AddForm extends React.Component {
         <Form.Item label="Department">
           <Select
             mode="multiple"
-            className="aligner-item aligner-item--bottom-left select"
+            //className="aligner-item aligner-item--bottom-left select"
             showSearch
-            placeholder="Select a Department"
+            placeholder="Select Department(s)"
             optionFilterProp="children"
             onChange={this.handleChangeD}
-            /*filterOption={(input, optionD) =>
-              optionD.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }*/
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
             dropdownMatchSelectWidth={false}
             //size="small"
             loading={this.state.loading}
