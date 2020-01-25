@@ -4,6 +4,7 @@ import React from 'react';
 import axios from 'axios';
 
 const { Option } = Select;
+const { OptionD } = Select;
 
 class AddForm extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class AddForm extends React.Component {
     this.fetchDivisions = this.fetchDivisions.bind(this);
     this.fetchDepartments = this.fetchDepartments.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleChangeD = this.handleChange.bind(this);
+    this.handleChangeD = this.handleChangeD.bind(this);
     this.handleFnameChange = this.handleFnameChange.bind(this);
     this.handleLnameChange = this.handleLnameChange.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -166,9 +167,9 @@ class AddForm extends React.Component {
       </Option>
     ));
     const optionsD = this.state.departments.map(departments => (
-      <Option key={departments.name} value={departments.name}>
+      <OptionD key={departments.name} value={departments.name}>
         {departments.name}
-      </Option>
+      </OptionD>
     ));
 
     const { getFieldDecorator } = this.props.form;
@@ -256,9 +257,9 @@ class AddForm extends React.Component {
             placeholder="Select a senate division"
             optionFilterProp="children"
             onChange={this.handleChange}
-            filterOption={(input, option) =>
+            /*filterOption={(input, option) =>
               option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+            }*/
             dropdownMatchSelectWidth={false}
             //size="small"
             loading={this.state.loading}
@@ -274,9 +275,9 @@ class AddForm extends React.Component {
             placeholder="Select a Department"
             optionFilterProp="children"
             onChange={this.handleChangeD}
-            filterOption={(input, option) =>
-              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+            /*filterOption={(input, optionD) =>
+              optionD.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }*/
             dropdownMatchSelectWidth={false}
             //size="small"
             loading={this.state.loading}
