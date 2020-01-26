@@ -169,6 +169,7 @@ class FacultyInfo extends Component {
       })
       .catch(err => {
         console.log(err);
+        return false;
       });
   }
 
@@ -209,7 +210,12 @@ class FacultyInfo extends Component {
       .then(response => {
         console.log(response.data);
         const facultyObject = response.data;
-        this.retrieveSenateData(facultyObject.senate_division_short_name);
+        const retrieved = this.retrieveSenateData(
+          facultyObject.senate_division_short_name
+        );
+        if (!retrieved) {
+          return false;
+        }
         this.setState({
           facultyName: facultyObject.full_name,
           facultyEmail: facultyObject.email,
@@ -226,13 +232,22 @@ class FacultyInfo extends Component {
       });
     const committeeIDList = await this.retrieveCommitteeAssignments(email);
     const departments = await this.retrieveDepartmentAssignments(email);
-    currentCommittees = await this.constructCommitteeAssociations(committeeIDList);
-    // const departmentIDList = departments.data.department_ids;
-    facultiCurrentDepartments = await this.constructDepartmentAssociations(
-      departments.data.department_ids
-    );
+    if (!committeeIDList) {
+      console.log(`No committee assignments for ${this.state.name}`);
+    } else {
+      currentCommittees = await this.constructCommitteeAssociations(
+        committeeIDList
+      );
+    }
+    if (!departments) {
+      console.log(`No department assignments for ${this.state.name}`);
+    } else {
+      facultiCurrentDepartments = await this.constructDepartmentAssociations(
+        departments.data.department_ids
+      );
+    }
     this.setState({
-      // Once all of our committees and departments are sorted, we can finally set their state.
+      // Once all of our committees and departments are built, we can finally set their state.
       facultiCurrentCommittees: currentCommittees,
       facultyDepartments: facultiCurrentDepartments,
     });
