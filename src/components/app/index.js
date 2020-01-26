@@ -40,7 +40,7 @@ class App extends Component {
             onCollapse={this.onCollapse}
           >
             <div className="logo" />
-            <Menu theme="dark" defaultSelectedKeys={['5']} mode="inline">
+            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
               <Menu.Item key="1">
                 <Icon type="home" />
                 <span>Home</span>
@@ -76,9 +76,11 @@ class App extends Component {
                 <Route path="/add-faculty" component={AddFaculty} />
                 <Route path="/get-faculty" component={GetFaculty} />
                 <Route path="/committees" component={Committees} />
-                <Route path="/faculty" component={FacultyInfo} />
+                <div className="faculty">
+                  <Route path="/faculty" component={FacultyInfo} />
+                </div>
               </Switch>
-              <Redirect to="/faculty" />
+              <Redirect to="/home" />
             </Content>
             <Footer className="footer">Ant Design ©2016 Created by Ant UED</Footer>
           </Layout>
