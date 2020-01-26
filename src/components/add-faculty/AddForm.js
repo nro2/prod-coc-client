@@ -1,6 +1,7 @@
 import { Form, Input, Select, Button } from 'antd';
 import React from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -10,21 +11,22 @@ class AddForm extends React.Component {
     this.state = {
       confirmDirty: false,
       senateDivisions: [],
-      departments: [],
+      departmentsList: [],
       text: '',
       error: {},
       loading: true,
       loading2: true,
 
-      _firstName: '',
+      firstName: '',
       buffer: '',
-      _lastName: '',
-      _email: '',
-      _jobTitle: '',
-      _phoneNum: '',
-      _senateDivision: '',
-      _fullName: '',
-      _departments: [],
+      lastName: '',
+      email: '',
+      jobTitle: '',
+      phoneNum: '',
+      senateDivision: '',
+      fullName: '',
+      departments: [],
+      redirectToGetFaculty: false,
     };
 
     this.fetchDivisions = this.fetchDivisions.bind(this);
@@ -38,19 +40,19 @@ class AddForm extends React.Component {
     this.handlePhoneChange = this.handlePhoneChange.bind(this);
   }
   handleFnameChange = event => {
-    this.setState({ _firstName: event.target.value });
+    this.setState({ firstName: event.target.value });
   };
   handleLnameChange = event => {
-    this.setState({ _lastName: event.target.value });
+    this.setState({ lastName: event.target.value });
   };
   handleEmailChange = event => {
-    this.setState({ _email: event.target.value });
+    this.setState({ email: event.target.value });
   };
   handleJobChange = event => {
-    this.setState({ _jobTitle: event.target.value });
+    this.setState({ jobTitle: event.target.value });
   };
   handlePhoneChange = event => {
-    this.setState({ _phoneNum: event.target.value });
+    this.setState({ phoneNum: event.target.value });
   };
 
   fetchDivisions() {
@@ -74,13 +76,13 @@ class AddForm extends React.Component {
 
   handleChange(value) {
     this.setState({
-      _senateDivision: value,
+      senateDivision: value,
     });
   }
 
   handleChangeD(value) {
     this.setState({
-      _departments: value,
+      departmentsList: value,
     });
   }
 
@@ -109,31 +111,31 @@ class AddForm extends React.Component {
   }
 
   handleSubmit = e => {
-    axios
-      .post('/api/faculty', {
-        fullName: this.state._firstName + ' ' + this.state._lastName,
-        email: this.state._email,
-        jobTitle: this.state._jobTitle,
-        phoneNum: this.state._phoneNum,
-        senateDivision: this.state._senateDivision,
-        departments: this.state._departments,
-      })
-      .then(() => {
-        this.setState({
-          text: 'Data insert was a success',
-        });
-      })
-      .catch(err => {
-        this.setState({
-          text: 'Insert was not successful',
-        });
-        console.log(err);
-      });
-
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        axios
+          .post('/api/faculty', {
+            fullName: this.state.firstName + ' ' + this.state.lastName,
+            email: this.state.email,
+            jobTitle: this.state.jobTitle,
+            phoneNum: this.state.phoneNum,
+            senateDivision: this.state.senateDivision,
+            departments: this.state.departments,
+          })
+          .then(() => {
+            this.setState({
+              text: 'Data insert was a success',
+              redirectToGetFaculty: true,
+            });
+          })
+          .catch(err => {
+            this.setState({
+              text: 'Insert was not successful',
+            });
+            console.log(err);
+          });
       }
     });
   };
@@ -154,6 +156,11 @@ class AddForm extends React.Component {
     ));
 
     const { getFieldDecorator } = this.props.form;
+
+    const redirect = this.state.redirectToGetFaculty;
+    if (redirect === true) {
+      return <Redirect to="/get-faculty" />;
+    }
 
     const formItemLayout = {
       labelCol: {
