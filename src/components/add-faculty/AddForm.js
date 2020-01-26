@@ -1,6 +1,5 @@
 import { Form, Input, Select, Button } from 'antd';
 import React from 'react';
-//  import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 const { Option } = Select;
@@ -28,7 +27,6 @@ class AddForm extends React.Component {
       _departments: [],
     };
 
-    //  this.addItem = this.addItem.bind(this);
     this.fetchDivisions = this.fetchDivisions.bind(this);
     this.fetchDepartments = this.fetchDepartments.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -140,33 +138,16 @@ class AddForm extends React.Component {
     });
   };
 
-  handleConfirmBlur = e => {
-    const { value } = e.target;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  handleWebsiteChange = value => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(
-        domain => `${value}${domain}`
-      );
-    }
-    this.setState({ autoCompleteResult });
-  };
-
   render() {
-    const options = this.state.senateDivisions.map(senate_division => (
+    const SenateOptions = this.state.senateDivisions.map(senateDivision => (
       <Option
-        key={senate_division.senate_division_short_name}
-        value={senate_division.senate_division_short_name}
+        key={senateDivision.senate_division_short_name}
+        value={senateDivision.senate_division_short_name}
       >
-        {senate_division.senate_division_short_name}
+        {senateDivision.senate_division_short_name}
       </Option>
     ));
-    const optionsD = this.state.departments.map(departments => (
+    const DevisionOptions = this.state.departments.map(departments => (
       <Option key={departments.name} value={departments.name}>
         {departments.name}
       </Option>
@@ -205,7 +186,7 @@ class AddForm extends React.Component {
             rules: [
               {
                 required: true,
-                message: 'Please input Faculty first name!',
+                message: 'Please input first name',
                 whitespace: true,
               },
             ],
@@ -216,7 +197,7 @@ class AddForm extends React.Component {
             rules: [
               {
                 required: true,
-                message: 'Please input Faculty Last name!',
+                message: 'Please input last name',
                 whitespace: true,
               },
             ],
@@ -227,62 +208,50 @@ class AddForm extends React.Component {
             rules: [
               {
                 type: 'email',
-                message: 'The input is not valid E-mail!',
+                message: 'The input is not valid e-mail',
               },
               {
                 required: true,
-                message: 'Please input faculty E-mail!',
+                message: 'Please input  e-mail',
               },
             ],
           })(<Input placeholder="Email" onChange={this.handleEmailChange} />)}
         </Form.Item>
         <Form.Item label="Job Title">
           {getFieldDecorator('job', {
-            rules: [{ required: false, message: 'Please input Job Title!' }],
+            rules: [{ required: false, message: 'Please input job title' }],
           })(<Input placeholder="Job Title" onChange={this.handleJobChange} />)}
         </Form.Item>
         <Form.Item label="Phone Number">
           {getFieldDecorator('phone', {
-            rules: [
-              { required: false, message: 'Please input faculty phone number!' },
-            ],
+            rules: [{ required: false, message: 'Please input phone number' }],
           })(
             <Input placeholder="###-###-####" onChange={this.handlePhoneChange} />
           )}
         </Form.Item>
         <Form.Item label="Senate Division">
           <Select
-            //className="aligner-item aligner-item--bottom-left select"
             showSearch
             placeholder="Select a senate division"
             optionFilterProp="children"
             onChange={this.handleChange}
-            filterOption={(input, option) =>
-              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
             dropdownMatchSelectWidth={false}
-            //size="small"
             loading={this.state.loading}
           >
-            {options}
+            {SenateOptions}
           </Select>
         </Form.Item>
         <Form.Item label="Department">
           <Select
             mode="multiple"
-            //className="aligner-item aligner-item--bottom-left select"
             showSearch
-            placeholder="Select Department(s)"
+            placeholder="Select department(s)"
             optionFilterProp="children"
             onChange={this.handleChangeD}
-            filterOption={(input, option) =>
-              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
             dropdownMatchSelectWidth={false}
-            //size="small"
             loading={this.state.loading}
           >
-            {optionsD}
+            {DevisionOptions}
           </Select>
         </Form.Item>
 
