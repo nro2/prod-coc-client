@@ -12,13 +12,11 @@ class AddForm extends React.Component {
       confirmDirty: false,
       senateDivisions: [],
       departmentsList: [],
-      text: '',
       error: {},
-      loading: true,
-      loading2: true,
+      loadingDivisions: true,
+      loadingDepartments: true,
 
       firstName: '',
-      buffer: '',
       lastName: '',
       email: '',
       jobTitle: '',
@@ -126,7 +124,6 @@ class AddForm extends React.Component {
           })
           .then(() => {
             this.setState({
-              text: 'Data insert was a success',
               redirectToGetFaculty: true,
             });
           })
@@ -141,7 +138,7 @@ class AddForm extends React.Component {
   };
 
   render() {
-    const SenateOptions = this.state.senateDivisions.map(senateDivision => (
+    const senateOptions = this.state.senateDivisions.map(senateDivision => (
       <Option
         key={senateDivision.senate_division_short_name}
         value={senateDivision.senate_division_short_name}
@@ -149,7 +146,7 @@ class AddForm extends React.Component {
         {senateDivision.senate_division_short_name}
       </Option>
     ));
-    const DevisionOptions = this.state.departments.map(departments => (
+    const divisionOptions = this.state.departments.map(departments => (
       <Option key={departments.name} value={departments.name}>
         {departments.name}
       </Option>
@@ -243,9 +240,9 @@ class AddForm extends React.Component {
             optionFilterProp="children"
             onChange={this.handleChange}
             dropdownMatchSelectWidth={false}
-            loading={this.state.loading}
+            loadingDivisions={this.state.loading}
           >
-            {SenateOptions}
+            {senateOptions}
           </Select>
         </Form.Item>
         <Form.Item label="Department">
@@ -256,9 +253,9 @@ class AddForm extends React.Component {
             optionFilterProp="children"
             onChange={this.handleChangeD}
             dropdownMatchSelectWidth={false}
-            loading={this.state.loading}
+            loadingDepartments={this.state.loading}
           >
-            {DevisionOptions}
+            {divisionOptions}
           </Select>
         </Form.Item>
 
