@@ -115,23 +115,21 @@ class FacultyInfo extends Component {
     }
     let committeeList = [];
     let departmentList = [];
-    let length = committees.data.length;
-    let i = 0;
     // Begin manipulating our promise objects for the data we want.
     // They work the same as any other object would.
-    for (i = 0; i < length; i++) {
+    committees.data.forEach(committees => {
       committeeList.push({
-        id: committees.data[i].committee_id,
-        name: committees.data[i].name,
+        id: committees.committee_id,
+        name: committees.name,
       });
-    }
-    length = departments.data.length;
-    for (i = 0; i < length; i++) {
+    });
+
+    departments.data.forEach(departments => {
       departmentList.push({
-        id: departments.data[i].department_id,
-        name: departments.data[i].name,
+        id: departments.committee_id,
+        name: departments.name,
       });
-    }
+    });
     this.setState({
       // Generate local lists and only modify states through setState.
       // We must treat states as immutable.
@@ -166,6 +164,7 @@ class FacultyInfo extends Component {
         this.setState({
           facultySenate: senateInfo.name,
         });
+        return true;
       })
       .catch(err => {
         console.log(err);
@@ -205,15 +204,15 @@ class FacultyInfo extends Component {
   getFacultyByEmail = async email => {
     let currentCommittees = [];
     let facultiCurrentDepartments = [];
+    let retrieved = false;
     axios
       .get(`/api/faculty/${email}`)
       .then(response => {
         console.log(response.data);
         const facultyObject = response.data;
-        const retrieved = this.retrieveSenateData(
-          facultyObject.senate_division_short_name
-        );
-        if (!retrieved) {
+        this.retrieveSenateData(facultyObject.senate_division_short_name);
+        if (!this.state.facultySenate) {
+          alert(retrieved);
           return false;
         }
         this.setState({
