@@ -32,8 +32,17 @@ class GetReports extends Component {
   }
 
   fetchCommitteeInfo() {
+    //var Name = this.state.committees;
+    const id = this.state.committees.map(committee => {
+      return (
+        <li key={`committee-${committee.committee_id}`}>
+          {committee.committee_id}
+        </li>
+      );
+    });
+
     axios
-      .get('/api/committeeInfo/committees')
+      .get(`/api/committeeInfo/${id}`)
       .then(response => {
         this.setState({
           committeeInfo: response.data,
@@ -56,25 +65,23 @@ class GetReports extends Component {
 
   render() {
     const Name = this.state.committees.map(committee => {
-      return <li key={`committee-${committee.committee_id}`}>{committee.name}</li>;
-    });
-
-    const cInfo = this.state.committeeInfo.map(committeeinfo => {
       return (
-        <li key={`committee-${committeeinfo.committee_id}`}>
-          {committeeinfo.committee_id}
+        <li key={`committee-${committee.committee_id}`}>
+          {committee.name + ' ID: ' + committee.committee_id}
         </li>
       );
     });
 
-    axios.get(`/api/committeeInfo/${Name}`).then(response => {
-      const Info = response.data;
-      this.setState({ Info });
+    const Info = this.state.committeeInfo.map(committeeinfo => {
+      return (
+        <li key={`committee-${committeeinfo.committee_id}`}>
+          {committeeinfo.committee_id +
+            committeeinfo.name +
+            committeeinfo.description +
+            committeeinfo.total_slots}
+        </li>
+      );
     });
-
-    //const Info = this.state.committees.map(committeeinfo => {
-    //  return axios.get(`api/committeeInfo/${committeeinfo.committee_id}`)
-    // });
 
     return (
       <div>
@@ -82,18 +89,16 @@ class GetReports extends Component {
         <div>
           <Descriptions>
             <Descriptions.Item label="">{Name}</Descriptions.Item>
-          </Descriptions>
-
-          <Descriptions>
             <Descriptions.Item label="Description">{}</Descriptions.Item>
-          </Descriptions>
-
-          <Descriptions>
             <Descriptions.Item label="Total Slots">{}</Descriptions.Item>
           </Descriptions>
 
-          {/*this.state.Info.map(infos => <li>{infos.Name}</li>)*/}
-          {cInfo}
+          <Descriptions>
+            <Descriptions.Item label="Members">{}</Descriptions.Item>
+            <Descriptions.Item label="Start Date">{}</Descriptions.Item>
+            <Descriptions.Item label="End Date">{}</Descriptions.Item>
+          </Descriptions>
+          {Info}
         </div>
       </div>
     );
