@@ -12,6 +12,8 @@ import AddFaculty from '../add-faculty';
 import Committees from '../committees';
 import GetFaculty from '../get-faculty';
 import Committee from '../committee';
+import FacultyInfo from '../faculty';
+
 import Home from '../home';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -43,46 +45,47 @@ class App extends Component {
             <Menu theme="dark" defaultSelectedKeys={['5']} mode="inline">
               <Menu.Item key="1">
                 <Icon type="home" />
-                <span>Home</span>
-                <Link to="/home" />
-              </Menu.Item>
+                <span> Home </span> <Link to="/home" />
+              </Menu.Item>{' '}
               <Menu.Item key="2">
                 <Icon type="usergroup-add" />
-                <span>Add Faculty</span>
-                <Link to="/add-faculty" />
-              </Menu.Item>
+                <span> Add Faculty </span> <Link to="/add-faculty" />
+              </Menu.Item>{' '}
               <Menu.Item key="3">
                 <Icon type="user" />
-                <span>Get Faculty</span>
-                <Link to="/get-faculty" />
-              </Menu.Item>
+                <span> Get Faculty </span> <Link to="/get-faculty" />
+              </Menu.Item>{' '}
               <Menu.Item key="4">
                 <Icon type="appstore" />
-                <span>Committees</span>
-                <Link to="/committees" />
-              </Menu.Item>
+                <span> Committees </span> <Link to="/committees" />
+              </Menu.Item>{' '}
               <Menu.Item key="5">
                 <Icon type="user" />
-                <span>Committee</span>
-                <Link to="/committee" />
-              </Menu.Item>
-            </Menu>
-          </Sider>
+                <span> Faculty Info </span> <Link to="/committee" />
+              </Menu.Item>{' '}
+            </Menu>{' '}
+          </Sider>{' '}
           <Layout>
             <Header className="header" />
             <Content className="aligner content">
               <Switch>
-                <Route path="/home" component={Home} />
-                <Route path="/add-faculty" component={AddFaculty} />
-                <Route path="/get-faculty" component={GetFaculty} />
-                <Route path="/committees" component={Committees} />
-                <Route path="/committee" component={Committee} />
-              </Switch>
+                <Route path="/home" component={Home} />{' '}
+                <Route path="/add-faculty" component={AddFaculty} />{' '}
+                <Route path="/get-faculty" component={GetFaculty} />{' '}
+                <Route path="/committees" component={Committees} />{' '}
+                <Route path="/committee" component={Committee} />{' '}
+                <div className="faculty">
+                  <Route path="/faculty" component={FacultyInfo} />{' '}
+                </div>{' '}
+              </Switch>{' '}
               <Redirect to="/committee" />
-            </Content>
-            <Footer className="footer">Ant Design ©2016 Created by Ant UED</Footer>
-          </Layout>
-        </Layout>
+            </Content>{' '}
+            <Footer className="footer">
+              {' '}
+              Ant Design© 2016 Created by Ant UED{' '}
+            </Footer>{' '}
+          </Layout>{' '}
+        </Layout>{' '}
       </Router>
     );
   }

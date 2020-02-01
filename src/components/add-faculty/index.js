@@ -1,52 +1,16 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import AddForm from './AddForm';
 
 class AddFaculty extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      text: '',
-    };
-
-    this.addItem = this.addItem.bind(this);
-  }
-
-  addItem(e) {
-    axios
-      .post('/api', {
-        firstName: this._firstName.value,
-        lastName: this._lastName.value,
-        phoneNum: this._phoneNum.value,
-      })
-      .then(() => {
-        this.setState({
-          text: 'Data insert was a success',
-        });
-        this._firstName.value = '';
-        this._lastName.value = '';
-        this._phoneNum.value = '';
-      })
-      .catch(err => {
-        this.setState({
-          text: 'Insert was not successful',
-        });
-        console.log(err);
-      });
-
-    e.preventDefault();
+    this.state = {};
   }
 
   render() {
     return (
       <div className="Add">
-        <h1>Add faculty here</h1>
-        <p>Message: {this.state.text}</p>
-        <form onSubmit={this.addItem}>
-          <input ref={a => (this._firstName = a)} placeholder="First Name" />
-          <input ref={a => (this._lastName = a)} placeholder="Last Name" />
-          <input ref={a => (this._phoneNum = a)} placeholder="Phone Number" />
-          <button type="submit">Add</button>
-        </form>
+        <AddForm />
       </div>
     );
   }
