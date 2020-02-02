@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Input, Popconfirm, Form, InputNumber } from 'antd';
+import { Table, Divider } from 'antd';
 
 const pageSize = 5; // Page size to show pagination
 const reqColumns = [
@@ -17,9 +17,15 @@ const reqColumns = [
   },
   {
     title: 'Required',
-    dataIndex: 'slotRequirements',
-    key: 'slotRequirements',
+    dataIndex: 'slotMinimum',
+    key: 'slotMinimum',
     editable: true,
+  },
+  {
+    title: 'To Be Filled',
+    dataIndex: 'slotsRemaining',
+    key: 'slotsRemaining',
+    editable: false,
   },
   {
     title: 'Action',
@@ -63,8 +69,11 @@ export default class RequirementsTable extends React.Component {
     return (
       <div>
         {this.iterate()}
-        <h3>Requirements</h3>
+        <Divider type="horizontal" orientation="left">
+          Requirements
+        </Divider>
         <Table
+          bordered
           dataSource={this.props.data['committeeSlots']}
           columns={reqColumns}
           pagination={

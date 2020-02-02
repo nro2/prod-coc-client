@@ -61,7 +61,7 @@ class App extends Component {
               </Menu.Item>{' '}
               <Menu.Item key="5">
                 <Icon type="user" />
-                <span> Faculty Info </span> <Link to="/committee" />
+                <span> Committee Info </span> <Link to="/committee" />
               </Menu.Item>{' '}
             </Menu>{' '}
           </Sider>{' '}

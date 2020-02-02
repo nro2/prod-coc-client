@@ -3,6 +3,7 @@ import CommitteeHeader from './committeeHeader.jsx';
 import CommitteeSlots from './committeeSlots.jsx';
 import RequirementsTable from './requirementsTable.jsx';
 import MembersTable from './membersTable.jsx';
+import axios from 'axios';
 
 // Axios used to pull data from endpoint
 //import axios from 'axios';
@@ -13,50 +14,54 @@ const committees = [
     name: 'Committee on Space Exploration',
     description: 'About exploring space',
     totalSlots: '10',
-    filledSlots: '5',
+    slotsRemaining: '5',
     committeeSlots: [
       {
         key: '1',
         senateShortname: 'BP',
-        slotRequirements: 3,
+        slotFilled: 3,
+        slotMinimum: 1,
+        slotsRemaining: 3,
       },
       {
         key: '2',
         senateShortname: 'AO',
-        slotRequirements: 7,
+        slotFilled: 3,
+        slotMinimum: 1,
+        slotsRemaining: 3,
       },
     ],
-    memberData: [
+    committeeAssignment: [
       {
         key: '1',
         facultyName: 'Boaty McBoatface',
-        email: 'boat@gmail.com',
-        start_date: '2019-1-1',
-        end_date: '2020-1-1',
+        facultyEmail: 'boat@gmail.com',
+        startDate: '2019-1-1',
+        endDate: '2020-1-1',
         senateDivision: 'BP',
       },
       {
         key: '2',
         facultyName: 'Grace Hopper',
-        email: 'ghopper@gmail.com',
-        start_date: '2019-1-1',
-        end_date: '2020-1-1',
+        facultyEmail: 'ghopper@gmail.com',
+        startDate: '2019-1-1',
+        endDate: '2020-1-1',
         senateDivision: 'AO',
       },
       {
         key: '3',
         facultyName: 'Boaty McBoatface',
-        email: 'boat@gmail.com',
-        start_date: '2019-1-1',
-        end_date: '2020-1-1',
+        facultyEmail: 'boat@gmail.com',
+        startDate: '2019-1-1',
+        endDate: '2020-1-1',
         senateDivision: 'BP',
       },
       {
         key: '4',
         facultyName: 'Grace Hopper',
-        email: 'ghopper@gmail.com',
-        start_date: '2019-1-1',
-        end_date: '2020-1-1',
+        facultyEmail: 'ghopper@gmail.com',
+        startDate: '2019-1-1',
+        endDate: '2020-1-1',
         senateDivision: 'AO',
       },
     ],
@@ -65,15 +70,33 @@ const committees = [
 // Start App
 export default class App extends React.Component {
   constructor(props) {
-    super(props); //since we are extending class Table so we have to use super in order to override Component class constructor
+    super(props);
+
     this.state = {
       committees,
     };
   }
-
+  componentDidMount() {
+    if (this.props.id) {
+      this.getCommittee(this.props.id);
+    } else {
+      console.log('I am inside the else on componentDidMount');
+      this.getCommittee(1);
+    }
+  }
+  getCommittee = async id => {
+    console.log('I am inside getCommittee');
+    axios.get(`/api/committee/${id}`).then(response => {
+      console.log('I am inside the axios call');
+      console.log(response.data);
+      this.setState({
+        committees: response.data,
+      });
+    });
+  };
   render() {
     return (
-      <div className="committeTable">
+      <div className="committeeTable">
         {this.state.committees.map((value, index) => {
           return (
             <div key={value + index} className="table-wrapper">

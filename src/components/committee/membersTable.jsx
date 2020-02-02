@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Input, Popconfirm, Form, InputNumber } from 'antd';
+import { Table, Divider } from 'antd';
 
 const pageSize = 20; // Page size to show pagination
 const memberColumns = [
@@ -11,20 +11,20 @@ const memberColumns = [
   },
   {
     title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
+    dataIndex: 'facultyEmail',
+    key: 'facultyEmail',
     editable: true,
   },
   {
     title: 'Start Date',
-    dataIndex: 'start_date',
-    key: 'start_date',
+    dataIndex: 'startDate',
+    key: 'startDate',
     editable: true,
   },
   {
     title: 'End Date',
-    dataIndex: 'end_date',
-    key: 'end_date',
+    dataIndex: 'endDate',
+    key: 'endDate',
     editable: true,
   },
   {
@@ -54,12 +54,15 @@ export default class MembersTable extends React.Component {
   render() {
     return (
       <div>
-        <h3>Members</h3>
+        <Divider type="horizontal" orientation="left">
+          Members
+        </Divider>
         <Table
-          dataSource={this.props.data['memberData']}
+          bordered
+          dataSource={this.props.data['committeeAssignment']}
           columns={memberColumns}
           pagination={
-            this.props.data['memberData'].length > pageSize && { pageSize }
+            this.props.data['committeeAssignment'].length > pageSize && { pageSize }
           }
         />
       </div>

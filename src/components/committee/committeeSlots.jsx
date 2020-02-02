@@ -1,12 +1,12 @@
 import React from 'react';
-import { Table, Input, Popconfirm, Form, InputNumber } from 'antd';
+import { Divider } from 'antd';
 
-const pageSize = 5; // Page size to show pagination
-const slotColumns = [
+//const pageSize = 5; // Page size to show pagination
+/*const slotColumns = [
   {
-    title: 'Filled',
-    dataIndex: 'filledSlots',
-    key: 'filledSlots',
+    title: 'To Be Filled',
+    dataIndex: 'slotsRemaining',
+    key: 'slotsRemaining',
   },
   {
     title: 'Total',
@@ -14,7 +14,7 @@ const slotColumns = [
     key: 'totalSlots',
   },
 ];
-
+*/
 export default class CommitteeSlots extends React.Component {
   constructor(props) {
     super(props);
@@ -31,12 +31,13 @@ export default class CommitteeSlots extends React.Component {
     //console.log(this.slots);
     return (
       <div>
-        <h3>Slots</h3>
-        <Table
-          dataSource={this.slots}
-          columns={slotColumns}
-          pagination={this.slots.length > pageSize && { pageSize }}
-        />
+        <Divider type="horizontal" orientation="left">
+          Slots
+        </Divider>
+        <h4>To Be Filled / Total Slots</h4>
+        <h4>
+          {this.props.data['slotsRemaining']} / {this.props.data['totalSlots']}
+        </h4>
       </div>
     );
   }
