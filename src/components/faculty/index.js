@@ -1,61 +1,13 @@
 import React, { Component } from 'react';
-import {
-  Table,
-  Button,
-  Divider,
-  Form,
-  Popconfirm,
-  Input,
-  InputNumber,
-  Avatar,
-  Typography,
-  notification,
-  Dropdown,
-  Menu,
-} from 'antd';
+import { Button, notification, Menu } from 'antd';
 import './faculty.css';
+import FacultyInfo from './facultyInfo';
+import CommitteeTables from './committeeTables';
 import axios from 'axios';
-const { Paragraph } = Typography;
 
-const textStyle = {
-  color: 'black',
-  fontSize: '85%',
-  whiteSpace: 'pre-line',
-};
-
-const EditableContext = React.createContext();
-
-class FacultyInfo extends Component {
+class Faculty extends Component {
   constructor(props) {
     super(props);
-    this.columns = [
-      // this is for our columns in our <Table> component
-      {
-        title: 'Name',
-        dataIndex: 'committee',
-        key: 'committee',
-      },
-      {
-        title: 'Slots available',
-        dataIndex: 'slots',
-        key: 'slots',
-      },
-      {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-      },
-      {
-        title: 'Action',
-        dataIndex: '',
-        key: 'x',
-        render: () => (
-          <span>
-            <Button type="danger">Delete</Button>
-          </span>
-        ),
-      },
-    ];
     this.departmentsDropdownMenu = '';
     this.committeesDropdownMenu = '';
     this.facultyData = [
@@ -73,7 +25,7 @@ class FacultyInfo extends Component {
       allDepartments: [],
       //     interestedCommitteeData: [], // empty for now ..
       //     chosenCommitteeData: [], // empty for now ..
-      cols: this.columns,
+      //cols: this.columns,
       loading: false,
       editingKey: '',
       saved: false,
@@ -254,10 +206,10 @@ class FacultyInfo extends Component {
   };
 
   constructDepartmentAssociations = async ids => {
-    var i = 0;
+    let i = 0;
     let length = ids.length;
-    var facultiDepartments = [];
-    var department = '';
+    let facultiDepartments = [];
+    let department = '';
     for (i = 0; i < length; i++) {
       department = await this.retrieveDepartmentByID(ids[i]);
       facultiDepartments.push({
@@ -271,7 +223,7 @@ class FacultyInfo extends Component {
   };
 
   constructCommitteeAssociations = async ids => {
-    var i = 0;
+    let i = 0;
     let length = ids.data.length;
     let facultiCurrentCommittees = [];
     let idList = [];
@@ -404,21 +356,22 @@ class FacultyInfo extends Component {
         Lots of arguments for LoadFaculti() to reduce the 'this.state.stuff'
         syntax that would make LoadFaculti unreadable
         */}
-        {this.renderFaculti(
-          this.state.facultyName,
-          this.state.facultyJob,
-          this.state.facultyEmail,
-          this.state.facultyPhone,
-          this.state.facultySenate,
-          this.state.facultyDepartments,
-          this.state.facultyExpert
-        )}
-        {this.renderCurrentCommittees(
-          this.state.facultiCurrentCommittees,
-          this.state.cols
-        )}
-        {this.renderChosenCommittees(this.state.data, this.state.cols)}
-        {this.renderInterestedCommittees(this.state.data, this.state.cols)}
+        <FacultyInfo
+          object={this.state}
+          departmentsDropdownMenu={this.departmentsDropdownMenu}
+          enableSaveChangesButton={this.enableSaveChangesButton}
+          updateFaculty={this.updateFaculty}
+          sayHello={this.sayHello}
+          getFacultyByEmail={this.getFacultyByEmail}
+          removeDepartment={this.removeDepartment}
+        />
+        <CommitteeTables
+          facultiCurrentCommittees={this.state.facultiCurrentCommittees}
+          mockData={this.state.data}
+          sayHello={this.sayHello}
+          enableSaveChangesButton={this.enableSaveChangesButton}
+          committeesDropdownMenu={this.committeesDropdownMenu}
+        />
         {this.renderUpdateButton(this.start, this.state.saved, loading)}
       </React.Fragment>
     );
@@ -434,365 +387,23 @@ class FacultyInfo extends Component {
       </Button>
     );
   }
-
-  renderFaculti(name, jobTitle, email, phone, senateDiv, departments, expertise) {
-    // .map() list function is relating the department name to it's own specific delete button
-    // and placing it in an HTML list that we call later
-    const localDepts = departments.map(departments => (
-      <li key={departments.key}>
-        {departments.name}
-        <Button
-          type="link"
-          onClick={() => {
-            this.removeDepartment(departments);
-          }}
-          size="small"
-        >
-          x
-        </Button>
-      </li>
-    ));
-    // Maps the departments list as an HTML list to localDepts
-    return (
-      <span>
-        <h1>
-          <Avatar size={64} icon="user" />
-          <Divider type="vertical" />
-          {name}
-          <Divider type="vertical" />
-          <i style={textStyle}>{jobTitle}</i>
-          <Divider type="vertical" />
-          <span style={textStyle}>{expertise}</span>
-          <Divider type="vertical" />
-          <Button type="link" onClick={this.sayHello} size="small">
-            Change
-          </Button>
-        </h1>
-        <p style={{ fontSize: '90%' }}>
-          <b>Senate: </b>
-          <Paragraph
-            style={{ display: 'inline' }}
-            editable={{ onChange: this.onSenateChange }}
-          >
-            {senateDiv}
-          </Paragraph>
-          <Divider type="vertical" />
-          <Button
-            size="small"
-            onClick={() => {
-              this.getFacultyByEmail('wolsborn@pdx.edu');
-            }}
-          >
-            Retrieve Joshy
-          </Button>
-        </p>
-        <Divider type="horizontal" orientation="left">
-          Contact Information
-        </Divider>
-        <p style={textStyle}>
-          <ul>
-            <li>{email + '\n'}</li>
-            <li>
-              <Paragraph editable={{ onChange: this.onPhoneChange }}>
-                {phone}
-              </Paragraph>
-            </li>
-          </ul>
-          <Divider type="horizontal" orientation="left">
-            Departments
-          </Divider>
-          <ul>
-            {localDepts}
-            {/*TODO: make button have departments in the dropdown, and disabled when no faculty member is selected*/}
-            <Dropdown overlay={this.departmentsDropdownMenu}>
-              <Button
-                type="link"
-                icon="down"
-                onClick={() => this.sayHello()}
-                size="small"
-              >
-                Add
-              </Button>
-            </Dropdown>
-          </ul>
-        </p>
-      </span>
-    ); // Everything above is HTML/AntDesign magic to make it look pretty. This is ONLY Faculti info.
-  }
-
-  renderCurrentCommittees() {
-    // load current committees that this faculty member is a part of, start/end dates are editable
-    return (
-      <span>
-        <Dropdown overlay={this.committeesDropdownMenu}>
-          <Button
-            type="primary"
-            icon="plus"
-            size="small"
-            onClick={() => this.sayHello()}
-          ></Button>
-        </Dropdown>
-        <Divider type="vertical" />
-        <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
-        <EditableFormTable
-          enableSaveChangesButton={this.enableSaveChangesButton}
-          currentCommittee={this.state.facultiCurrentCommittees}
-        />
-      </span>
-    );
-  }
-
-  renderChosenCommittees(facultyData, columnData) {
-    // Loads the chosen comittee table
-    return (
-      <span>
-        <Dropdown overlay={this.committeesDropdownMenu}>
-          <Button
-            type="primary"
-            icon="plus"
-            size="small"
-            onClick={() => this.sayHello()}
-          ></Button>
-        </Dropdown>
-        <Divider type="vertical" />
-        <h1 style={{ display: 'inline' }}>Committees Chosen:</h1>
-        <Table dataSource={facultyData} bordered columns={columnData} />
-      </span>
-    );
-  }
-
-  renderInterestedCommittees(facultyData, columnData) {
-    // loads the interested committee table
-    return (
-      <span>
-        <Dropdown overlay={this.committeesDropdownMenu}>
-          <Button
-            type="primary"
-            icon="plus"
-            size="small"
-            onClick={() => this.sayHello()}
-          ></Button>
-        </Dropdown>
-        <Divider type="vertical" />
-        <h1 style={{ display: 'inline' }}>Committees interested in:</h1>
-        <Table dataSource={facultyData} bordered columns={columnData} />
-      </span>
-    );
-  }
-
-  enableSaveChangesButton() {
+  enableSaveChangesButton(phone, senate, committeeID) {
     // enableSaveChangesButton is triggered by child state whenever start/end dates are edited and saved
     // this is what allows the 'save changes button' to be enabled when changes are made
-    this.setState({
-      saved: true,
-    });
-  }
-}
-
-class EditableCell extends Component {
-  getInput = () => {
-    if (this.props.inputType === 'number') {
-      return <InputNumber />;
+    if (committeeID) {
+      this.setState({
+        saved: true,
+      });
+      // Add editable functionality for current committee tables
     }
-    return <Input />;
-  };
-
-  renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      children,
-      ...restProps
-    } = this.props;
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please input the ${title}!`,
-                },
-              ],
-              initialValue: record[dataIndex],
-            })(this.getInput())}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-  render() {
-    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
+    if (phone || senate) {
+      this.setState({
+        saved: true,
+        facultyPhone: phone,
+        facultySenate: senate,
+      });
+    }
   }
 }
 
-class EditableTable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      facultiCurrentCommittees: '',
-      editingKey: '',
-      saved: false,
-    };
-    this.columns = [
-      {
-        title: 'Name',
-        dataIndex: 'committee',
-        key: 'committee',
-        editable: false,
-      },
-      {
-        title: 'Slots available',
-        dataIndex: 'slots',
-        key: 'slots',
-        editable: false,
-      },
-      {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-        editable: false,
-      },
-      {
-        title: 'Start',
-        dataIndex: 'startDate',
-        key: 'startDate',
-        editable: true,
-      },
-      {
-        title: 'End',
-        dataIndex: 'endDate',
-        key: 'endDate',
-        editable: true,
-      },
-      {
-        title: 'Action',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          const { editingKey } = this.state;
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {form => (
-                  <Button
-                    type="link"
-                    onClick={() => this.save(form, record.key)}
-                    style={{ marginRight: 8 }}
-                  >
-                    Save
-                  </Button>
-                )}
-              </EditableContext.Consumer>
-              <Popconfirm
-                title="Cancel without saving?"
-                onConfirm={() => this.cancel(record.key)}
-              >
-                <Button type="link">Cancel</Button>
-              </Popconfirm>
-            </span>
-          ) : (
-            <span>
-              <Button
-                type="primary"
-                disabled={editingKey !== ''}
-                onClick={() => this.edit(record.key)}
-                ghost
-              >
-                Edit
-              </Button>
-              <Divider type="vertical" />
-              <Button type="danger">Delete</Button>
-            </span>
-          );
-        },
-      },
-    ];
-  }
-  // TODO: Find a new way of updating child state, as this method is deprecated
-
-  componentWillReceiveProps(newProps) {
-    this.setState({ facultiCurrentCommittees: newProps.currentCommittee });
-  }
-
-  isEditing = record => record.key === this.state.editingKey;
-  cancel = () => {
-    this.setState({ editingKey: '' });
-  };
-
-  save(form, key) {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
-      const newData = [...this.state.facultiCurrentCommittees];
-      const index = newData.findIndex(item => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        this.setState({ facultiCurrentCommittees: newData, editingKey: '' });
-        this.props.enableSaveChangesButton(); // enableSaveChangesButton is placed here to prevent undesirable behavior
-      } else {
-        newData.push(row);
-        this.setState({ facultiCurrentCommittees: newData, editingKey: '' });
-        this.props.enableSaveChangesButton(); // enableSaveChangesButton is placed here to prevent undesirable behavior
-      }
-    });
-  }
-
-  edit(key) {
-    this.setState({ editingKey: key });
-  }
-
-  render() {
-    const components = {
-      body: {
-        cell: EditableCell,
-      },
-    };
-
-    const columns = this.columns.map(col => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: record => ({
-          record,
-          inputType: col.dataIndex === 'age' ? 'number' : 'text',
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(record),
-        }),
-      };
-    });
-
-    return (
-      <EditableContext.Provider value={this.props.form}>
-        <Table
-          components={components}
-          bordered
-          dataSource={this.state.facultiCurrentCommittees}
-          columns={columns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
-        />
-      </EditableContext.Provider>
-    );
-  }
-}
-
-const EditableFormTable = Form.create()(EditableTable);
-
-export default FacultyInfo;
+export default Faculty;
