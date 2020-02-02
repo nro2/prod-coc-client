@@ -5,110 +5,45 @@ import RequirementsTable from './requirementsTable.jsx';
 import MembersTable from './membersTable.jsx';
 import axios from 'axios';
 
-// Axios used to pull data from endpoint
-//import axios from 'axios';
-
-const committees = [
-  {
-    id: 1,
-    name: 'Committee on Space Exploration',
-    description: 'About exploring space',
-    totalSlots: '10',
-    slotsRemaining: '5',
-    committeeSlots: [
-      {
-        key: '1',
-        senateShortname: 'BP',
-        slotFilled: 3,
-        slotMinimum: 1,
-        slotsRemaining: 3,
-      },
-      {
-        key: '2',
-        senateShortname: 'AO',
-        slotFilled: 3,
-        slotMinimum: 1,
-        slotsRemaining: 3,
-      },
-    ],
-    committeeAssignment: [
-      {
-        key: '1',
-        facultyName: 'Boaty McBoatface',
-        facultyEmail: 'boat@gmail.com',
-        startDate: '2019-1-1',
-        endDate: '2020-1-1',
-        senateDivision: 'BP',
-      },
-      {
-        key: '2',
-        facultyName: 'Grace Hopper',
-        facultyEmail: 'ghopper@gmail.com',
-        startDate: '2019-1-1',
-        endDate: '2020-1-1',
-        senateDivision: 'AO',
-      },
-      {
-        key: '3',
-        facultyName: 'Boaty McBoatface',
-        facultyEmail: 'boat@gmail.com',
-        startDate: '2019-1-1',
-        endDate: '2020-1-1',
-        senateDivision: 'BP',
-      },
-      {
-        key: '4',
-        facultyName: 'Grace Hopper',
-        facultyEmail: 'ghopper@gmail.com',
-        startDate: '2019-1-1',
-        endDate: '2020-1-1',
-        senateDivision: 'AO',
-      },
-    ],
-  },
-];
 // Start App
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      committees,
+      committee: [],
+      dataLoaded: false,
     };
   }
   componentDidMount() {
-    if (this.props.id) {
-      this.getCommittee(this.props.id);
-    } else {
-      console.log('I am inside the else on componentDidMount');
-      this.getCommittee(1);
-    }
-  }
-  getCommittee = async id => {
-    console.log('I am inside getCommittee');
-    axios.get(`/api/committee/${id}`).then(response => {
-      console.log('I am inside the axios call');
-      console.log(response.data);
-      this.setState({
-        committees: response.data,
-      });
+    axios.get(`/api/committee/info/1`).then(response => {
+      //console.log('I am inside the axios call');
+      //console.log('Response data: ' + response.data);
+      const committee = response.data;
+      //console.log('Const set with response data: ' + committee);
+      this.setState({ committee });
+      this.setState({ dataLoaded: true });
     });
-  };
+  }
+  // getCommittee = async id => {
+  //   console.log('I am inside getCommittee');
+
+  // };
   render() {
+    console.log('Render Function');
+    console.log(this.state.committee);
     return (
       <div className="committeeTable">
-        {this.state.committees.map((value, index) => {
-          return (
-            <div key={value + index} className="table-wrapper">
-              <React.Fragment>
-                <CommitteeHeader data={this.state.committees[index]} />
-                <CommitteeSlots data={this.state.committees[index]} />
-                <RequirementsTable data={this.state.committees[index]} />
-                <MembersTable data={this.state.committees[index]} />
-              </React.Fragment>
-            </div>
-          );
-        })}
+        <div className="table-wrapper">
+          {this.state.dataLoaded && (
+            <React.Fragment>
+              <CommitteeHeader data={this.state.committee} />
+              <CommitteeSlots data={this.state.committee} />
+              <RequirementsTable data={this.state.committee} />
+              <MembersTable data={this.state.committee} />
+            </React.Fragment>
+          )}
+        </div>
       </div>
     );
   }

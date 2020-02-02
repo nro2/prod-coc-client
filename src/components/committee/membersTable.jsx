@@ -58,6 +58,7 @@ export default class MembersTable extends React.Component {
           Members
         </Divider>
         <Table
+          rowKey="membersTable"
           bordered
           dataSource={this.props.data['committeeAssignment']}
           columns={memberColumns}

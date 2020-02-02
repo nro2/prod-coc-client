@@ -34,7 +34,7 @@ const reqColumns = [
     render: () => {
       return (
         <span>
-          <a> Edit Total Slots </a>
+          <a href="#"> Edit Total Slots </a>
         </span>
       );
     },
@@ -44,35 +44,18 @@ const reqColumns = [
 export default class RequirementsTable extends React.Component {
   constructor(props) {
     super(props);
-    this.filledS = [
-      {
-        key: this.props.data['id'],
-        filledSlots: this.props.data['filledSlots'],
-        totalSlots: this.props.data['totalSlots'],
-      },
-    ];
-    this.iterate = this.iterate.bind(this);
-    this.members = this.props.data['memberData'];
-    this.committee = this.props.data['committeeSlots'];
   }
 
-  iterate = function() {
-    console.log(this.committee);
-    for (let i = 0; i < this.committee.length; i++) {
-      console.log(this.committee[i]);
-    }
-  };
-
   render() {
-    //console.log(this.props.data['committeeSlots']);
+    //console.log(this.props.data);
     //console.log(this.props.data['memberData']);
     return (
       <div>
-        {this.iterate()}
         <Divider type="horizontal" orientation="left">
           Requirements
         </Divider>
         <Table
+          rowkey="senatesTable"
           bordered
           dataSource={this.props.data['committeeSlots']}
           columns={reqColumns}
