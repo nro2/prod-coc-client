@@ -19,25 +19,13 @@ const reqColumns = [
     title: 'Required',
     dataIndex: 'slotMinimum',
     key: 'slotMinimum',
-    editable: true,
+    editable: false,
   },
   {
     title: 'To Be Filled',
     dataIndex: 'slotsRemaining',
     key: 'slotsRemaining',
     editable: false,
-  },
-  {
-    title: 'Action',
-    dataIndex: '',
-    key: 'x',
-    render: () => {
-      return (
-        <span>
-          <a href="#"> Edit Total Slots </a>
-        </span>
-      );
-    },
   },
 ];
 
@@ -47,8 +35,6 @@ export default class RequirementsTable extends React.Component {
   }
 
   render() {
-    //console.log(this.props.data);
-    //console.log(this.props.data['memberData']);
     return (
       <div>
         <Divider type="horizontal" orientation="left">

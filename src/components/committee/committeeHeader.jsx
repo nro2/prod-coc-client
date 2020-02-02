@@ -7,7 +7,6 @@ export default class CommitteeHeader extends React.Component {
   }
 
   getHeader = function() {
-    //console.log(this.props.data['name']);
     return (
       <header>
         <h2>{this.props.data['name']}</h2>

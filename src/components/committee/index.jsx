@@ -17,18 +17,11 @@ export default class App extends React.Component {
   }
   componentDidMount() {
     axios.get(`/api/committee/info/1`).then(response => {
-      //console.log('I am inside the axios call');
-      //console.log('Response data: ' + response.data);
       const committee = response.data;
-      //console.log('Const set with response data: ' + committee);
       this.setState({ committee });
       this.setState({ dataLoaded: true });
     });
   }
-  // getCommittee = async id => {
-  //   console.log('I am inside getCommittee');
-
-  // };
   render() {
     console.log('Render Function');
     console.log(this.state.committee);

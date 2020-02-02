@@ -59,10 +59,6 @@ class App extends Component {
                 <Icon type="appstore" />
                 <span> Committees </span> <Link to="/committees" />
               </Menu.Item>{' '}
-              <Menu.Item key="5">
-                <Icon type="user" />
-                <span> Committee Info </span> <Link to="/committee" />
-              </Menu.Item>{' '}
             </Menu>{' '}
           </Sider>{' '}
           <Layout>
