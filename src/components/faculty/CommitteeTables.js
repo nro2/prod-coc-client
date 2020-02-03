@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Button, Divider, Dropdown } from 'antd';
 import './faculty.css';
-import EditableFormTable from './editableTable';
+import EditableFormTable from './EditableTable';
 
 class CommitteeTables extends Component {
   constructor(props) {

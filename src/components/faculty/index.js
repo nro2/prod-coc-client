@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Button, notification, Menu } from 'antd';
 import './faculty.css';
-import FacultyInfo from './facultyInfo';
-import CommitteeTables from './committeeTables';
+import FacultyInfo from './FacultyInfo';
+import CommitteeTables from './CommitteeTables';
 import axios from 'axios';
 
 class Faculty extends Component {
