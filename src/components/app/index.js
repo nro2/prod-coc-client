@@ -11,7 +11,9 @@ import './app.css';
 import AddFaculty from '../add-faculty';
 import Committees from '../committees';
 import GetFaculty from '../get-faculty';
+import Committee from '../committee';
 import FacultyInfo from '../faculty';
+
 import Home from '../home';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -66,6 +68,11 @@ class App extends Component {
                 <span>Faculty Info</span>
                 <Link to="/faculty" />
               </Menu.Item>
+              <Menu.Item key="6">
+                <Icon type="user" />
+                <span>Committee Info</span>
+                <Link to="/committee" />
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout>
@@ -76,6 +83,7 @@ class App extends Component {
                 <Route path="/add-faculty" component={AddFaculty} />
                 <Route path="/get-faculty" component={GetFaculty} />
                 <Route path="/committees" component={Committees} />
+                <Route path="/committee" component={Committee} />
                 <div className="faculty">
                   <Route path="/faculty" component={FacultyInfo} />
                 </div>
