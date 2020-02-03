@@ -32,30 +32,30 @@ class GetReports extends Component {
   }
 
   fetchCommitteeInfo() {
-    //var Name = this.state.committees;
     const id = this.state.committees.map(committee => {
-      return (
-        <li key={`committee-${committee.committee_id}`}>
-          {committee.committee_id}
-        </li>
-      );
+      return committee.committee_id;
     });
 
-    axios
-      .get(`/api/committeeInfo/${id}`)
-      .then(response => {
-        this.setState({
-          committeeInfo: response.data,
-          loading: false,
-          error: {},
+    let promises = [];
+
+    for (var i = 0; i < id.length; i++) {
+      promises
+        .push(
+          axios.get(`/api/committee/info/${id[i]}`).then(response => {
+            this.state.committeeInfo.push(response);
+            this.setState({
+              loading: false,
+              error: {},
+            });
+          })
+        )
+        .catch(err => {
+          this.setState({
+            error: { message: err.response.data.error, code: err.response.status },
+            loading: false,
+          });
         });
-      })
-      .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
-        });
-      });
+    }
   }
 
   componentDidMount() {
@@ -75,10 +75,7 @@ class GetReports extends Component {
     const Info = this.state.committeeInfo.map(committeeinfo => {
       return (
         <li key={`committee-${committeeinfo.committee_id}`}>
-          {committeeinfo.committee_id +
-            committeeinfo.name +
-            committeeinfo.description +
-            committeeinfo.total_slots}
+          {committeeinfo.name}
         </li>
       );
     });
@@ -98,8 +95,8 @@ class GetReports extends Component {
             <Descriptions.Item label="Start Date">{}</Descriptions.Item>
             <Descriptions.Item label="End Date">{}</Descriptions.Item>
           </Descriptions>
-          {Info}
         </div>
+        {Info}
       </div>
     );
   }
