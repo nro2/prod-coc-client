@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Table, Divider } from 'antd';
 
 const pageSize = 5; // Page size to show pagination
@@ -29,11 +29,7 @@ const reqColumns = [
   },
 ];
 
-export default class RequirementsTable extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+export default class RequirementsTable extends Component {
   render() {
     return (
       <div>

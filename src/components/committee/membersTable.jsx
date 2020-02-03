@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Table, Divider, Form, Input, Button, Popconfirm } from 'antd';
 import 'antd/dist/antd.css';
 import './index.css';
@@ -15,7 +15,7 @@ const EditableRow = ({ form, index, ...props }) => (
 
 const EditableFormRow = Form.create()(EditableRow);
 
-class EditableCell extends React.Component {
+class EditableCell extends Component {
   state = {
     editing: false,
   };
@@ -96,7 +96,7 @@ class EditableCell extends React.Component {
   }
 }
 
-export default class MembersTable extends React.Component {
+export default class MembersTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -144,7 +144,7 @@ export default class MembersTable extends React.Component {
             title="Remove member?"
             onConfirm={() => this.handleDelete(record.key)}
           >
-            <a>Remove Member</a>
+            <Button type="link">Remove Member</Button>
           </Popconfirm>
         ) : null,
     },

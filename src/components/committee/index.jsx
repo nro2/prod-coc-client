@@ -1,12 +1,12 @@
-import React from 'react';
-import CommitteeHeader from './committeeHeader.jsx';
-import CommitteeSlots from './committeeSlots.jsx';
-import RequirementsTable from './requirementsTable.jsx';
-import MembersTable from './membersTable.jsx';
+import React, { Component } from 'react';
+import CommitteeHeader from './CommitteeHeader.jsx';
+import CommitteeSlots from './CommitteeSlots.jsx';
+import RequirementsTable from './RequirementsTable.jsx';
+import MembersTable from './MembersTable.jsx';
 import axios from 'axios';
 
 // Start App
-export default class App extends React.Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
 

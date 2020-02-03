@@ -1,11 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Divider } from 'antd';
 
-export default class CommitteeSlots extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+export default class CommitteeSlots extends Component {
   render() {
     return (
       <div>
