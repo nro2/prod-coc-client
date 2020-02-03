@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Button, notification, Menu } from 'antd';
 import './faculty.css';
-import FacultyInfo from './facultyInfo';
-import CommitteeTables from './committeeTables';
+import FacultyInfo from './FacultyInfo';
+import CommitteeTables from './CommitteeTables';
 import axios from 'axios';
 
 class Faculty extends Component {
@@ -92,6 +92,7 @@ class Faculty extends Component {
     return true;
   };
 
+  // TODO: replace all these `retrieve` methods with getFacultyInfo (CF1-129)
   retrieveAllCommittees() {
     // queries for all committees, returns the promise
     return axios.get(`/api/committees`).catch(err => {
@@ -157,6 +158,7 @@ class Faculty extends Component {
     let currentCommittees = [];
     let facultiCurrentDepartments = [];
     let retrieved = false;
+
     axios
       .get(`/api/faculty/${email}`)
       .then(response => {
@@ -173,7 +175,6 @@ class Faculty extends Component {
           facultyPhone: facultyObject.phone_num,
           facultyJob: facultyObject.job_title,
           facultyLoaded: true,
-          // facultySenate update handled by retrieveSenateData()
         });
       })
       .catch(err => {
@@ -181,8 +182,10 @@ class Faculty extends Component {
         // catch and return failures
         return false;
       });
+
     const committeeIDList = await this.retrieveCommitteeAssignments(email);
     const departments = await this.retrieveDepartmentAssignments(email);
+
     if (!committeeIDList) {
       console.log(`No committee assignments for ${this.state.name}`);
     } else {
@@ -190,6 +193,7 @@ class Faculty extends Component {
         committeeIDList
       );
     }
+
     if (!departments) {
       console.log(`No department assignments for ${this.state.name}`);
     } else {
@@ -197,20 +201,20 @@ class Faculty extends Component {
         departments.data.department_ids
       );
     }
+
     this.setState({
       // Once all of our committees and departments are built, we can finally set their state.
       facultiCurrentCommittees: currentCommittees,
       facultyDepartments: facultiCurrentDepartments,
     });
+
     return true;
   };
 
   constructDepartmentAssociations = async ids => {
-    let i = 0;
-    let length = ids.length;
     let facultiDepartments = [];
     let department = '';
-    for (i = 0; i < length; i++) {
+    for (let i = 0; i < ids.length; i++) {
       department = await this.retrieveDepartmentByID(ids[i]);
       facultiDepartments.push({
         key: ids[i],
@@ -223,11 +227,9 @@ class Faculty extends Component {
   };
 
   constructCommitteeAssociations = async ids => {
-    let i = 0;
-    let length = ids.data.length;
     let facultiCurrentCommittees = [];
     let idList = [];
-    for (i = 0; i < length; i++) {
+    for (let i = 0; i < ids.data.length; i++) {
       idList.push(ids.data[i].committee_id);
       const committee = await this.retrieveCommitteeByID(idList[i]);
       facultiCurrentCommittees.push({
@@ -251,14 +253,12 @@ class Faculty extends Component {
   // When the 'update' button is clicked, we start the loading process.
   start = () => {
     this.setState({ loading: true, saved: false });
-    // ajax request after empty completing
     setTimeout(() => {
       this.setState({
-        // De-select the checked boxes, and notify DOM
         loading: false,
       });
     }, 1000);
-    this.openNotification('topRight'); // Push a notification to the user
+    this.openNotification('topRight');
   };
 
   openNotification = placement => {
@@ -269,8 +269,10 @@ class Faculty extends Component {
     });
   };
 
+  /**
+   * Notifies the user that a function is not implemented, working as a placeholder.
+   */
   sayHello = () => {
-    // Used for debugging, or as a placeholder
     alert('Hello! I am not yet implemented.');
   };
 
@@ -281,45 +283,6 @@ class Faculty extends Component {
     console.log('Department removed:', toRemove);
     this.enableSaveChangesButton();
     this.setState({ facultyDepartments: localDepts });
-  };
-
-  onPhoneChange = facultyPhone => {
-    // on edit change to phone #
-    console.log('Phone changed:', facultyPhone);
-    if (facultyPhone !== this.state.facultyPhone) {
-      // Check to see if data was actually changed
-      this.enableSaveChangesButton();
-      this.setState({ facultyPhone });
-    }
-  };
-
-  onSenateChange = facultySenate => {
-    // on edit change to senate division
-    // TODO: Change this to a dropdown like with committees and departments
-    console.log('Senate changed:', facultySenate);
-    if (facultySenate !== this.state.facultySenate) {
-      // Check to see if data was actually changed
-      this.enableSaveChangesButton();
-      this.setState({ facultySenate });
-    }
-  };
-
-  onDepartmentAdd = toAdd => {
-    // expects department object as argument, and appends our faculty member's department associations
-    console.log('Department added:', toAdd);
-    let length = this.state.facultyDepartments.length;
-    let i = 0;
-    let onList = false;
-    for (i = 0; i < length; i++) {
-      // check if already on faculti's list
-      if (toAdd.name === this.state.facultyDepartments[i].name) {
-        onList = true;
-      }
-    }
-    if (onList === false) {
-      // if not, we add it.
-      this.state.facultyDepartments.push(toAdd);
-    }
   };
 
   createDepartmentMenu() {
@@ -333,7 +296,6 @@ class Faculty extends Component {
   }
 
   createCommitteesMenu() {
-    // Manipulates committees into menu items, and then returns it as a menu object
     const committeesDropdownMenu = this.state.allCommittees.map(committees => (
       <Menu.Item key={committees.id}>
         <Button type="link">{committees.name}</Button>
@@ -342,20 +304,39 @@ class Faculty extends Component {
     return <Menu>{committeesDropdownMenu}</Menu>;
   }
 
-  /*******************************************************/
-  // Everything above this point manipulates data, or
-  // sends queries to the server
-  /*******************************************************/
+  enableSaveChangesButton(phone, senate, committeeID) {
+    // enableSaveChangesButton is triggered by child state whenever start/end dates are edited and saved
+    // this is what allows the 'save changes button' to be enabled when changes are made
+    if (committeeID) {
+      this.setState({
+        saved: true,
+      });
+      // Add editable functionality for current committee tables
+    }
+    if (phone || senate) {
+      this.setState({
+        saved: true,
+        facultyPhone: phone,
+        facultySenate: senate,
+      });
+    }
+  }
+
+  renderUpdateButton(start, saved, loading) {
+    // TODO: Add a 'reset' button to revert all changes?
+    return (
+      <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
+        Save Changes
+      </Button>
+    );
+  }
+
   render() {
     const { loading } = this.state;
     this.departmentsDropdownMenu = this.createDepartmentMenu();
     this.committeesDropdownMenu = this.createCommitteesMenu();
     return (
-      <React.Fragment>
-        {/*
-        Lots of arguments for LoadFaculti() to reduce the 'this.state.stuff'
-        syntax that would make LoadFaculti unreadable
-        */}
+      <Fragment>
         <FacultyInfo
           object={this.state}
           departmentsDropdownMenu={this.departmentsDropdownMenu}
@@ -373,36 +354,8 @@ class Faculty extends Component {
           committeesDropdownMenu={this.committeesDropdownMenu}
         />
         {this.renderUpdateButton(this.start, this.state.saved, loading)}
-      </React.Fragment>
+      </Fragment>
     );
-  }
-  /**************************************************************/
-  // Everything below this point focuses on rendering components.
-  /**************************************************************/
-  renderUpdateButton(start, saved, loading) {
-    // TODO: Add a 'reset' button to revert all changes?
-    return (
-      <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
-        Save Changes
-      </Button>
-    );
-  }
-  enableSaveChangesButton(phone, senate, committeeID) {
-    // enableSaveChangesButton is triggered by child state whenever start/end dates are edited and saved
-    // this is what allows the 'save changes button' to be enabled when changes are made
-    if (committeeID) {
-      this.setState({
-        saved: true,
-      });
-      // Add editable functionality for current committee tables
-    }
-    if (phone || senate) {
-      this.setState({
-        saved: true,
-        facultyPhone: phone,
-        facultySenate: senate,
-      });
-    }
   }
 }
 

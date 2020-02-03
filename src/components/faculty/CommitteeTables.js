@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Table, Button, Divider, Dropdown } from 'antd';
+import EditableFormTable from './EditableTable';
 import './faculty.css';
-import EditableFormTable from './editableTable';
 
 class CommitteeTables extends Component {
   constructor(props) {
     super(props);
     this.columns = [
-      // this is for our columns in our <Table> component
       {
         title: 'Name',
         dataIndex: 'committee',
@@ -48,6 +47,8 @@ class CommitteeTables extends Component {
       committeesDropdownMenu: [],
     };
   }
+
+  // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
     this.setState({
       facultiCurrentCommittees: newProps.facultiCurrentCommittees,
@@ -56,27 +57,8 @@ class CommitteeTables extends Component {
       committeesDropdownMenu: newProps.committeesDropdownMenu,
     });
   }
-  render() {
-    return (
-      <React.Fragment>
-        {this.renderCurrentCommittees(
-          this.state.facultiCurrentCommittees,
-          this.columns
-        )}
-        {this.renderChosenCommittees(
-          this.state.facultiChosenCommittees,
-          this.columns
-        )}
-        {this.renderInterestedCommittees(
-          this.state.facultiChosenCommittees,
-          this.columns
-        )}
-      </React.Fragment>
-    );
-  }
 
   renderCurrentCommittees() {
-    // load current committees that this faculty member is a part of, start/end dates are editable
     return (
       <span>
         <Dropdown overlay={this.state.committeesDropdownMenu}>
@@ -85,7 +67,7 @@ class CommitteeTables extends Component {
             icon="plus"
             size="small"
             onClick={() => this.props.sayHello()}
-          ></Button>
+          />
         </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
@@ -98,7 +80,6 @@ class CommitteeTables extends Component {
   }
 
   renderChosenCommittees(facultyData, columnData) {
-    // Loads the chosen comittee table
     return (
       <span>
         <Dropdown overlay={this.state.committeesDropdownMenu}>
@@ -107,7 +88,7 @@ class CommitteeTables extends Component {
             icon="plus"
             size="small"
             onClick={() => this.props.sayHello()}
-          ></Button>
+          />
         </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Committees Chosen:</h1>
@@ -117,7 +98,6 @@ class CommitteeTables extends Component {
   }
 
   renderInterestedCommittees(facultyData, columnData) {
-    // loads the interested committee table
     return (
       <span>
         <Dropdown overlay={this.state.committeesDropdownMenu}>
@@ -126,12 +106,31 @@ class CommitteeTables extends Component {
             icon="plus"
             size="small"
             onClick={() => this.props.sayHello()}
-          ></Button>
+          />
         </Dropdown>
         <Divider type="vertical" />
         <h1 style={{ display: 'inline' }}>Committees interested in:</h1>
         <Table dataSource={facultyData} bordered columns={columnData} />
       </span>
+    );
+  }
+
+  render() {
+    return (
+      <Fragment>
+        {this.renderCurrentCommittees(
+          this.state.facultiCurrentCommittees,
+          this.columns
+        )}
+        {this.renderChosenCommittees(
+          this.state.facultiChosenCommittees,
+          this.columns
+        )}
+        {this.renderInterestedCommittees(
+          this.state.facultiChosenCommittees,
+          this.columns
+        )}
+      </Fragment>
     );
   }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, Button, Divider, Form, Popconfirm, Input, InputNumber } from 'antd';
 
 const EditableContext = React.createContext();
+
 class EditableCell extends Component {
   getInput = () => {
     if (this.props.inputType === 'number') {
@@ -128,8 +129,8 @@ class EditableTable extends Component {
       },
     ];
   }
-  // TODO: Find a new way of updating child state, as this method is deprecated
 
+  // TODO: Find a new way of updating child state, as this method is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
     this.setState({ facultiCurrentCommittees: newProps.currentCommittee });
   }

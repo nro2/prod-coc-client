@@ -22,6 +22,8 @@ class FacultyInfo extends Component {
       facultyID: -1,
     };
   }
+
+  // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
     this.setState({
       facultyName: newProps.object.facultyName,
@@ -34,8 +36,8 @@ class FacultyInfo extends Component {
       facultyID: newProps.object.facultyID,
     });
   }
+
   onPhoneChange = facultyPhone => {
-    // on edit change to phone #
     console.log('Phone changed:', facultyPhone);
     if (facultyPhone !== this.state.facultyPhone) {
       // Check to see if data was actually changed
@@ -46,8 +48,8 @@ class FacultyInfo extends Component {
       );
     }
   };
+
   onSenateChange = facultySenate => {
-    // on edit change to senate division
     // TODO: Change this to a dropdown like with committees and departments
     console.log('Senate changed:', facultySenate);
     if (facultySenate !== this.state.facultySenate) {
@@ -59,16 +61,8 @@ class FacultyInfo extends Component {
       );
     }
   };
-  render() {
-    return (
-      <React.Fragment>
-        {this.renderFacultiInfo(this.state.facultyDepartments)}
-      </React.Fragment>
-    );
-  }
+
   renderFacultiInfo(departments) {
-    // .map() list function is relating the department name to it's own specific delete button
-    // and placing it in an HTML list that we call later
     const localDepts = departments.map(departments => (
       <li key={departments.key}>
         {departments.name}
@@ -83,7 +77,7 @@ class FacultyInfo extends Component {
         </Button>
       </li>
     ));
-    // Maps the departments list as an HTML list to localDepts
+
     return (
       <span>
         <h1>
@@ -143,6 +137,14 @@ class FacultyInfo extends Component {
           </ul>
         </p>
       </span>
+    );
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        {this.renderFacultiInfo(this.state.facultyDepartments)}
+      </React.Fragment>
     );
   }
 }
