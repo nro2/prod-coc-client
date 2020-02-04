@@ -219,7 +219,6 @@ class Faculty extends Component {
     });
 
     this.createResetState(this.state, this.initialFacultyData);
-    alert(this.initialFacultyData.facultySenate);
     return true;
   };
 
@@ -373,9 +372,13 @@ class Faculty extends Component {
           title="Are you sure?"
           onConfirm={() => this.undoChanges(this.initialFacultyData)}
           okText="Yes!"
-          disabled={!saved}
+          disabled={!this.state.facultyLoaded}
         >
-          <Button type="primary" disabled={!saved} loading={loading}>
+          <Button
+            type="primary"
+            disabled={!this.state.facultyLoaded}
+            loading={loading}
+          >
             Reset
           </Button>
         </Popconfirm>
