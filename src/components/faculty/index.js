@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, notification, Menu } from 'antd';
+import { Button, notification, Menu, Divider, Popconfirm } from 'antd';
 import './faculty.css';
 import FacultyInfo from './FacultyInfo';
 import CommitteeTables from './CommitteeTables';
@@ -321,13 +321,28 @@ class Faculty extends Component {
       });
     }
   }
-
-  renderUpdateButton(start, saved, loading) {
+  resetChanges() {
+    return null;
+  }
+  renderSubmissionButtons(start, saved, loading) {
     // TODO: Add a 'reset' button to revert all changes?
     return (
-      <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
-        Save Changes
-      </Button>
+      <Fragment>
+        <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
+          Save Changes
+        </Button>
+        <Divider type="vertical" />
+        <Popconfirm
+          title="Are you sure?"
+          onConfirm={() => this.resetChanges()}
+          okText="Yes!"
+          disabled={!saved}
+        >
+          <Button type="primary" disabled={!saved}>
+            Reset
+          </Button>
+        </Popconfirm>
+      </Fragment>
     );
   }
 
@@ -353,7 +368,7 @@ class Faculty extends Component {
           enableSaveChangesButton={this.enableSaveChangesButton}
           committeesDropdownMenu={this.committeesDropdownMenu}
         />
-        {this.renderUpdateButton(this.start, this.state.saved, loading)}
+        {this.renderSubmissionButtons(this.start, this.state.saved, loading)}
       </Fragment>
     );
   }
