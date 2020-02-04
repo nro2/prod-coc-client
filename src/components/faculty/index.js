@@ -18,6 +18,17 @@ class Faculty extends Component {
         description: 'stuff and things',
       },
     ];
+    this.initialFacultyData = {
+      facultyName: null,
+      facultyEmail: null,
+      facultyPhone: null,
+      facultyDepartments: null,
+      facultySenate: null,
+      facultyJob: null,
+      facultyExpert: null,
+      facultyID: -1,
+      facultiCurrentCommittees: [],
+    };
     this.state = {
       data: this.facultyData,
       facultiCurrentCommittees: [],
@@ -25,7 +36,6 @@ class Faculty extends Component {
       allDepartments: [],
       //     interestedCommitteeData: [], // empty for now ..
       //     chosenCommitteeData: [], // empty for now ..
-      //cols: this.columns,
       loading: false,
       editingKey: '',
       saved: false,
@@ -208,8 +218,22 @@ class Faculty extends Component {
       facultyDepartments: facultiCurrentDepartments,
     });
 
+    this.createResetState(this.state, this.initialFacultyData);
+    alert(this.initialFacultyData.facultySenate);
     return true;
   };
+
+  createResetState(faculti, resetState) {
+    resetState.facultyName = faculti.facultyName;
+    resetState.facultyPhone = faculti.facultyPhone;
+    resetState.facultyEmail = faculti.facultyEmail;
+    resetState.facultyJob = faculti.facultyJob;
+    resetState.facultyDepartments = faculti.facultyDepartments;
+    resetState.facultyExpert = faculti.facultyExpert;
+    resetState.facultySenate = faculti.facultySenate;
+    resetState.facultyID = faculti.facultyID;
+    resetState.facultiCurrentCommittees = faculti.facultiCurrentCommittees;
+  }
 
   constructDepartmentAssociations = async ids => {
     let facultiDepartments = [];
@@ -321,9 +345,22 @@ class Faculty extends Component {
       });
     }
   }
-  resetChanges() {
-    return null;
+
+  undoChanges(resetState) {
+    this.setState({
+      facultyName: resetState.facultyName,
+      facultyPhone: resetState.facultyPhone,
+      facultyEmail: resetState.facultyEmail,
+      facultyDepartments: resetState.facultyDepartments,
+      facultyJob: resetState.facultyJob,
+      facultyID: resetState.facultyID,
+      facultyExpert: resetState.facultyExpert,
+      facultySenate: resetState.facultySenate,
+      saved: false,
+      facultiCurrentCommittees: resetState.facultiCurrentCommittees,
+    });
   }
+
   renderSubmissionButtons(start, saved, loading) {
     // TODO: Add a 'reset' button to revert all changes?
     return (
@@ -334,11 +371,11 @@ class Faculty extends Component {
         <Divider type="vertical" />
         <Popconfirm
           title="Are you sure?"
-          onConfirm={() => this.resetChanges()}
+          onConfirm={() => this.undoChanges(this.initialFacultyData)}
           okText="Yes!"
           disabled={!saved}
         >
-          <Button type="primary" disabled={!saved}>
+          <Button type="primary" disabled={!saved} loading={loading}>
             Reset
           </Button>
         </Popconfirm>
