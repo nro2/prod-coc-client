@@ -13,104 +13,61 @@ class GetReports extends Component {
       committeeInfo: [],
       dataLoaded: false,
     };
-
-    this.fetchCommittees = this.fetchCommittees.bind(this);
-  }
-
-  fetchCommittees() {
-    axios
-      .get('/api/committees')
-      .then(response => {
-        this.setState({
-          committees: response.data,
-          loading: false,
-          error: {},
-        });
-      })
-      .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
-        });
-      });
+    this.fetchCommitteeInfo = this.fetchCommitteeInfo.bind(this);
   }
 
   fetchCommitteeInfo() {
     /*
-    const id = this.state.committees.map(committee => {
-      return committee.committee_id;
+    axios
+    .get('/api/committees')
+    .then(response => {
+      let promises = [];
+      for (var i = 0; i < response.data.length; i++) {
+        promises
+          .push(
+            axios
+              .get(`/api/committee/info/${response.data[i].committee_id}`)
+              .then(response => {
+                this.state.committeeInfo.push(response);
+              })
+              .catch(err => {
+                this.setState({
+                  error: { message: err.response.data.error, code: err.response.status },
+                  loading: false,
+                });
+              })
+          )
+      }
+    })
+    .catch(err => {
+      this.setState({
+        error: { message: err.response.data.error, code: err.response.status },
+        loading: false,
+      });
     });
-    let promises = [];
+  }*/
 
-    for (var i = 0; i < id.length; i++) {
-      promises
-        .push(
-          axios.get(`/api/committee/info/${id[i]}`).then(response => {
-            this.state.committeeInfo.push(response);
-            this.setState({
-              loading: false,
-              dataLoaded: true,
-              error: {},
-            });
-          })
-        )
-        .catch(err => {
+    axios.get('/api/committees').then(response => {
+      axios
+        .get(`/api/committee/info/${response.data[0].committee_id}`)
+        .then(response => {
           this.setState({
-            error: { message: err.response.data.error, code: err.response.status },
+            committeeInfo: response.data,
+            dataLoaded: true,
             loading: false,
+            error: {},
           });
         });
-    }
-    */
-    /*
-    const id = this.state.committees.map(committee => {
-      return committee.committee_id;
-    });*/
-
-    axios.get(`/api/committee/info/1`).then(response => {
-      this.setState({
-        committeeInfo: response.data,
-        dataLoaded: true,
-        loading: false,
-        error: {},
-      });
     });
   }
 
   componentDidMount() {
-    this.fetchCommittees();
     this.fetchCommitteeInfo();
   }
 
   render() {
-    /*
-    const Name = this.state.committees.map(committee => {
-      return (
-        <li key={`committee-${committee.committee_id}`}>
-          {committee.name + ' ID: ' + committee.committee_id}
-        </li>
-      );
-    });*/
-    /*
-    const Info = this.state.committeeInfo.map(committeeinfo => {
-      return (
-        <li key={`committee-${committeeinfo.committee_id}`}>
-          {committeeinfo.name}
-        </li>
-      );
-    });*/
-    /*
-    const facultyname = this.state.committeeInfo.committeeAssignment.map(name => {
-      return <li key={`name.facultyName`}>{name.facultyName}</li>;
-    });*/
-
-    const id = this.state.committees.map(committee => {
-      return committee.committee_id;
-    });
-
     return (
       <div>
-        TESTING. ID[0] = {id[0]}
         <h1>Reports</h1>
         <div>
           {this.state.dataLoaded && (

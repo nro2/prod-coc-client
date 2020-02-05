@@ -121,10 +121,6 @@ export default class MembersTable extends Component {
     };
 
     const columns = this.memberColumns.map(col => {
-      /*
-      if (!col.editable) {
-        return col;
-      }*/
       return {
         ...col,
         onCell: record => ({
