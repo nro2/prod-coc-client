@@ -11,6 +11,8 @@ import './app.css';
 import AddFaculty from '../add-faculty';
 import Committees from '../committees';
 import GetFaculty from '../get-faculty';
+import Committee from '../committee';
+import FacultyInfo from '../faculty';
 import Home from '../home';
 import GetReports from '../get-reports';
 
@@ -62,9 +64,19 @@ class App extends Component {
                 <Link to="/committees" />
               </Menu.Item>
               <Menu.Item key="5">
+                <Icon type="user" />
+                <span>Faculty Info</span>
+                <Link to="/faculty" />
+              </Menu.Item>
+              <Menu.Item key="6">
+                <Icon type="user" />
+                <span>Committee Info</span>
+                <Link to="/committee" />
+              </Menu.Item>
+              <Menu.Item key="7">
                 <Icon type="appstore" />
                 <span>Reports</span>
-                <Link to="/reports" />
+                <Link to="/get-reports" />
               </Menu.Item>
             </Menu>
           </Sider>
@@ -77,6 +89,8 @@ class App extends Component {
                 <Route path="/get-faculty" component={GetFaculty} />
                 <Route path="/committees" component={Committees} />
                 <Route path="/reports" component={GetReports} />
+                <Route path="/committee" component={Committee} />
+                <Route path="/faculty" component={FacultyInfo} />
               </Switch>
               <Redirect to="/home" />
             </Content>
