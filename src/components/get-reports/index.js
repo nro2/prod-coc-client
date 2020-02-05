@@ -9,7 +9,6 @@ class GetReports extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      committees: [],
       committeeInfo: [],
       dataLoaded: false,
     };
@@ -17,48 +16,38 @@ class GetReports extends Component {
   }
 
   fetchCommitteeInfo() {
-    /*
     axios
-    .get('/api/committees')
-    .then(response => {
-      let promises = [];
-      for (var i = 0; i < response.data.length; i++) {
-        promises
-          .push(
+      .get('/api/committees')
+      .then(response => {
+        let promises = [];
+        for (var i = 0; i < response.data.length; i++) {
+          promises.push(
             axios
               .get(`/api/committee/info/${response.data[i].committee_id}`)
               .then(response => {
-                this.state.committeeInfo.push(response);
+                this.state.committeeInfo.push(response.data);
+                this.setState({
+                  dataLoaded: true,
+                });
               })
               .catch(err => {
                 this.setState({
-                  error: { message: err.response.data.error, code: err.response.status },
+                  error: {
+                    message: err.response.data.error,
+                    code: err.response.status,
+                  },
                   loading: false,
                 });
               })
-          )
-      }
-    })
-    .catch(err => {
-      this.setState({
-        error: { message: err.response.data.error, code: err.response.status },
-        loading: false,
-      });
-    });
-  }*/
-
-    axios.get('/api/committees').then(response => {
-      axios
-        .get(`/api/committee/info/${response.data[0].committee_id}`)
-        .then(response => {
-          this.setState({
-            committeeInfo: response.data,
-            dataLoaded: true,
-            loading: false,
-            error: {},
-          });
+          );
+        }
+      })
+      .catch(err => {
+        this.setState({
+          error: { message: err.response.data.error, code: err.response.status },
+          loading: false,
         });
-    });
+      });
   }
 
   componentDidMount() {
@@ -72,23 +61,25 @@ class GetReports extends Component {
         <div>
           {this.state.dataLoaded && (
             <React.Fragment>
+              testing retrieving date=
+              {this.state.committeeInfo[0].committeeAssignment['startDate']}
               <Descriptions
-                title={this.state.committeeInfo['name']}
+                title={this.state.committeeInfo[0]['name']}
                 layout="vertical"
                 bordered
               >
                 <Descriptions.Item label="Description">
-                  {this.state.committeeInfo['description']}
+                  {this.state.committeeInfo[0]['description']}
                 </Descriptions.Item>
                 <Descriptions.Item label="Total Slots">
-                  {this.state.committeeInfo['totalSlots']}
+                  {this.state.committeeInfo[0]['totalSlots']}
                 </Descriptions.Item>
                 <Descriptions.Item label="Slots Remaining">
-                  {this.state.committeeInfo['slotsRemaining']}
+                  {this.state.committeeInfo[0]['slotsRemaining']}
                 </Descriptions.Item>
               </Descriptions>
-              <MembersTable data={this.state.committeeInfo} />
-              <RequirementsTable data={this.state.committeeInfo} />
+              <MembersTable data={this.state.committeeInfo[0]} />
+              <RequirementsTable data={this.state.committeeInfo[0]} />
             </React.Fragment>
           )}
         </div>
