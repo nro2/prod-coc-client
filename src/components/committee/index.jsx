@@ -23,8 +23,6 @@ export default class App extends Component {
     });
   }
   render() {
-    console.log('Render Function');
-    console.log(this.state.committee);
     return (
       <div className="committeeTable">
         <div className="table-wrapper">

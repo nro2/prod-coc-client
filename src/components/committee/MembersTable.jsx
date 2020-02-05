@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, Divider, Form, Input, Button, Popconfirm } from 'antd';
 import 'antd/dist/antd.css';
 import './index.css';
+import ModalSearchForm from '../common/ModalSearchForm';
 
 const pageSize = 5; // Page size to show pagination
 
@@ -216,6 +217,7 @@ export default class MembersTable extends Component {
         >
           Add a member
         </Button>
+        <ModalSearchForm />
         <Table
           rowKey={record => record.facultyName}
           bordered
