@@ -1,18 +1,20 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
+import { Modal, Button, Select, Descriptions } from 'antd';
 import axios from 'axios';
-import SearchDropDown from './SearchDropDown.jsx';
+import SearchDropDown from '../common/SearchDropDown.jsx';
+import AddMemberForm from './AddMemberForm.jsx';
+
+const { Option } = Select;
 
 class ModalSearchForm extends React.Component {
   state = {
     ModalText: 'Content of the modal',
     visible: false,
     confirmLoading: false,
-    endpoint: '',
     dataMembers: [],
+    selected: '',
   };
 
-  /*Gets the list of all faculty members for drop down select*/
   fetchData() {
     axios
       .get(this.props.endpoint)
@@ -35,6 +37,7 @@ class ModalSearchForm extends React.Component {
     this.setState({
       visible: true,
     });
+    this.fetchData();
   };
 
   handleOk = () => {
@@ -54,25 +57,64 @@ class ModalSearchForm extends React.Component {
     console.log('Clicked cancel button');
     this.setState({
       visible: false,
+      selected: '',
+    });
+  };
+
+  changeHandler = value => {
+    this.setState({
+      selected: value,
     });
   };
 
   render() {
-    const { visible, confirmLoading, ModalText } = this.state;
+    let showForm = false;
+    if (this.state.selected !== '') showForm = true;
+
+    const options = this.state.dataMembers.map(faculty => (
+      <Option key={faculty.email}>{faculty.full_name}</Option>
+    ));
+
+    const faculty = this.state.dataMembers.find(
+      faculty => faculty.email === this.state.selected
+    );
+
+    let items = [];
+
+    if (faculty !== undefined) {
+      Object.entries(faculty).forEach(([key, value]) =>
+        items.push(<Descriptions.Item label={key}>{value}</Descriptions.Item>)
+      );
+    }
+
+    const { visible, confirmLoading } = this.state;
     return (
       <div>
         <Button type="primary" onClick={this.showModal}>
-          Open Modal with async logic
+          {this.props.buttonName}
         </Button>
         <Modal
-          title="Title"
+          title={this.props.title || 'Title'}
           visible={visible}
           onOk={this.handleOk}
           confirmLoading={confirmLoading}
           onCancel={this.handleCancel}
+          destroyOnClose
         >
-          <SearchDropDown />
-          <p>{ModalText}</p>
+          <div>
+            <SearchDropDown
+              dataMembers={options}
+              onChange={this.changeHandler}
+              placeholder="Select Faculty"
+            />
+          </div>
+          <div>
+            <AddMemberForm
+              layout="vertical"
+              visible={showForm}
+              dataMembers={items}
+            />
+          </div>
         </Modal>
       </div>
     );

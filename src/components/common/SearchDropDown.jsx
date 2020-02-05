@@ -1,8 +1,6 @@
 import React from 'react';
 import { Select, Divider } from 'antd';
 
-const { Option } = Select;
-
 class SearchDropDown extends React.Component {
   constructor(props) {
     super(props);
@@ -13,33 +11,35 @@ class SearchDropDown extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(value) {
+  handleChange(event) {
     this.setState({
-      selected: value,
+      selected: event,
       showInfo: true,
     });
+
+    this.props.onChange(event);
   }
 
   render() {
     return (
       <div>
-        <h1>Get faculty info here</h1>
         <div>
           <Select
             showSearch
-            placeholder="Search for a faculty member"
+            className="aligner-item aligner-item-center select"
+            placeholder={this.props.placeholder || 'Enter text here'}
             optionFilterProp="children"
             onChange={this.handleChange}
             dropdownMatchSelectWidth={false}
             size="large"
             loading={this.state.loading}
           >
-            <Option key="1">1</Option>
+            {this.props.dataMembers}
           </Select>
           {this.state.showInfo && (
             <div>
               <Divider orientation="left">
-                {this.state.selected + "'s Info"}
+                {this.state.selected + "'s Info" || ' '}
               </Divider>
             </div>
           )}
