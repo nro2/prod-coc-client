@@ -76,7 +76,7 @@ class App extends Component {
               <Menu.Item key="7">
                 <Icon type="appstore" />
                 <span>Reports</span>
-                <Link to="/get-reports" />
+                <Link to="/reports" />
               </Menu.Item>
             </Menu>
           </Sider>
