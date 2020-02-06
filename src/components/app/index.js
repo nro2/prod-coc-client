@@ -84,9 +84,7 @@ class App extends Component {
                 <Route path="/get-faculty" component={GetFaculty} />
                 <Route path="/committees" component={Committees} />
                 <Route path="/committee" component={Committee} />
-                <div>
-                  <Route path="/faculty" component={FacultyInfo} />
-                </div>
+                <Route path="/faculty" component={FacultyInfo} />
               </Switch>
               <Redirect to="/home" />
             </Content>

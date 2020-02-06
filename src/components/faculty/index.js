@@ -390,7 +390,7 @@ class Faculty extends Component {
     this.departmentsDropdownMenu = this.createDepartmentMenu();
     this.committeesDropdownMenu = this.createCommitteesMenu();
     return (
-      <Fragment>
+      <div>
         <FacultyInfo
           object={this.state}
           departmentsDropdownMenu={this.departmentsDropdownMenu}
@@ -408,7 +408,7 @@ class Faculty extends Component {
           committeesDropdownMenu={this.committeesDropdownMenu}
         />
         {this.renderSubmissionButtons(this.start)}
-      </Fragment>
+      </div>
     );
   }
 }
