@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { message, Select } from 'antd';
+import { message, Select, Collapse } from 'antd';
 import CommitteeHeader from './CommitteeHeader.jsx';
 import RequirementsTable from './RequirementsTable.jsx';
 import MembersTable from './MembersTable.jsx';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import SearchDropDown from '../common/SearchDropDown.jsx';
 
 const { Option } = Select;
+const { Panel } = Collapse;
 
 export default class App extends Component {
   constructor(props) {
@@ -30,6 +31,10 @@ export default class App extends Component {
       this.forceUpdate();
     });
   }
+
+  callback = key => {
+    console.log(key);
+  };
 
   fetchCommitteeInfo(id) {
     axios
@@ -104,6 +109,7 @@ export default class App extends Component {
                 showInfo={true}
               />
               <CommitteeHeader data={this.state.committee} />
+
               <RequirementsTable data={this.state.committeeSlots} />
               <MembersTable
                 data={this.state.committeeAssignment}

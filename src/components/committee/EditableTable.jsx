@@ -151,6 +151,7 @@ class EditableTable extends React.Component {
       <EditableContext.Provider value={this.props.form}>
         <Table
           rowKey="facultyEmail"
+          size="small"
           components={components}
           bordered
           dataSource={this.props.data}

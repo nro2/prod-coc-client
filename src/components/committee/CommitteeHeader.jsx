@@ -34,7 +34,13 @@ export default class CommitteeHeader extends Component {
 
     const content = (
       <div>
-        <Paragraph>{modifiedDescription}</Paragraph>
+        <Paragraph>
+          <ol>
+            Responsibilities:
+            <br />
+            {modifiedDescription}
+          </ol>
+        </Paragraph>
       </div>
     );
 
