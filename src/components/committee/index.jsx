@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import CommitteeHeader from './CommitteeHeader.jsx';
-import CommitteeSlots from './CommitteeSlots.jsx';
 import RequirementsTable from './RequirementsTable.jsx';
 import MembersTable from './MembersTable.jsx';
 import axios from 'axios';
 
-// Start App
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +29,6 @@ export default class App extends Component {
           {this.state.dataLoaded && (
             <React.Fragment>
               <CommitteeHeader data={this.state.committee} />
-              <CommitteeSlots data={this.state.committee} />
               <RequirementsTable data={this.state.committee} />
               <MembersTable data={this.state.committee} />
             </React.Fragment>
