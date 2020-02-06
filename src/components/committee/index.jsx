@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { message, Select, Collapse } from 'antd';
+import { message, Select } from 'antd';
 import CommitteeHeader from './CommitteeHeader.jsx';
 import RequirementsTable from './RequirementsTable.jsx';
 import MembersTable from './MembersTable.jsx';
@@ -7,7 +7,6 @@ import axios from 'axios';
 import SearchDropDown from '../common/SearchDropDown.jsx';
 
 const { Option } = Select;
-const { Panel } = Collapse;
 
 export default class App extends Component {
   constructor(props) {
@@ -93,7 +92,6 @@ export default class App extends Component {
     const options = this.state.committees.map(committees => (
       <Option key={committees.committee_id}>{committees.name}</Option>
     ));
-    console.log(this.state);
 
     return (
       <div className="committeeTable">

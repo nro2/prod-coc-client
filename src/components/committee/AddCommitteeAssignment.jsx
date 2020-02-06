@@ -55,8 +55,6 @@ class AddCommitteeAsignment extends React.Component {
 
     form.validateFields((err, values) => {
       if (err) {
-        console.log(this.formRef);
-        console.log(err);
         return;
       }
 
