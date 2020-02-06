@@ -53,6 +53,9 @@ export default class App extends Component {
         <div className="table-wrapper">
           {this.state.dataLoaded && (
             <React.Fragment>
+              <CommitteeHeader data={this.state.committee} />
+              <CommitteeSlots data={this.state.committee} />
+              <RequirementsTable data={this.state.committee} />
               <MembersTable
                 data={this.state.committeeAssignment}
                 id={this.state.committeeId}
@@ -65,7 +68,3 @@ export default class App extends Component {
     );
   }
 }
-
-//<CommitteeHeader data={this.state.committee} />
-//<CommitteeSlots data={this.state.committee} />
-//<RequirementsTable data={this.state.committee} />

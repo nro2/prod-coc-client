@@ -6,25 +6,21 @@ const reqColumns = [
   {
     title: 'Senate',
     dataIndex: 'senateShortname',
-    key: 'senateShortname',
     editable: false,
   },
   {
     title: 'Filled',
     dataIndex: 'slotFilled',
-    key: 'senateFilled',
     editable: false,
   },
   {
     title: 'Required',
     dataIndex: 'slotMinimum',
-    key: 'slotMinimum',
     editable: false,
   },
   {
     title: 'To Be Filled',
     dataIndex: 'slotsRemaining',
-    key: 'slotsRemaining',
     editable: false,
   },
 ];
@@ -37,7 +33,7 @@ export default class RequirementsTable extends Component {
           Requirements
         </Divider>
         <Table
-          rowkey="senatesTable"
+          rowKey="senateShortname"
           bordered
           dataSource={this.props.data['committeeSlots']}
           columns={reqColumns}

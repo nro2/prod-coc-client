@@ -55,8 +55,12 @@ class AddCommitteeAsignment extends React.Component {
 
     form.validateFields((err, values) => {
       if (err) {
+        console.log(this.formRef);
+        console.log(err);
         return;
       }
+
+      this.formRef.resetState();
 
       const dateFormat = 'YYYY/MM/DD';
       this.postAssignment(

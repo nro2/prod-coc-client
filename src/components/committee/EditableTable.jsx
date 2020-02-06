@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, InputNumber, Form, Input, Popconfirm } from 'antd';
+import { Table, Button, InputNumber, Form, Input, Popconfirm } from 'antd';
 
 const EditableContext = React.createContext();
 
@@ -16,6 +16,7 @@ class EditableCell extends React.Component {
       editing,
       dataIndex,
       title,
+      inputType,
       record,
       children,
       ...restProps
@@ -61,25 +62,30 @@ class EditableTable extends React.Component {
           <span>
             <EditableContext.Consumer>
               {form => (
-                <a
+                <Button
+                  type="link"
                   onClick={() => this.save(form, record.key)}
                   style={{ marginRight: 8 }}
                 >
                   Save
-                </a>
+                </Button>
               )}
             </EditableContext.Consumer>
             <Popconfirm
               title="Sure to cancel?"
               onConfirm={() => this.cancel(record.key)}
             >
-              <a>Cancel</a>
+              <Button type="link">Cancel</Button>
             </Popconfirm>
           </span>
         ) : (
-          <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
+          <Button
+            type="link"
+            disabled={editingKey !== ''}
+            onClick={() => this.edit(record.key)}
+          >
             Edit
-          </a>
+          </Button>
         );
       },
     };
@@ -141,9 +147,6 @@ class EditableTable extends React.Component {
         }),
       };
     });
-
-    console.log('EditableTable');
-    console.log(this.props.data);
     return (
       <EditableContext.Provider value={this.props.form}>
         <Table
