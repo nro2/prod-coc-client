@@ -361,7 +361,6 @@ class Faculty extends Component {
   }
 
   renderSubmissionButtons(start, saved, loading) {
-    // TODO: Add a 'reset' button to revert all changes?
     return (
       <Fragment>
         <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
