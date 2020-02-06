@@ -360,7 +360,8 @@ class Faculty extends Component {
     });
   }
 
-  renderSubmissionButtons(start, saved, loading) {
+  renderSubmissionButtons(start) {
+    const { saved, loading } = this.state;
     return (
       <Fragment>
         <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
@@ -386,7 +387,6 @@ class Faculty extends Component {
   }
 
   render() {
-    const { loading } = this.state;
     this.departmentsDropdownMenu = this.createDepartmentMenu();
     this.committeesDropdownMenu = this.createCommitteesMenu();
     return (
@@ -407,7 +407,7 @@ class Faculty extends Component {
           enableSaveChangesButton={this.enableSaveChangesButton}
           committeesDropdownMenu={this.committeesDropdownMenu}
         />
-        {this.renderSubmissionButtons(this.start, this.state.saved, loading)}
+        {this.renderSubmissionButtons(this.start)}
       </Fragment>
     );
   }
