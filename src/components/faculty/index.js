@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, notification, Menu } from 'antd';
+import { Button, notification, Menu, Divider, Popconfirm } from 'antd';
 import './faculty.css';
 import FacultyInfo from './FacultyInfo';
 import CommitteeTables from './CommitteeTables';
@@ -18,6 +18,17 @@ class Faculty extends Component {
         description: 'stuff and things',
       },
     ];
+    this.initialFacultyData = {
+      facultyName: null,
+      facultyEmail: null,
+      facultyPhone: null,
+      facultyDepartments: null,
+      facultySenate: null,
+      facultyJob: null,
+      facultyExpert: null,
+      facultyID: -1,
+      facultiCurrentCommittees: [],
+    };
     this.state = {
       data: this.facultyData,
       facultiCurrentCommittees: [],
@@ -25,7 +36,6 @@ class Faculty extends Component {
       allDepartments: [],
       //     interestedCommitteeData: [], // empty for now ..
       //     chosenCommitteeData: [], // empty for now ..
-      //cols: this.columns,
       loading: false,
       editingKey: '',
       saved: false,
@@ -50,8 +60,8 @@ class Faculty extends Component {
     // 1. All committee and department data. We then set the state.
     // 2. All faculty data. We then set the state.
     // 3. All associations. We then set the state.
-    // TODO: I will reduce the number of times setState is called on render from ~3-4 to 1.
-
+    // TODO: reduce the number of times setState is called on render from ~3-4 to 1. (CF1-129)
+    // TODO: Report when queries are unsuccessful (CF1-156)
     let retrieved = this.retrieveDropdownOptions();
     if (this.props.email && retrieved === true) {
       retrieved = this.getFacultyByEmail(this.props.email);
@@ -208,8 +218,21 @@ class Faculty extends Component {
       facultyDepartments: facultiCurrentDepartments,
     });
 
+    this.createResetState(this.state, this.initialFacultyData);
     return true;
   };
+
+  createResetState(faculti, resetState) {
+    resetState.facultyName = faculti.facultyName;
+    resetState.facultyPhone = faculti.facultyPhone;
+    resetState.facultyEmail = faculti.facultyEmail;
+    resetState.facultyJob = faculti.facultyJob;
+    resetState.facultyDepartments = faculti.facultyDepartments;
+    resetState.facultyExpert = faculti.facultyExpert;
+    resetState.facultySenate = faculti.facultySenate;
+    resetState.facultyID = faculti.facultyID;
+    resetState.facultiCurrentCommittees = faculti.facultiCurrentCommittees;
+  }
 
   constructDepartmentAssociations = async ids => {
     let facultiDepartments = [];
@@ -322,21 +345,52 @@ class Faculty extends Component {
     }
   }
 
-  renderUpdateButton(start, saved, loading) {
-    // TODO: Add a 'reset' button to revert all changes?
+  undoChanges(resetState) {
+    this.setState({
+      facultyName: resetState.facultyName,
+      facultyPhone: resetState.facultyPhone,
+      facultyEmail: resetState.facultyEmail,
+      facultyDepartments: resetState.facultyDepartments,
+      facultyJob: resetState.facultyJob,
+      facultyID: resetState.facultyID,
+      facultyExpert: resetState.facultyExpert,
+      facultySenate: resetState.facultySenate,
+      saved: false,
+      facultiCurrentCommittees: resetState.facultiCurrentCommittees,
+    });
+  }
+
+  renderSubmissionButtons(start) {
+    const { saved, loading } = this.state;
     return (
-      <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
-        Save Changes
-      </Button>
+      <Fragment>
+        <Button type="primary" onClick={start} disabled={!saved} loading={loading}>
+          Save Changes
+        </Button>
+        <Divider type="vertical" />
+        <Popconfirm
+          title="Are you sure?"
+          onConfirm={() => this.undoChanges(this.initialFacultyData)}
+          okText="Yes!"
+          disabled={!this.state.facultyLoaded}
+        >
+          <Button
+            type="primary"
+            disabled={!this.state.facultyLoaded}
+            loading={loading}
+          >
+            Reset
+          </Button>
+        </Popconfirm>
+      </Fragment>
     );
   }
 
   render() {
-    const { loading } = this.state;
     this.departmentsDropdownMenu = this.createDepartmentMenu();
     this.committeesDropdownMenu = this.createCommitteesMenu();
     return (
-      <Fragment>
+      <div>
         <FacultyInfo
           object={this.state}
           departmentsDropdownMenu={this.departmentsDropdownMenu}
@@ -353,8 +407,8 @@ class Faculty extends Component {
           enableSaveChangesButton={this.enableSaveChangesButton}
           committeesDropdownMenu={this.committeesDropdownMenu}
         />
-        {this.renderUpdateButton(this.start, this.state.saved, loading)}
-      </Fragment>
+        {this.renderSubmissionButtons(this.start)}
+      </div>
     );
   }
 }

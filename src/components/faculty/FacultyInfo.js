@@ -20,11 +20,16 @@ class FacultyInfo extends Component {
       facultyJob: 'Faculty Job',
       facultyExpert: 'Faculty Expertise',
       facultyID: -1,
+      departmentsAreLoaded: false,
     };
   }
 
   // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
+    let dropdownIsLoaded = false;
+    if (newProps.departmentsDropdownMenu) {
+      dropdownIsLoaded = true;
+    }
     this.setState({
       facultyName: newProps.object.facultyName,
       facultyEmail: newProps.object.facultyEmail,
@@ -34,6 +39,7 @@ class FacultyInfo extends Component {
       facultyJob: newProps.object.facultyJob,
       facultyExpert: newProps.object.facultyExpert,
       facultyID: newProps.object.facultyID,
+      departmentsAreLoaded: dropdownIsLoaded,
     });
   }
 
@@ -129,7 +135,10 @@ class FacultyInfo extends Component {
           <ul>
             {localDepts}
             {/*TODO: make button have departments in the dropdown, and disabled when no faculty member is selected*/}
-            <Dropdown overlay={this.props.departmentsDropdownMenu}>
+            <Dropdown
+              overlay={this.props.departmentsDropdownMenu}
+              disabled={!this.state.departmentsAreLoaded}
+            >
               <Button type="link" icon="down" size="small">
                 Add
               </Button>
