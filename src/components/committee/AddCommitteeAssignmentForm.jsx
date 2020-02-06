@@ -91,6 +91,7 @@ class AddCommitteeAssignmentForm extends React.Component {
           dataMembers={options}
           onChange={this.changeHandler}
           placeholder="Select Faculty"
+          dividerText="Faculty Info"
         />
         <Descriptions>{items}</Descriptions>
         {this.state.showForm && (

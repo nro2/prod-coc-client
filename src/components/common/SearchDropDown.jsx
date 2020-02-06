@@ -6,6 +6,7 @@ class SearchDropDown extends React.Component {
     super(props);
     this.state = {
       dataMembers: [],
+      showInfo: this.props.showInfo,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -33,14 +34,13 @@ class SearchDropDown extends React.Component {
             dropdownMatchSelectWidth={false}
             size="large"
             loading={this.state.loading}
+            defaultValue={this.props.default}
           >
             {this.props.dataMembers}
           </Select>
           {this.state.showInfo && (
             <div>
-              <Divider orientation="left">
-                {this.state.selected + "'s Info" || ' '}
-              </Divider>
+              <Divider orientation="left">{this.props.dividerText || ''}</Divider>
             </div>
           )}
         </div>
