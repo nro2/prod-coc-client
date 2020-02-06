@@ -37,7 +37,7 @@ export default class RequirementsTable extends Component {
           bordered
           dataSource={this.props.data}
           columns={reqColumns}
-          pagination={this.props.data.length > pageSize && { pageSize }}
+          pagination={1 > pageSize && { pageSize }}
           size="small"
         />
       </div>
