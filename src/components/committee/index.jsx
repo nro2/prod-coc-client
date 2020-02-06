@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { message } from 'antd';
 import CommitteeHeader from './CommitteeHeader.jsx';
 import CommitteeSlots from './CommitteeSlots.jsx';
 import RequirementsTable from './RequirementsTable.jsx';
@@ -12,26 +13,51 @@ export default class App extends Component {
 
     this.state = {
       committee: [],
+      committeeId: 0,
+      committeeAssignment: {},
       dataLoaded: false,
     };
+
+    this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
-  componentDidMount() {
-    axios.get(`/api/committee/info/1`).then(response => {
-      const committee = response.data;
-      this.setState({ committee });
-      this.setState({ dataLoaded: true });
+
+  rerenderParentCallback() {
+    this.fetchCommitteeInfo().then(() => {
+      this.forceUpdate();
     });
   }
+
+  fetchCommitteeInfo() {
+    axios
+      .get(`/api/committee/info/1`)
+      .then(response => {
+        this.setState({
+          committee: response.data,
+          committeeId: response.data.id,
+          committeeAssignment: response.data['committeeAssignment'],
+          dataLoaded: true,
+        });
+      })
+      .catch(err => {
+        message.error(err);
+      });
+  }
+
+  componentDidMount() {
+    this.fetchCommitteeInfo();
+  }
+
   render() {
     return (
       <div className="committeeTable">
         <div className="table-wrapper">
           {this.state.dataLoaded && (
             <React.Fragment>
-              <CommitteeHeader data={this.state.committee} />
-              <CommitteeSlots data={this.state.committee} />
-              <RequirementsTable data={this.state.committee} />
-              <MembersTable data={this.state.committee} />
+              <MembersTable
+                data={this.state.committeeAssignment}
+                id={this.state.committeeId}
+                rerenderParentCallback={this.rerenderParentCallback}
+              />
             </React.Fragment>
           )}
         </div>
@@ -39,3 +65,7 @@ export default class App extends Component {
     );
   }
 }
+
+//<CommitteeHeader data={this.state.committee} />
+//<CommitteeSlots data={this.state.committee} />
+//<RequirementsTable data={this.state.committee} />

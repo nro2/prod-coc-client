@@ -7,10 +7,15 @@ export default class CommitteeHeader extends Component {
   }
 
   getHeader = function() {
+    let newText = this.props.data['description'].split('\n').map((item, i) => {
+      return <li key={i}>{item}</li>;
+    });
+
     return (
       <header>
         <h2>{this.props.data['name']}</h2>
-        <p>{this.props.data['description']}</p>
+        Committee Responsibilities:
+        <ol>{newText}</ol>
       </header>
     );
   };
