@@ -60,8 +60,8 @@ class Faculty extends Component {
     // 1. All committee and department data. We then set the state.
     // 2. All faculty data. We then set the state.
     // 3. All associations. We then set the state.
-    // TODO: I will reduce the number of times setState is called on render from ~3-4 to 1.
-
+    // TODO: reduce the number of times setState is called on render from ~3-4 to 1. (CF1-129)
+    // TODO: Report when queries are unsuccessful (CF1-156)
     let retrieved = this.retrieveDropdownOptions();
     if (this.props.email && retrieved === true) {
       retrieved = this.getFacultyByEmail(this.props.email);

@@ -45,23 +45,32 @@ class CommitteeTables extends Component {
       facultiInterestedCommittees: [],
       facultiChosenCommittees: [],
       committeesDropdownMenu: [],
+      committeesAreLoaded: false,
     };
   }
 
   // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
+    let committeesLoaded = false;
+    if (newProps.committeesDropdownMenu) {
+      committeesLoaded = true;
+    }
     this.setState({
       facultiCurrentCommittees: newProps.facultiCurrentCommittees,
       facultiInterestedCommittees: newProps.mockData,
       facultiChosenCommittees: newProps.mockData,
       committeesDropdownMenu: newProps.committeesDropdownMenu,
+      committeesAreLoaded: committeesLoaded,
     });
   }
 
   renderCurrentCommittees() {
     return (
       <span>
-        <Dropdown overlay={this.state.committeesDropdownMenu}>
+        <Dropdown
+          overlay={this.state.committeesDropdownMenu}
+          disabled={!this.state.committeesAreLoaded}
+        >
           <Button
             type="primary"
             icon="plus"
@@ -82,7 +91,10 @@ class CommitteeTables extends Component {
   renderChosenCommittees(facultyData, columnData) {
     return (
       <span>
-        <Dropdown overlay={this.state.committeesDropdownMenu}>
+        <Dropdown
+          overlay={this.state.committeesDropdownMenu}
+          disabled={!this.state.committeesAreLoaded}
+        >
           <Button
             type="primary"
             icon="plus"
@@ -100,7 +112,10 @@ class CommitteeTables extends Component {
   renderInterestedCommittees(facultyData, columnData) {
     return (
       <span>
-        <Dropdown overlay={this.state.committeesDropdownMenu}>
+        <Dropdown
+          overlay={this.state.committeesDropdownMenu}
+          disabled={!this.state.committeesAreLoaded}
+        >
           <Button
             type="primary"
             icon="plus"
