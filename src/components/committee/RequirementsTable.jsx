@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Divider } from 'antd';
+import { Table, Divider, InputNumber } from 'antd';
 
 const pageSize = 30; // Page size to show pagination
 const reqColumns = [
@@ -16,7 +16,7 @@ const reqColumns = [
   {
     title: 'Required',
     dataIndex: 'slotMinimum',
-    editable: false,
+    render: value => <InputNumber min={0} defaultValue={value} />,
   },
   {
     title: 'To Be Filled',
