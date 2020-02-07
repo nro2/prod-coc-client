@@ -56,11 +56,6 @@ class Faculty extends Component {
 
   componentDidMount() {
     // This method immediately loads when the Faculty Info component is first rendered.
-    // For more information search "React component lifecycle diagram". Below is the order we retrieve data in:
-    // 1. All committee and department data. We then set the state.
-    // 2. All faculty data. We then set the state.
-    // 3. All associations. We then set the state.
-    // TODO: reduce the number of times setState is called on render from ~3-4 to 1. (CF1-129)
     // TODO: Report when queries are unsuccessful (CF1-156)
     let retrieved = this.retrieveDropdownOptions();
     if (this.props.email && retrieved === true) {
@@ -102,7 +97,6 @@ class Faculty extends Component {
     return true;
   };
 
-  // TODO: replace all these `retrieve` methods with getFacultyInfo (CF1-129)
   retrieveAllCommittees() {
     // queries for all committees, returns the promise
     return axios.get(`/api/committees`).catch(err => {
@@ -117,105 +111,36 @@ class Faculty extends Component {
     });
   }
 
-  retrieveSenateData(senateShortName) {
-    // TODO: change to follow the format of the other retrieval methods
-    axios
-      .get(`/api/senate-division/${senateShortName}`)
-      .then(response => {
-        console.log(response.data);
-        const senateInfo = response.data; // assigns response promise
-        this.setState({
-          facultySenate: senateInfo.name,
-        });
-        return true;
-      })
-      .catch(err => {
-        console.log(err);
-        return false;
-      });
-  }
-
-  retrieveCommitteeByID(id) {
-    // queries for a specific committee using the ID, returns the promise object
-    return axios.get(`/api/committee/${id}`).catch(err => {
-      console.log(err);
+  retrieveFacultiInfo = async email => {
+    return axios.get(`api/faculty/info/${email}`).catch(() => {
+      console.log('Failed to retrieve faculty by email!');
     });
-  }
-
-  retrieveDepartmentAssignments(email) {
-    // queries for departments a faculti is a part of, returns the promise object
-    return axios.get(`/api/department-associations/faculty/${email}`).catch(err => {
-      console.log(err);
-    });
-  }
-
-  retrieveCommitteeAssignments(email) {
-    // queries for committees that a faculty is assigned to, returns the promise object
-    return axios.get(`/api/committee-assignment/faculty/${email}`).catch(err => {
-      console.log(err);
-    });
-  }
-
-  retrieveDepartmentByID(id) {
-    // queries for a department given its ID, returns the promise object
-    return axios.get(`/api/department/${id}`).catch(err => {
-      console.log(err);
-    });
-  }
-
+  };
   // TODO: Change from 3 setStates to 1 setState in onComponentMount()
   getFacultyByEmail = async email => {
     let currentCommittees = [];
     let facultiCurrentDepartments = [];
-    let retrieved = false;
-
-    axios
-      .get(`/api/faculty/${email}`)
-      .then(response => {
-        console.log(response.data);
-        const facultyObject = response.data;
-        this.retrieveSenateData(facultyObject.senate_division_short_name);
-        if (!this.state.facultySenate) {
-          alert(retrieved);
-          return false;
-        }
-        this.setState({
-          facultyName: facultyObject.full_name,
-          facultyEmail: facultyObject.email,
-          facultyPhone: facultyObject.phone_num,
-          facultyJob: facultyObject.job_title,
-          facultyLoaded: true,
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        // catch and return failures
-        return false;
-      });
-
-    const committeeIDList = await this.retrieveCommitteeAssignments(email);
-    const departments = await this.retrieveDepartmentAssignments(email);
-
-    if (!committeeIDList) {
-      console.log(`No committee assignments for ${this.state.name}`);
-    } else {
-      currentCommittees = await this.constructCommitteeAssociations(
-        committeeIDList
-      );
+    const facultyObject = await this.retrieveFacultiInfo(email);
+    if (!facultyObject) {
+      // alert the user on failed request
+      // CF1-156
+      return;
     }
 
-    if (!departments) {
-      console.log(`No department assignments for ${this.state.name}`);
-    } else {
-      facultiCurrentDepartments = await this.constructDepartmentAssociations(
-        departments.data.department_ids
-      );
-    }
-
+    currentCommittees = this.constructCommitteeAssociations(
+      facultyObject.data.committees
+    );
+    facultiCurrentDepartments = facultyObject.data.departments;
     this.setState({
       // Once all of our committees and departments are built, we can finally set their state.
       facultiCurrentCommittees: currentCommittees,
       facultyDepartments: facultiCurrentDepartments,
+      facultyName: facultyObject.data.full_name,
+      facultyEmail: facultyObject.data.email,
+      facultyPhone: facultyObject.data.phone_num,
+      facultyJob: facultyObject.data.job_title,
+      facultySenate: facultyObject.data.senate_division_short_name,
+      facultyLoaded: true,
     });
 
     this.createResetState(this.state, this.initialFacultyData);
@@ -234,34 +159,18 @@ class Faculty extends Component {
     resetState.facultiCurrentCommittees = faculti.facultiCurrentCommittees;
   }
 
-  constructDepartmentAssociations = async ids => {
-    let facultiDepartments = [];
-    let department = '';
-    for (let i = 0; i < ids.length; i++) {
-      department = await this.retrieveDepartmentByID(ids[i]);
-      facultiDepartments.push({
-        key: ids[i],
-        name: department.data.name,
-      });
-      // currently ignoring the department's description,
-      // may need to add in the future
-    }
-    return facultiDepartments;
-  };
-
-  constructCommitteeAssociations = async ids => {
+  constructCommitteeAssociations = ids => {
     let facultiCurrentCommittees = [];
     let idList = [];
-    for (let i = 0; i < ids.data.length; i++) {
-      idList.push(ids.data[i].committee_id);
-      const committee = await this.retrieveCommitteeByID(idList[i]);
+    for (let i = 0; i < ids.length; i++) {
+      idList.push(ids[i].committee_id);
       facultiCurrentCommittees.push({
         key: `${i}`,
-        committee: committee.data.name,
-        slots: committee.data.total_slots,
-        description: committee.data.description,
-        startDate: ids.data[i].start_date,
-        endDate: ids.data[i].end_date,
+        committee: ids[i].name,
+        slots: ids[i].total_slots,
+        description: ids[i].description,
+        startDate: ids[i].start_date,
+        endDate: ids[i].end_date,
       });
     }
     return facultiCurrentCommittees;
