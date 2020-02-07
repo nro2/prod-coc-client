@@ -47,7 +47,7 @@ class AddCommitteeAsignment extends React.Component {
       endDate: endDate,
     });
 
-    return await res;
+    return res;
   };
 
   handleCreate = value => {

@@ -31,10 +31,6 @@ export default class App extends Component {
     });
   }
 
-  callback = key => {
-    console.log(key);
-  };
-
   fetchCommitteeInfo(id) {
     axios
       .get(`/api/committee/info/${id}`)
