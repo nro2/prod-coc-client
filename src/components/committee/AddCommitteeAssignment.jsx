@@ -96,7 +96,7 @@ class AddCommitteeAsignment extends React.Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           okText="Add"
-          title="Add new Committee Assignment"
+          title="Add New Committee Member"
           dataMembers={this.state.dataMembers}
           committeeId={this.props.committeeId}
         />
