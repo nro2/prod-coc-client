@@ -17,16 +17,12 @@ class Faculty extends Component {
       },
     ];
     this.state = {
-      facultySnapshot: {},
       data: this.facultyData,
       allCommittees: [],
       allDepartments: [],
-      //     interestedCommitteeData: [], // empty for now ..
-      //     chosenCommitteeData: [], // empty for now ..
       loading: false,
       editingKey: '',
       saved: false,
-
       faculty: {
         currentCommittees: [],
         departments: [{ key: 1, name: 'none' }],
@@ -39,17 +35,7 @@ class Faculty extends Component {
         id: -1,
         loaded: false,
       },
-
-      facultiCurrentCommittees: [],
-      facultyLoaded: false,
-      facultyName: 'Faculty Name',
-      facultyEmail: 'none-specified',
-      facultyPhone: '(000)-000-0000',
-      facultyDepartments: [{ key: 1, name: 'none' }],
-      facultySenate: 'Faculty Senate',
-      facultyJob: 'Faculty Job',
-      facultyExpert: 'Faculty Expertise',
-      facultyID: -1,
+      facultySnapshot: {},
     };
     this.enableSaveChangesButton = this.enableSaveChangesButton.bind(this); // Whenever start/end dates are modified.
     this.onFacultyEdit = this.onFacultyEdit.bind(this); // Whenever faculty info is modified.
@@ -143,15 +129,6 @@ class Faculty extends Component {
         senate: facultyObject.data.senate_division_short_name,
         loaded: true,
       },
-      // FIXME: remove these
-      facultiCurrentCommittees: currentCommittees,
-      facultyDepartments: facultiCurrentDepartments,
-      facultyName: facultyObject.data.full_name,
-      facultyEmail: facultyObject.data.email,
-      facultyPhone: facultyObject.data.phone_num,
-      facultyJob: facultyObject.data.job_title,
-      facultySenate: facultyObject.data.senate_division_short_name,
-      facultyLoaded: true,
     });
 
     this.takeFacultySnapshot();
@@ -160,17 +137,7 @@ class Faculty extends Component {
 
   takeFacultySnapshot() {
     this.setState({
-      facultySnapshot: {
-        facultyName: this.state.facultyName,
-        facultyPhone: this.state.facultyPhone,
-        facultyEmail: this.state.facultyEmail,
-        facultyJob: this.state.facultyJob,
-        facultyDepartments: this.state.facultyDepartments,
-        facultyExpert: this.state.facultyExpert,
-        facultySenate: this.state.facultySenate,
-        facultyID: this.state.facultyID,
-        facultiCurrentCommittees: this.state.facultiCurrentCommittees,
-      },
+      facultySnapshot: this.state.faculty,
     });
   }
 
@@ -211,7 +178,7 @@ class Faculty extends Component {
   openNotification = placement => {
     notification.info({
       message: `Success!`,
-      description: `${this.state.facultyName}'s profile has been updated!`,
+      description: `${this.state.faculty.name}'s profile has been updated!`,
       placement,
     });
   };
@@ -260,28 +227,7 @@ class Faculty extends Component {
 
   undoChanges() {
     this.setState({
-      faculty: {
-        name: this.state.facultySnapshot.facultyName,
-        phone: this.state.facultySnapshot.facultyPhone,
-        email: this.state.facultySnapshot.facultyEmail,
-        departments: this.state.facultySnapshot.facultyDepartments,
-        job: this.state.facultySnapshot.facultyJob,
-        id: this.state.facultySnapshot.facultyID,
-        expert: this.state.facultySnapshot.facultyExpert,
-        senate: this.state.facultySnapshot.facultySenate,
-        currentCommittees: this.state.facultySnapshot.facultiCurrentCommittees,
-      },
-
-      // FIXME: remove these
-      facultyName: this.state.facultySnapshot.facultyName,
-      facultyPhone: this.state.facultySnapshot.facultyPhone,
-      facultyEmail: this.state.facultySnapshot.facultyEmail,
-      facultyDepartments: this.state.facultySnapshot.facultyDepartments,
-      facultyJob: this.state.facultySnapshot.facultyJob,
-      facultyID: this.state.facultySnapshot.facultyID,
-      facultyExpert: this.state.facultySnapshot.facultyExpert,
-      facultySenate: this.state.facultySnapshot.facultySenate,
-      facultiCurrentCommittees: this.state.facultySnapshot.facultiCurrentCommittees,
+      faculty: this.state.facultySnapshot,
       saved: false,
     });
   }
@@ -298,11 +244,11 @@ class Faculty extends Component {
           title="Are you sure?"
           onConfirm={() => this.undoChanges()}
           okText="Yes!"
-          disabled={!this.state.facultyLoaded}
+          disabled={!this.state.faculty.loaded}
         >
           <Button
             type="primary"
-            disabled={!this.state.facultyLoaded}
+            disabled={!this.state.faculty.loaded}
             loading={loading}
           >
             Reset
@@ -325,7 +271,7 @@ class Faculty extends Component {
           removeDepartment={this.removeDepartment}
         />
         <CommitteeTables
-          facultiCurrentCommittees={this.state.facultiCurrentCommittees}
+          facultiCurrentCommittees={this.state.faculty.currentCommittees}
           mockData={this.state.data}
           sayHello={this.sayHello}
           enableSaveChangesButton={this.enableSaveChangesButton}
