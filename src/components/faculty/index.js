@@ -19,7 +19,6 @@ class Faculty extends Component {
     this.state = {
       facultySnapshot: {},
       data: this.facultyData,
-      facultiCurrentCommittees: [],
       allCommittees: [],
       allDepartments: [],
       //     interestedCommitteeData: [], // empty for now ..
@@ -27,7 +26,21 @@ class Faculty extends Component {
       loading: false,
       editingKey: '',
       saved: false,
-      committeeIDList: [],
+
+      faculty: {
+        currentCommittees: [],
+        departments: [{ key: 1, name: 'none' }],
+        name: 'Faculty Name',
+        email: 'none-specified',
+        phone: '(000)-000-0000',
+        senate: 'Faculty Senate',
+        job: 'Faculty Job',
+        expert: 'Faculty Expertise',
+        id: -1,
+        loaded: false,
+      },
+
+      facultiCurrentCommittees: [],
       facultyLoaded: false,
       facultyName: 'Faculty Name',
       facultyEmail: 'none-specified',
@@ -120,7 +133,17 @@ class Faculty extends Component {
     );
     facultiCurrentDepartments = facultyObject.data.departments;
     this.setState({
-      // Once all of our committees and departments are built, we can finally set their state.
+      faculty: {
+        currentCommittees,
+        departments: facultiCurrentDepartments,
+        name: facultyObject.data.full_name,
+        email: facultyObject.data.email,
+        phone: facultyObject.data.phone_num,
+        job: facultyObject.data.job_title,
+        senate: facultyObject.data.senate_division_short_name,
+        loaded: true,
+      },
+      // FIXME: remove these
       facultiCurrentCommittees: currentCommittees,
       facultyDepartments: facultiCurrentDepartments,
       facultyName: facultyObject.data.full_name,
@@ -201,12 +224,17 @@ class Faculty extends Component {
   };
 
   removeDepartment = toRemove => {
-    let localDepts = this.state.facultyDepartments.filter(
+    let localDepts = this.state.faculty.departments.filter(
       title => title !== toRemove
     );
     console.log('Department removed:', toRemove);
     this.enableSaveChangesButton();
-    this.setState({ facultyDepartments: localDepts });
+    this.setState({
+      faculty: {
+        ...this.state.faculty,
+        departments: localDepts,
+      },
+    });
   };
 
   enableSaveChangesButton(phone, senate, committeeID) {
@@ -221,14 +249,30 @@ class Faculty extends Component {
     if (phone || senate) {
       this.setState({
         saved: true,
-        facultyPhone: phone,
-        facultySenate: senate,
+        faculty: {
+          ...this.state.faculty,
+          phone,
+          senate,
+        },
       });
     }
   }
 
   undoChanges() {
     this.setState({
+      faculty: {
+        name: this.state.facultySnapshot.facultyName,
+        phone: this.state.facultySnapshot.facultyPhone,
+        email: this.state.facultySnapshot.facultyEmail,
+        departments: this.state.facultySnapshot.facultyDepartments,
+        job: this.state.facultySnapshot.facultyJob,
+        id: this.state.facultySnapshot.facultyID,
+        expert: this.state.facultySnapshot.facultyExpert,
+        senate: this.state.facultySnapshot.facultySenate,
+        currentCommittees: this.state.facultySnapshot.facultiCurrentCommittees,
+      },
+
+      // FIXME: remove these
       facultyName: this.state.facultySnapshot.facultyName,
       facultyPhone: this.state.facultySnapshot.facultyPhone,
       facultyEmail: this.state.facultySnapshot.facultyEmail,
@@ -272,7 +316,7 @@ class Faculty extends Component {
     return (
       <div>
         <FacultyInfo
-          object={this.state}
+          faculty={this.state.faculty}
           departments={this.state.allDepartments}
           enableSaveChangesButton={this.enableSaveChangesButton}
           updateFaculty={this.updateFaculty}
