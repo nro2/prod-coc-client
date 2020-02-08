@@ -27,6 +27,7 @@ export default class RequirementsTable extends Component {
         item.slotReqs = value;
         exists = true;
       }
+      return item;
     });
 
     if (exists === false) {
@@ -41,21 +42,24 @@ export default class RequirementsTable extends Component {
 
   handleSave = () => {
     this.state.newSlotReqs.map(item => {
-      axios
+      let res = axios
         .put(
           `api/committee-slots/${this.props.committeeId}/${item.senateShortname}`,
           {
             slotRequirements: item.slotReqs,
           }
         )
-        .then(() => {
+        .then(response => {
           message.success('Slot requirements successfully updated');
           this.setState({ disabled: true });
+          return response;
         })
         .catch(err => {
           message.error(err.response.data.error);
           this.setState({ disabled: true });
+          return err;
         });
+      return res;
     });
 
     this.setState({
