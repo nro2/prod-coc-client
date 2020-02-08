@@ -23,6 +23,8 @@ class Faculty extends Component {
       data: this.facultyData,
       allCommittees: [],
       allDepartments: [],
+      committeesLoaded: false,
+      departmentsLoaded: false,
       loading: false,
       error: {},
       faculty: {
@@ -47,7 +49,6 @@ class Faculty extends Component {
   async componentDidMount() {
     // This request to populate the dropdowns can be asynchronous, so that it runs
     // without blocking while the synchronous faculty info request is processed
-    // TODO: change how this function works
     this.retrieveDropdownOptions();
 
     await axios
@@ -86,53 +87,45 @@ class Faculty extends Component {
       });
   }
 
+  /**
+   * Retrieves the committees and departments list and stores them in the state of
+   * the component.
+   *
+   * When the requests fail, the `committeesLoaded` state remains `false`.
+   *
+   * @returns {Promise<void>}
+   */
   retrieveDropdownOptions = async () => {
-    const committees = await this.retrieveAllCommittees();
-    const departments = await this.retrieveAllDepartments();
-    if (!committees || !departments) {
-      // notify caller about failure to retrieve data
-      return false;
-    }
-    let committeeList = [];
-    let departmentList = [];
-    // Begin manipulating our promise objects for the data we want.
-    // They work the same as any other object would.
-    committees.data.forEach(committees => {
-      committeeList.push({
-        id: committees.committee_id,
-        name: committees.name,
+    await axios.get('/api/committees').then(committees => {
+      const committeeList = [];
+      committees.data.forEach(committees => {
+        committeeList.push({
+          id: committees.committee_id,
+          name: committees.name,
+        });
+      });
+
+      this.setState({
+        allCommittees: committeeList,
+        committeesLoaded: true,
       });
     });
 
-    departments.data.forEach(departments => {
-      departmentList.push({
-        id: departments.committee_id,
-        name: departments.name,
+    axios.get('/api/departments').then(departments => {
+      const departmentList = [];
+      departments.data.forEach(departments => {
+        departmentList.push({
+          id: departments.committee_id,
+          name: departments.name,
+        });
+      });
+
+      this.setState({
+        allDepartments: departmentList,
+        departmentsLoaded: true,
       });
     });
-    this.setState({
-      // Generate local lists and only modify states through setState.
-      // We must treat states as immutable.
-      // This is the way.
-      allCommittees: committeeList,
-      allDepartments: departmentList,
-    });
-    return true;
   };
-
-  retrieveAllCommittees() {
-    // queries for all committees, returns the promise
-    return axios.get(`/api/committees`).catch(err => {
-      console.log(err);
-    });
-  }
-
-  retrieveAllDepartments() {
-    // queries for all departments, returns the promise
-    return axios.get(`/api/departments`).catch(err => {
-      console.log(err);
-    });
-  }
 
   /**
    * Takes a snapshot of the current faculty state, so that when we can revert
@@ -200,16 +193,22 @@ class Faculty extends Component {
     alert('Hello! I am not yet implemented.');
   };
 
-  removeDepartment = toRemove => {
-    let localDepts = this.state.faculty.departments.filter(
-      title => title !== toRemove
+  /**
+   * Removes a department from the state. This method is called from `FacultyInfo`
+   * so that the state of the department transitions down to that component.
+   *
+   * @param department  Department to remove
+   */
+  removeDepartment = department => {
+    const departments = this.state.faculty.departments.filter(
+      title => title !== department
     );
-    console.log('Department removed:', toRemove);
+    console.log('Department removed:', department);
     this.enableSaveChangesButton();
     this.setState({
       faculty: {
         ...this.state.faculty,
-        departments: localDepts,
+        departments,
       },
     });
   };
@@ -235,7 +234,11 @@ class Faculty extends Component {
     }
   }
 
-  undoChanges() {
+  /**
+   * Restores the latest faculty snapshot, overriding the current faculty with the
+   * last saved faculty state.
+   */
+  restoreSnapshot() {
     this.setState({
       faculty: this.state.facultySnapshot,
       saved: false,
@@ -252,7 +255,7 @@ class Faculty extends Component {
         <Divider type="vertical" />
         <Popconfirm
           title="Are you sure?"
-          onConfirm={() => this.undoChanges()}
+          onConfirm={() => this.restoreSnapshot()}
           okText="Yes!"
           disabled={!this.state.faculty.loaded}
         >
