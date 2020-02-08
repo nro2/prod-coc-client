@@ -10,7 +10,7 @@ class FacultyInfo extends Component {
         name: 'Faculty Name',
         email: 'none-specified',
         phone: '(000)-000-0000',
-        departments: [{ key: 1, name: 'none' }],
+        departments: [{ department_id: 1, name: 'none' }],
         senate: 'Faculty Senate',
         job: 'Faculty Job',
         expertise: 'Faculty Expertise',
@@ -67,7 +67,7 @@ class FacultyInfo extends Component {
   renderFacultyInfo() {
     const departments = this.createDepartmentMenu();
     const localDepts = this.state.faculty.departments.map(department => (
-      <li key={department.key}>
+      <li key={department.department_id}>
         {department.name}
         <Button
           type="link"

@@ -29,7 +29,7 @@ class Faculty extends Component {
       error: {},
       faculty: {
         currentCommittees: [],
-        departments: [{ key: 1, name: 'none' }],
+        departments: [{ department_id: 1, name: 'none' }],
         name: 'Faculty Name',
         email: 'none-specified',
         phone: '(000)-000-0000',
@@ -114,10 +114,10 @@ class Faculty extends Component {
 
     axios.get('/api/departments').then(departments => {
       const departmentList = [];
-      departments.data.forEach(departments => {
+      departments.data.forEach(department => {
         departmentList.push({
-          id: departments.committee_id,
-          name: departments.name,
+          id: department.department_id,
+          name: department.name,
         });
       });
 
