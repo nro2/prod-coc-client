@@ -16,18 +16,8 @@ class Faculty extends Component {
         description: 'stuff and things',
       },
     ];
-    this.initialFacultyData = {
-      facultyName: null,
-      facultyEmail: null,
-      facultyPhone: null,
-      facultyDepartments: null,
-      facultySenate: null,
-      facultyJob: null,
-      facultyExpert: null,
-      facultyID: -1,
-      facultiCurrentCommittees: [],
-    };
     this.state = {
+      facultySnapshot: {},
       data: this.facultyData,
       facultiCurrentCommittees: [],
       allCommittees: [],
@@ -37,8 +27,8 @@ class Faculty extends Component {
       loading: false,
       editingKey: '',
       saved: false,
-      facultyLoaded: false,
       committeeIDList: [],
+      facultyLoaded: false,
       facultyName: 'Faculty Name',
       facultyEmail: 'none-specified',
       facultyPhone: '(000)-000-0000',
@@ -141,20 +131,24 @@ class Faculty extends Component {
       facultyLoaded: true,
     });
 
-    this.createResetState(this.state, this.initialFacultyData);
+    this.takeFacultySnapshot();
     return true;
   };
 
-  createResetState(faculti, resetState) {
-    resetState.facultyName = faculti.facultyName;
-    resetState.facultyPhone = faculti.facultyPhone;
-    resetState.facultyEmail = faculti.facultyEmail;
-    resetState.facultyJob = faculti.facultyJob;
-    resetState.facultyDepartments = faculti.facultyDepartments;
-    resetState.facultyExpert = faculti.facultyExpert;
-    resetState.facultySenate = faculti.facultySenate;
-    resetState.facultyID = faculti.facultyID;
-    resetState.facultiCurrentCommittees = faculti.facultiCurrentCommittees;
+  takeFacultySnapshot() {
+    this.setState({
+      facultySnapshot: {
+        facultyName: this.state.facultyName,
+        facultyPhone: this.state.facultyPhone,
+        facultyEmail: this.state.facultyEmail,
+        facultyJob: this.state.facultyJob,
+        facultyDepartments: this.state.facultyDepartments,
+        facultyExpert: this.state.facultyExpert,
+        facultySenate: this.state.facultySenate,
+        facultyID: this.state.facultyID,
+        facultiCurrentCommittees: this.state.facultiCurrentCommittees,
+      },
+    });
   }
 
   constructCommitteeAssociations = ids => {
@@ -233,18 +227,18 @@ class Faculty extends Component {
     }
   }
 
-  undoChanges(resetState) {
+  undoChanges() {
     this.setState({
-      facultyName: resetState.facultyName,
-      facultyPhone: resetState.facultyPhone,
-      facultyEmail: resetState.facultyEmail,
-      facultyDepartments: resetState.facultyDepartments,
-      facultyJob: resetState.facultyJob,
-      facultyID: resetState.facultyID,
-      facultyExpert: resetState.facultyExpert,
-      facultySenate: resetState.facultySenate,
+      facultyName: this.state.facultySnapshot.facultyName,
+      facultyPhone: this.state.facultySnapshot.facultyPhone,
+      facultyEmail: this.state.facultySnapshot.facultyEmail,
+      facultyDepartments: this.state.facultySnapshot.facultyDepartments,
+      facultyJob: this.state.facultySnapshot.facultyJob,
+      facultyID: this.state.facultySnapshot.facultyID,
+      facultyExpert: this.state.facultySnapshot.facultyExpert,
+      facultySenate: this.state.facultySnapshot.facultySenate,
+      facultiCurrentCommittees: this.state.facultySnapshot.facultiCurrentCommittees,
       saved: false,
-      facultiCurrentCommittees: resetState.facultiCurrentCommittees,
     });
   }
 
@@ -258,7 +252,7 @@ class Faculty extends Component {
         <Divider type="vertical" />
         <Popconfirm
           title="Are you sure?"
-          onConfirm={() => this.undoChanges(this.initialFacultyData)}
+          onConfirm={() => this.undoChanges()}
           okText="Yes!"
           disabled={!this.state.facultyLoaded}
         >
