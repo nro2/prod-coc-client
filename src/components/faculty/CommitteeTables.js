@@ -41,9 +41,11 @@ class CommitteeTables extends Component {
       },
     ];
     this.state = {
-      facultiCurrentCommittees: [],
-      facultiInterestedCommittees: [],
-      facultiChosenCommittees: [],
+      faculty: {
+        currentCommittees: [],
+        interestedCommittees: [],
+        chosenCommittees: [],
+      },
       committeesAreLoaded: false,
       committees: [],
     };
@@ -51,15 +53,14 @@ class CommitteeTables extends Component {
 
   // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
-    let committeesLoaded = false;
-    if (newProps.committees) {
-      // TODO: change this to something more reasonable
-      committeesLoaded = true;
-    }
+    const committeesLoaded = newProps.committees.length !== 0;
+
     this.setState({
-      facultiCurrentCommittees: newProps.facultiCurrentCommittees,
-      facultiInterestedCommittees: newProps.mockData,
-      facultiChosenCommittees: newProps.mockData,
+      faculty: {
+        currentCommittees: newProps.facultiCurrentCommittees,
+        interestedCommittees: newProps.mockData,
+        chosenCommittees: newProps.mockData,
+      },
       committeesAreLoaded: committeesLoaded,
       committees: newProps.committees,
     });
@@ -92,7 +93,7 @@ class CommitteeTables extends Component {
         <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
         <EditableFormTable
           enableSaveChangesButton={this.props.enableSaveChangesButton}
-          currentCommittee={this.state.facultiCurrentCommittees}
+          currentCommittee={this.state.faculty.currentCommittees}
         />
       </span>
     );
@@ -141,15 +142,15 @@ class CommitteeTables extends Component {
     return (
       <Fragment>
         {this.renderCurrentCommittees(
-          this.state.facultiCurrentCommittees,
+          this.state.faculty.currentCommittees,
           this.columns
         )}
         {this.renderChosenCommittees(
-          this.state.facultiChosenCommittees,
+          this.state.faculty.chosenCommittees,
           this.columns
         )}
         {this.renderInterestedCommittees(
-          this.state.facultiChosenCommittees,
+          this.state.faculty.chosenCommittees,
           this.columns
         )}
       </Fragment>
