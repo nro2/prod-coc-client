@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Divider, Avatar, Typography, Dropdown } from 'antd';
+import { Button, Divider, Avatar, Typography, Dropdown, Menu } from 'antd';
 const { Paragraph } = Typography;
 
 const textStyle = {
@@ -26,10 +26,8 @@ class FacultyInfo extends Component {
 
   // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
-    let dropdownIsLoaded = false;
-    if (newProps.departmentsDropdownMenu) {
-      dropdownIsLoaded = true;
-    }
+    let dropdownIsLoaded = newProps.departments.length !== 0;
+
     this.setState({
       facultyName: newProps.object.facultyName,
       facultyEmail: newProps.object.facultyEmail,
@@ -68,14 +66,24 @@ class FacultyInfo extends Component {
     }
   };
 
-  renderFacultiInfo(departments) {
-    const localDepts = departments.map(departments => (
-      <li key={departments.key}>
-        {departments.name}
+  createDepartmentMenu() {
+    const departmentsDropdownMenu = this.props.departments.map(department => (
+      <Menu.Item key={department.id}>
+        <Button type="link">{department.name}</Button>
+      </Menu.Item>
+    ));
+    return <Menu>{departmentsDropdownMenu}</Menu>;
+  }
+
+  renderFacultyInfo() {
+    const departmentsMenu = this.createDepartmentMenu();
+    const localDepts = this.state.facultyDepartments.map(department => (
+      <li key={department.key}>
+        {department.name}
         <Button
           type="link"
           onClick={() => {
-            this.props.removeDepartment(departments);
+            this.props.removeDepartment(department);
           }}
           size="small"
         >
@@ -136,7 +144,7 @@ class FacultyInfo extends Component {
             {localDepts}
             {/*TODO: make button have departments in the dropdown, and disabled when no faculty member is selected*/}
             <Dropdown
-              overlay={this.props.departmentsDropdownMenu}
+              overlay={departmentsMenu}
               disabled={!this.state.departmentsAreLoaded}
             >
               <Button type="link" icon="down" size="small">
@@ -150,11 +158,7 @@ class FacultyInfo extends Component {
   }
 
   render() {
-    return (
-      <React.Fragment>
-        {this.renderFacultiInfo(this.state.facultyDepartments)}
-      </React.Fragment>
-    );
+    return <React.Fragment>{this.renderFacultyInfo()}</React.Fragment>;
   }
 }
 

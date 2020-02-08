@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, notification, Menu, Divider, Popconfirm } from 'antd';
+import { Button, notification, Divider, Popconfirm } from 'antd';
 import './faculty.css';
 import FacultyInfo from './FacultyInfo';
 import CommitteeTables from './CommitteeTables';
@@ -8,8 +8,6 @@ import axios from 'axios';
 class Faculty extends Component {
   constructor(props) {
     super(props);
-    this.departmentsDropdownMenu = '';
-    this.committeesDropdownMenu = '';
     this.facultyData = [
       {
         key: '1',
@@ -217,25 +215,6 @@ class Faculty extends Component {
     this.setState({ facultyDepartments: localDepts });
   };
 
-  createDepartmentMenu() {
-    // Manipulates departments into menu items, and then returns it as a menu object
-    const departmentsDropdownMenu = this.state.allDepartments.map(departments => (
-      <Menu.Item key={departments.id}>
-        <Button type="link">{departments.name}</Button>
-      </Menu.Item>
-    ));
-    return <Menu>{departmentsDropdownMenu}</Menu>;
-  }
-
-  createCommitteesMenu() {
-    const committeesDropdownMenu = this.state.allCommittees.map(committees => (
-      <Menu.Item key={committees.id}>
-        <Button type="link">{committees.name}</Button>
-      </Menu.Item>
-    ));
-    return <Menu>{committeesDropdownMenu}</Menu>;
-  }
-
   enableSaveChangesButton(phone, senate, committeeID) {
     // enableSaveChangesButton is triggered by child state whenever start/end dates are edited and saved
     // this is what allows the 'save changes button' to be enabled when changes are made
@@ -296,13 +275,11 @@ class Faculty extends Component {
   }
 
   render() {
-    this.departmentsDropdownMenu = this.createDepartmentMenu();
-    this.committeesDropdownMenu = this.createCommitteesMenu();
     return (
       <div>
         <FacultyInfo
           object={this.state}
-          departmentsDropdownMenu={this.departmentsDropdownMenu}
+          departments={this.state.allDepartments}
           enableSaveChangesButton={this.enableSaveChangesButton}
           updateFaculty={this.updateFaculty}
           sayHello={this.sayHello}
@@ -314,7 +291,7 @@ class Faculty extends Component {
           mockData={this.state.data}
           sayHello={this.sayHello}
           enableSaveChangesButton={this.enableSaveChangesButton}
-          committeesDropdownMenu={this.committeesDropdownMenu}
+          committees={this.state.allCommittees}
         />
         {this.renderSubmissionButtons(this.start)}
       </div>

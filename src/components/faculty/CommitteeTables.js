@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Table, Button, Divider, Dropdown } from 'antd';
+import { Table, Button, Divider, Dropdown, Menu } from 'antd';
 import EditableFormTable from './EditableTable';
 import './faculty.css';
 
@@ -44,33 +44,43 @@ class CommitteeTables extends Component {
       facultiCurrentCommittees: [],
       facultiInterestedCommittees: [],
       facultiChosenCommittees: [],
-      committeesDropdownMenu: [],
       committeesAreLoaded: false,
+      committees: [],
     };
   }
 
   // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
     let committeesLoaded = false;
-    if (newProps.committeesDropdownMenu) {
+    if (newProps.committees) {
+      // TODO: change this to something more reasonable
       committeesLoaded = true;
     }
     this.setState({
       facultiCurrentCommittees: newProps.facultiCurrentCommittees,
       facultiInterestedCommittees: newProps.mockData,
       facultiChosenCommittees: newProps.mockData,
-      committeesDropdownMenu: newProps.committeesDropdownMenu,
       committeesAreLoaded: committeesLoaded,
+      committees: newProps.committees,
     });
   }
 
+  createCommitteesMenu() {
+    const committeesDropdownMenu = this.state.committees.map(committee => (
+      <Menu.Item key={committee.id}>
+        <Button type="link">{committee.name}</Button>
+      </Menu.Item>
+    ));
+
+    return <Menu>{committeesDropdownMenu}</Menu>;
+  }
+
   renderCurrentCommittees() {
+    const committees = this.createCommitteesMenu();
+
     return (
       <span>
-        <Dropdown
-          overlay={this.state.committeesDropdownMenu}
-          disabled={!this.state.committeesAreLoaded}
-        >
+        <Dropdown overlay={committees} disabled={!this.state.committeesAreLoaded}>
           <Button
             type="primary"
             icon="plus"
@@ -89,12 +99,10 @@ class CommitteeTables extends Component {
   }
 
   renderChosenCommittees(facultyData, columnData) {
+    const committees = this.createCommitteesMenu();
     return (
       <span>
-        <Dropdown
-          overlay={this.state.committeesDropdownMenu}
-          disabled={!this.state.committeesAreLoaded}
-        >
+        <Dropdown overlay={committees} disabled={!this.state.committeesAreLoaded}>
           <Button
             type="primary"
             icon="plus"
@@ -110,12 +118,11 @@ class CommitteeTables extends Component {
   }
 
   renderInterestedCommittees(facultyData, columnData) {
+    const committees = this.createCommitteesMenu();
+
     return (
       <span>
-        <Dropdown
-          overlay={this.state.committeesDropdownMenu}
-          disabled={!this.state.committeesAreLoaded}
-        >
+        <Dropdown overlay={committees} disabled={!this.state.committeesAreLoaded}>
           <Button
             type="primary"
             icon="plus"
