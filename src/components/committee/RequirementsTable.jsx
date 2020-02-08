@@ -5,11 +5,18 @@ import axios from 'axios';
 const pageSize = 30; // Page size to show pagination
 
 export default class RequirementsTable extends Component {
-  state = {
-    committeeId: this.props.committeeId,
-    disabled: true,
-    newSlotReqs: [],
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      committeeId: this.props.committeeId,
+      disabled: true,
+      newSlotReqs: [],
+    };
+
+    this.handleReqChange = this.handleReqChange.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+  }
 
   handleReqChange = (value, senateShortname) => {
     let newSlotReqsState = this.state.newSlotReqs;
