@@ -76,7 +76,7 @@ export default class RequirementsTable extends Component {
       dataIndex: 'slotMinimum',
       render: (initValue, key) => (
         <InputNumber
-          min={0}
+          min={1}
           defaultValue={initValue}
           disabled={this.state.disabled}
           onChange={value => {
