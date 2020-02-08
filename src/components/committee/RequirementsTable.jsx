@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Divider, InputNumber, Button } from 'antd';
+import { Table, Divider, InputNumber, Button, message } from 'antd';
 import axios from 'axios';
 
 const pageSize = 30; // Page size to show pagination
@@ -17,7 +17,7 @@ export default class RequirementsTable extends Component {
     let exists = false;
     newSlotReqsState.map(item => {
       if (item.senateShortname === senateShortname) {
-        item.slotReq = value;
+        item.slotReqs = value;
         exists = true;
       }
     });
@@ -25,18 +25,39 @@ export default class RequirementsTable extends Component {
     if (exists === false) {
       newSlotReqsState = this.state.newSlotReqs.concat({
         senateShortname: senateShortname,
-        slotReq: value,
+        slotReqs: value,
       });
     }
 
     this.setState({ newSlotReqs: newSlotReqsState });
   };
 
+  handleSave = () => {
+    this.state.newSlotReqs.map(item => {
+      axios
+        .put(
+          `api/committee-slots/${this.props.committeeId}/${item.senateShortname}`,
+          {
+            slotRequirements: item.slotReqs,
+          }
+        )
+        .then(() => {
+          message.success('Slot requirements successfully updated');
+        })
+        .catch(err => {
+          message.error(err.response.data.error);
+        });
+    });
+
+    this.setState({
+      newSlotReqs: [],
+    });
+  };
+
   toggle = () => {
     this.setState({
       disabled: !this.state.disabled,
     });
-    console.log(this.state.newSlotReqs);
   };
 
   reqColumns = [
@@ -78,6 +99,9 @@ export default class RequirementsTable extends Component {
         </Divider>
         <Button onClick={this.toggle} type="primary">
           Edit
+        </Button>
+        <Button onClick={this.handleSave} type="primary">
+          Save
         </Button>
         <Table
           rowKey="senateShortname"
