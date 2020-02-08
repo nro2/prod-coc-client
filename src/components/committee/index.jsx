@@ -104,7 +104,10 @@ export default class App extends Component {
               />
               <CommitteeHeader data={this.state.committee} />
 
-              <RequirementsTable data={this.state.committeeSlots} />
+              <RequirementsTable
+                data={this.state.committeeSlots}
+                committeeId={this.state.committeeId}
+              />
               <MembersTable
                 data={this.state.committeeAssignment}
                 id={this.state.committeeId}

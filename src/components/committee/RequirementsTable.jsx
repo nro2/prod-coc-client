@@ -6,13 +6,37 @@ const pageSize = 30; // Page size to show pagination
 
 export default class RequirementsTable extends Component {
   state = {
+    committeeId: this.props.committeeId,
     disabled: true,
+    newSlotReqs: [],
+  };
+
+  handleReqChange = (value, senateShortname) => {
+    let newSlotReqsState = this.state.newSlotReqs;
+
+    let exists = false;
+    newSlotReqsState.map(item => {
+      if (item.senateShortname === senateShortname) {
+        item.slotReq = value;
+        exists = true;
+      }
+    });
+
+    if (exists === false) {
+      newSlotReqsState = this.state.newSlotReqs.concat({
+        senateShortname: senateShortname,
+        slotReq: value,
+      });
+    }
+
+    this.setState({ newSlotReqs: newSlotReqsState });
   };
 
   toggle = () => {
     this.setState({
       disabled: !this.state.disabled,
     });
+    console.log(this.state.newSlotReqs);
   };
 
   reqColumns = [
@@ -29,8 +53,15 @@ export default class RequirementsTable extends Component {
     {
       title: 'Required',
       dataIndex: 'slotMinimum',
-      render: value => (
-        <InputNumber min={0} defaultValue={value} disabled={this.state.disabled} />
+      render: (initValue, key) => (
+        <InputNumber
+          min={0}
+          defaultValue={initValue}
+          disabled={this.state.disabled}
+          onChange={value => {
+            this.handleReqChange(value, key.senateShortname);
+          }}
+        />
       ),
     },
     {
