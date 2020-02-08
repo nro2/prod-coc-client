@@ -13,7 +13,7 @@ class FacultyInfo extends Component {
         departments: [{ key: 1, name: 'none' }],
         senate: 'Faculty Senate',
         job: 'Faculty Job',
-        expert: 'Faculty Expertise',
+        expertise: 'Faculty Expertise',
         id: -1,
       },
       departmentsAreLoaded: false,
@@ -90,7 +90,7 @@ class FacultyInfo extends Component {
           <Divider type="vertical" />
           <i className="text-style">{this.state.faculty.job}</i>
           <Divider type="vertical" />
-          <span className="text-style">{this.state.faculty.expert}</span>
+          <span className="text-style">{this.state.faculty.expertise}</span>
           <Divider type="vertical" />
           <Button type="link" onClick={() => this.props.sayHello()} size="small">
             Change

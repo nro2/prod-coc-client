@@ -35,15 +35,15 @@ class Faculty extends Component {
         phone: '(000)-000-0000',
         senate: 'Faculty Senate',
         job: 'Faculty Job',
-        expert: 'Faculty Expertise',
+        expertise: 'Faculty Expertise',
         id: -1,
         loaded: false,
       },
       facultySnapshot: {},
       saved: false,
     };
-    this.enableSaveChangesButton = this.enableSaveChangesButton.bind(this); // Whenever start/end dates are modified.
-    this.onFacultyEdit = this.onFacultyEdit.bind(this); // Whenever faculty info is modified.
+    this.enableSaveChangesButton = this.enableSaveChangesButton.bind(this);
+    this.onFacultyEdit = this.onFacultyEdit.bind(this);
   }
 
   async componentDidMount() {
@@ -67,6 +67,7 @@ class Faculty extends Component {
           job: data.job_title,
           senate: data.senate_division_short_name,
           loaded: true,
+          expertise: data.surveys.expertise || 'No Expertise',
         };
 
         this.setState({
