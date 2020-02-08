@@ -50,9 +50,11 @@ export default class RequirementsTable extends Component {
         )
         .then(() => {
           message.success('Slot requirements successfully updated');
+          this.setState({ disabled: true });
         })
         .catch(err => {
           message.error(err.response.data.error);
+          this.setState({ disabled: true });
         });
     });
 
@@ -104,12 +106,14 @@ export default class RequirementsTable extends Component {
         <Divider type="horizontal" orientation="left">
           Requirements
         </Divider>
-        <Button onClick={this.toggle} type="primary">
-          Edit
-        </Button>
-        <Button onClick={this.handleSave} type="primary">
-          Save
-        </Button>
+        <div style={{ marginBottom: 16 }}>
+          <Button style={{ marginRight: 8 }} onClick={this.toggle} type="primary">
+            Edit
+          </Button>
+          <Button onClick={this.handleSave} type="primary">
+            Save
+          </Button>
+        </div>
         <Table
           rowKey="senateShortname"
           bordered

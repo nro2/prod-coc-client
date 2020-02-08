@@ -49,12 +49,14 @@ export default class MembersTable extends React.Component {
         <Divider type="horizontal" orientation="left">
           Members
         </Divider>
-        <AddCommitteeAsignment
-          buttonLabel="Add Member"
-          endpoint="api/faculty"
-          committeeId={this.props.id}
-          rerenderParentCallback={this.rerenderParentCallback}
-        />
+        <div style={{ marginBottom: 16 }}>
+          <AddCommitteeAsignment
+            buttonLabel="Add Member"
+            endpoint="api/faculty"
+            committeeId={this.props.id}
+            rerenderParentCallback={this.rerenderParentCallback}
+          />
+        </div>
         <EditableFormTable data={this.props.data} columns={columns} />
       </div>
     );
