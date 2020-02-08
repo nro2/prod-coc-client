@@ -111,14 +111,6 @@ class FacultyInfo extends Component {
             {this.state.faculty.senate}
           </Paragraph>
           <Divider type="vertical" />
-          <Button
-            size="small"
-            onClick={() => {
-              this.props.getFacultyByEmail('wolsborn@pdx.edu');
-            }}
-          >
-            Retrieve Joshy
-          </Button>
         </p>
         <Divider type="horizontal" orientation="left">
           Contact Information
