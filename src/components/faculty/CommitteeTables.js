@@ -93,7 +93,7 @@ class CommitteeTables extends Component {
         <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
         <EditableFormTable
           enableSaveChangesButton={this.props.enableSaveChangesButton}
-          currentCommittee={this.state.faculty.currentCommittees}
+          currentCommittees={this.state.faculty.currentCommittees}
         />
       </span>
     );
