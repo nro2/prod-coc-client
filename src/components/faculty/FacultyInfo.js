@@ -96,7 +96,7 @@ class FacultyInfo extends Component {
             Change
           </Button>
         </h1>
-        <p style={{ fontSize: '90%' }}>
+        <div style={{ fontSize: '90%' }}>
           <b>Senate: </b>
           <Paragraph
             style={{ display: 'inline' }}
@@ -105,11 +105,11 @@ class FacultyInfo extends Component {
             {this.state.faculty.senate}
           </Paragraph>
           <Divider type="vertical" />
-        </p>
+        </div>
         <Divider type="horizontal" orientation="left">
           Contact Information
         </Divider>
-        <p className="text-style">
+        <div className="text-style">
           <ul>
             <li>{this.state.faculty.email + '\n'}</li>
             <li>
@@ -133,7 +133,7 @@ class FacultyInfo extends Component {
               </Button>
             </Dropdown>
           </ul>
-        </p>
+        </div>
       </span>
     );
   }
