@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 import { Button, Divider, Avatar, Typography, Dropdown, Menu } from 'antd';
 const { Paragraph } = Typography;
 
-const textStyle = {
-  color: 'black',
-  fontSize: '85%',
-  whiteSpace: 'pre-line',
-};
-
 class FacultyInfo extends Component {
   constructor(props) {
     super(props);
@@ -94,9 +88,9 @@ class FacultyInfo extends Component {
           <Divider type="vertical" />
           {this.state.faculty.name}
           <Divider type="vertical" />
-          <i style={textStyle}>{this.state.faculty.job}</i>
+          <i className="text-style">{this.state.faculty.job}</i>
           <Divider type="vertical" />
-          <span style={textStyle}>{this.state.faculty.expert}</span>
+          <span className="text-style">{this.state.faculty.expert}</span>
           <Divider type="vertical" />
           <Button type="link" onClick={() => this.props.sayHello()} size="small">
             Change
@@ -115,7 +109,7 @@ class FacultyInfo extends Component {
         <Divider type="horizontal" orientation="left">
           Contact Information
         </Divider>
-        <p style={textStyle}>
+        <p className="text-style">
           <ul>
             <li>{this.state.faculty.email + '\n'}</li>
             <li>
