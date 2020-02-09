@@ -117,15 +117,14 @@ class EditableTable extends React.Component {
               Edit
             </Button>
             <Divider type="vertical" />
-            <Button
-              type="link"
-              disabled={editingKey !== ''}
-              onClick={() =>
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() =>
                 this.delete(record.facultyEmail, this.props.committeeId)
               }
             >
-              Delete
-            </Button>
+              <Button type="link">Delete</Button>
+            </Popconfirm>
           </React.Fragment>
         );
       },
@@ -203,6 +202,10 @@ class EditableTable extends React.Component {
 
   cancel = () => {
     this.setState({ editingKey: '' });
+  };
+
+  confirmDelete = (email, id) => {
+    this.delete(email, id);
   };
 
   delete = (email, committeeId) => {
