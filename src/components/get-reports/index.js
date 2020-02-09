@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Descriptions } from 'antd';
 import './get-reports.css';
-import MembersTable from './MembersTable.js';
-import RequirementsTable from './RequirementsTable.js';
 
 class GetReports extends Component {
   constructor(props) {
@@ -15,39 +13,23 @@ class GetReports extends Component {
     this.fetchCommitteeInfo = this.fetchCommitteeInfo.bind(this);
   }
 
-  fetchCommitteeInfo() {
-    axios
-      .get('/api/committees')
-      .then(response => {
-        let promises = [];
-        for (var i = 0; i < response.data.length; i++) {
-          promises.push(
-            axios
-              .get(`/api/committee/info/${response.data[i].committee_id}`)
-              .then(response => {
-                this.state.committeeInfo.push(response.data);
-                this.setState({
-                  dataLoaded: true,
-                });
-              })
-              .catch(err => {
-                this.setState({
-                  error: {
-                    message: err.response.data.error,
-                    code: err.response.status,
-                  },
-                  loading: false,
-                });
-              })
-          );
-        }
-      })
-      .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
-        });
-      });
+  async fetchCommitteeInfo() {
+    let committeeIds = await axios.get('/api/committees').then(response => {
+      return response.data;
+    });
+
+    const promises = committeeIds.map(async item => {
+      let res = await axios.get(`/api/committee/info/${item.committee_id}`);
+      return res.data;
+    });
+
+    const results = await Promise.all(promises);
+
+    let newCommitteeInfoState = this.state.committeeInfo.concat(results);
+    this.setState({
+      committeeInfo: newCommitteeInfoState,
+      dataLoaded: true,
+    });
   }
 
   componentDidMount() {
@@ -61,8 +43,6 @@ class GetReports extends Component {
         <div>
           {this.state.dataLoaded && (
             <React.Fragment>
-              testing retrieving date=
-              {this.state.committeeInfo[0].committeeAssignment['startDate']}
               <Descriptions
                 title={this.state.committeeInfo[0]['name']}
                 layout="vertical"
@@ -78,8 +58,6 @@ class GetReports extends Component {
                   {this.state.committeeInfo[0]['slotsRemaining']}
                 </Descriptions.Item>
               </Descriptions>
-              <MembersTable data={this.state.committeeInfo[0]} />
-              <RequirementsTable data={this.state.committeeInfo[0]} />
             </React.Fragment>
           )}
         </div>
