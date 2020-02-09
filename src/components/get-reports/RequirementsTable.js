@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
 import { Table, Divider } from 'antd';
 
-const pageSize = 5; // Page size to show pagination
+const pageSize = 30; // Page size to show pagination
 const reqColumns = [
   {
     title: 'Senate',
     dataIndex: 'senateShortname',
-    key: 'senateShortname',
+    editable: false,
   },
   {
     title: 'Filled',
     dataIndex: 'slotFilled',
-    key: 'senateFilled',
+    editable: false,
   },
   {
     title: 'Required',
     dataIndex: 'slotMinimum',
-    key: 'slotMinimum',
+    editable: false,
   },
   {
     title: 'To Be Filled',
     dataIndex: 'slotsRemaining',
-    key: 'slotsRemaining',
+    editable: false,
   },
 ];
 
@@ -33,13 +33,12 @@ export default class RequirementsTable extends Component {
           Requirements
         </Divider>
         <Table
-          rowkey="senatesTable"
+          rowKey="senateShortname"
           bordered
-          dataSource={this.props.data['committeeSlots']}
+          dataSource={this.props.data}
           columns={reqColumns}
-          pagination={
-            this.props.data['committeeSlots'].length > pageSize && { pageSize }
-          }
+          pagination={1 > pageSize && { pageSize }}
+          size="small"
         />
       </div>
     );

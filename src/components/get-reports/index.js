@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Descriptions } from 'antd';
+import RequirementsTable from './RequirementsTable';
 import './get-reports.css';
 
 class GetReports extends Component {
@@ -32,6 +32,33 @@ class GetReports extends Component {
     });
   }
 
+  stubData = [
+    {
+      senateShortname: 'AO',
+      slotFilled: 15,
+      slotMinimum: 20,
+      slotsRemaining: 5,
+    },
+    {
+      senateShortname: 'CLAS-Sci',
+      slotFilled: 30,
+      slotMinimum: 50,
+      slotsRemaining: 20,
+    },
+    {
+      senateShortname: 'CLAS-AL',
+      slotFilled: 5,
+      slotMinimum: 24,
+      slotsRemaining: 19,
+    },
+    {
+      senateShortname: 'SB',
+      slotFilled: 0,
+      slotMinimum: 20,
+      slotsRemaining: 20,
+    },
+  ];
+
   componentDidMount() {
     this.fetchCommitteeInfo();
   }
@@ -40,27 +67,7 @@ class GetReports extends Component {
     return (
       <div>
         <h1>Reports</h1>
-        <div>
-          {this.state.dataLoaded && (
-            <React.Fragment>
-              <Descriptions
-                title={this.state.committeeInfo[0]['name']}
-                layout="vertical"
-                bordered
-              >
-                <Descriptions.Item label="Description">
-                  {this.state.committeeInfo[0]['description']}
-                </Descriptions.Item>
-                <Descriptions.Item label="Total Slots">
-                  {this.state.committeeInfo[0]['totalSlots']}
-                </Descriptions.Item>
-                <Descriptions.Item label="Slots Remaining">
-                  {this.state.committeeInfo[0]['slotsRemaining']}
-                </Descriptions.Item>
-              </Descriptions>
-            </React.Fragment>
-          )}
-        </div>
+        <RequirementsTable data={this.stubData} />
       </div>
     );
   }
