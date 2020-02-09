@@ -204,10 +204,6 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' });
   };
 
-  confirmDelete = (email, id) => {
-    this.delete(email, id);
-  };
-
   delete = (email, committeeId) => {
     this.deleteAssignment(email, committeeId)
       .then(() => {
