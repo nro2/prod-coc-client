@@ -1,7 +1,6 @@
 import { Form, Input, Select, Button } from 'antd';
 import React from 'react';
 import axios from 'axios';
-//import { Redirect } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -56,18 +55,6 @@ class AddFacultyForm extends React.Component {
       });
   }
 
-  /*  handleChange(value) {
-    this.setState({
-      senateDivision: value,
-    });
-  }
-
-  handleChangeD(value) {
-    this.setState({
-      departmentsList: value,
-    });
-  }
-*/
   fetchDepartments() {
     axios
       .get('/api/departments')
@@ -92,35 +79,6 @@ class AddFacultyForm extends React.Component {
     this.fetchDepartments();
   }
 
-  /* handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-        axios
-          .post('/api/faculty', {
-            fullName: this.state.firstName + ' ' + this.state.lastName,
-            email: this.state.email,
-            jobTitle: this.state.jobTitle,
-            phoneNum: this.state.phoneNum,
-            senateDivision: this.state.senateDivision,
-            departments: this.state.departments,
-          })
-          .then(() => {
-            this.setState({
-              redirectToGetFaculty: true,
-            });
-          })
-          .catch(err => {
-            this.setState({
-              text: 'Insert was not successful',
-            });
-            console.log(err);
-          });
-      }
-    });
-  };*/
-
   render() {
     const senateOptions = this.state.senateDivisions.map(senateDivision => (
       <Option
@@ -138,11 +96,6 @@ class AddFacultyForm extends React.Component {
 
     const { layout } = this.props;
     const { getFieldDecorator } = this.props.form;
-
-    /*   const redirect = this.state.redirectToGetFaculty;
-    if (redirect === true) {
-      return <Redirect to="/get-faculty" />;
-    }*/
 
     return (
       <Form layout={layout || 'vertical'}>
