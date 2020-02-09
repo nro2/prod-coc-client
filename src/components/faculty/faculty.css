@@ -1,1 +1,7 @@
 @import '~antd/dist/antd.css';
+
+.text-style {
+  color: black;
+  font-size: 85%;
+  white-space: pre-line;
+}

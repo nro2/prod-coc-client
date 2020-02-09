@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, notification, Menu, Divider, Popconfirm } from 'antd';
+import { Button, notification, Divider, Popconfirm, Result } from 'antd';
 import './faculty.css';
 import FacultyInfo from './FacultyInfo';
 import CommitteeTables from './CommitteeTables';
@@ -8,8 +8,9 @@ import axios from 'axios';
 class Faculty extends Component {
   constructor(props) {
     super(props);
-    this.departmentsDropdownMenu = '';
-    this.committeesDropdownMenu = '';
+    // TODO: remove this hardcoded value once we have a page that renders this
+    //  component and rename it to a this.props.email or similar
+    this.email = 'wolsborn@pdx.edu';
     this.facultyData = [
       {
         key: '1',
@@ -18,162 +19,147 @@ class Faculty extends Component {
         description: 'stuff and things',
       },
     ];
-    this.initialFacultyData = {
-      facultyName: null,
-      facultyEmail: null,
-      facultyPhone: null,
-      facultyDepartments: null,
-      facultySenate: null,
-      facultyJob: null,
-      facultyExpert: null,
-      facultyID: -1,
-      facultiCurrentCommittees: [],
-    };
     this.state = {
       data: this.facultyData,
-      facultiCurrentCommittees: [],
       allCommittees: [],
       allDepartments: [],
-      //     interestedCommitteeData: [], // empty for now ..
-      //     chosenCommitteeData: [], // empty for now ..
+      committeesLoaded: false,
+      departmentsLoaded: false,
       loading: false,
-      editingKey: '',
+      error: {},
+      faculty: {
+        currentCommittees: [],
+        departments: [{ department_id: 1, name: 'none' }],
+        name: 'Faculty Name',
+        email: 'none-specified',
+        phone: '(000)-000-0000',
+        senate: 'Faculty Senate',
+        job: 'Faculty Job',
+        expertise: 'Faculty Expertise',
+        id: -1,
+        loaded: false,
+      },
+      facultySnapshot: {},
       saved: false,
-      facultyLoaded: false,
-      committeeIDList: [],
-      facultyName: 'Faculty Name',
-      facultyEmail: 'none-specified',
-      facultyPhone: '(000)-000-0000',
-      facultyDepartments: [{ key: 1, name: 'none' }],
-      facultySenate: 'Faculty Senate',
-      facultyJob: 'Faculty Job',
-      facultyExpert: 'Faculty Expertise',
-      facultyID: -1,
     };
-    this.enableSaveChangesButton = this.enableSaveChangesButton.bind(this); // Whenever start/end dates are modified.
-    this.onFacultyEdit = this.onFacultyEdit.bind(this); // Whenever faculty info is modified.
+    this.enableSaveChangesButton = this.enableSaveChangesButton.bind(this);
+    this.onFacultyEdit = this.onFacultyEdit.bind(this);
   }
 
-  componentDidMount() {
-    // This method immediately loads when the Faculty Info component is first rendered.
-    // TODO: Report when queries are unsuccessful (CF1-156)
-    let retrieved = this.retrieveDropdownOptions();
-    if (this.props.email && retrieved === true) {
-      retrieved = this.getFacultyByEmail(this.props.email);
-    }
+  async componentDidMount() {
+    // This request to populate the dropdowns can be asynchronous, so that it runs
+    // without blocking while the synchronous faculty info request is processed
+    this.retrieveDropdownOptions();
+
+    await axios
+      .get(`api/faculty/info/${this.email}`)
+      .then(result => {
+        const data = result.data;
+        const { committees, departments } = result.data;
+        const currentCommittees = this.mapCurrentCommittees(committees);
+
+        const faculty = {
+          currentCommittees,
+          departments,
+          name: data.full_name,
+          email: data.email,
+          phone: data.phone_num,
+          job: data.job_title,
+          senate: data.senate_division_short_name,
+          loaded: true,
+          expertise: data.surveys.expertise || 'No Expertise',
+        };
+
+        this.setState({
+          faculty,
+        });
+
+        this.takeFacultySnapshot();
+      })
+      .catch(err => {
+        const data = err.response;
+        this.setState({
+          error: {
+            message: data ? data.error : 'Internal Server Error',
+            code: err.response.status,
+          },
+          loading: false,
+        });
+      });
   }
 
+  /**
+   * Retrieves the committees and departments list and stores them in the state of
+   * the component.
+   *
+   * When the requests fail, the `committeesLoaded` state remains `false`.
+   *
+   * @returns {Promise<void>}
+   */
   retrieveDropdownOptions = async () => {
-    const committees = await this.retrieveAllCommittees();
-    const departments = await this.retrieveAllDepartments();
-    if (!committees || !departments) {
-      // notify caller about failure to retrieve data
-      return false;
-    }
-    let committeeList = [];
-    let departmentList = [];
-    // Begin manipulating our promise objects for the data we want.
-    // They work the same as any other object would.
-    committees.data.forEach(committees => {
-      committeeList.push({
-        id: committees.committee_id,
-        name: committees.name,
+    await axios.get('/api/committees').then(committees => {
+      const committeeList = [];
+      committees.data.forEach(committees => {
+        committeeList.push({
+          id: committees.committee_id,
+          name: committees.name,
+        });
+      });
+
+      this.setState({
+        allCommittees: committeeList,
+        committeesLoaded: true,
       });
     });
 
-    departments.data.forEach(departments => {
-      departmentList.push({
-        id: departments.committee_id,
-        name: departments.name,
+    axios.get('/api/departments').then(departments => {
+      const departmentList = [];
+      departments.data.forEach(department => {
+        departmentList.push({
+          id: department.department_id,
+          name: department.name,
+        });
+      });
+
+      this.setState({
+        allDepartments: departmentList,
+        departmentsLoaded: true,
       });
     });
+  };
+
+  /**
+   * Takes a snapshot of the current faculty state, so that when we can revert
+   * changes to the faculty by referring to the snapshot as a restoration point.
+   */
+  takeFacultySnapshot() {
     this.setState({
-      // Generate local lists and only modify states through setState.
-      // We must treat states as immutable.
-      // This is the way.
-      allCommittees: committeeList,
-      allDepartments: departmentList,
-    });
-    return true;
-  };
-
-  retrieveAllCommittees() {
-    // queries for all committees, returns the promise
-    return axios.get(`/api/committees`).catch(err => {
-      console.log(err);
+      facultySnapshot: this.state.faculty,
     });
   }
 
-  retrieveAllDepartments() {
-    // queries for all departments, returns the promise
-    return axios.get(`/api/departments`).catch(err => {
-      console.log(err);
-    });
-  }
+  /**
+   * Builds an Ant-compatible committees object to be passed to the `CommitteeTables`
+   * component.
+   *
+   * @param committees  List of committees retrieved from the back-end
+   * @returns {[]}      List of table-compatible committee object
+   */
+  mapCurrentCommittees = committees => {
+    const currentCommittees = [];
 
-  retrieveFacultiInfo = async email => {
-    return axios.get(`api/faculty/info/${email}`).catch(() => {
-      console.log('Failed to retrieve faculty by email!');
-    });
-  };
-  // TODO: Change from 3 setStates to 1 setState in onComponentMount()
-  getFacultyByEmail = async email => {
-    let currentCommittees = [];
-    let facultiCurrentDepartments = [];
-    const facultyObject = await this.retrieveFacultiInfo(email);
-    if (!facultyObject) {
-      // alert the user on failed request
-      // CF1-156
-      return;
-    }
-
-    currentCommittees = this.constructCommitteeAssociations(
-      facultyObject.data.committees
-    );
-    facultiCurrentDepartments = facultyObject.data.departments;
-    this.setState({
-      // Once all of our committees and departments are built, we can finally set their state.
-      facultiCurrentCommittees: currentCommittees,
-      facultyDepartments: facultiCurrentDepartments,
-      facultyName: facultyObject.data.full_name,
-      facultyEmail: facultyObject.data.email,
-      facultyPhone: facultyObject.data.phone_num,
-      facultyJob: facultyObject.data.job_title,
-      facultySenate: facultyObject.data.senate_division_short_name,
-      facultyLoaded: true,
-    });
-
-    this.createResetState(this.state, this.initialFacultyData);
-    return true;
-  };
-
-  createResetState(faculti, resetState) {
-    resetState.facultyName = faculti.facultyName;
-    resetState.facultyPhone = faculti.facultyPhone;
-    resetState.facultyEmail = faculti.facultyEmail;
-    resetState.facultyJob = faculti.facultyJob;
-    resetState.facultyDepartments = faculti.facultyDepartments;
-    resetState.facultyExpert = faculti.facultyExpert;
-    resetState.facultySenate = faculti.facultySenate;
-    resetState.facultyID = faculti.facultyID;
-    resetState.facultiCurrentCommittees = faculti.facultiCurrentCommittees;
-  }
-
-  constructCommitteeAssociations = ids => {
-    let facultiCurrentCommittees = [];
-    let idList = [];
-    for (let i = 0; i < ids.length; i++) {
-      idList.push(ids[i].committee_id);
-      facultiCurrentCommittees.push({
-        key: `${i}`,
-        committee: ids[i].name,
-        slots: ids[i].total_slots,
-        description: ids[i].description,
-        startDate: ids[i].start_date,
-        endDate: ids[i].end_date,
+    committees.forEach((committee, index) => {
+      currentCommittees.push({
+        key: `${index}`,
+        committee: committee.name,
+        slots: committee.total_slots,
+        description: committee.description,
+        startDate: committee.start_date,
+        endDate: committee.end_date,
       });
-    }
-    return facultiCurrentCommittees;
+    });
+
+    return currentCommittees;
   };
 
   onFacultyEdit(e) {
@@ -196,7 +182,7 @@ class Faculty extends Component {
   openNotification = placement => {
     notification.info({
       message: `Success!`,
-      description: `${this.state.facultyName}'s profile has been updated!`,
+      description: `${this.state.faculty.name}'s profile has been updated!`,
       placement,
     });
   };
@@ -208,33 +194,25 @@ class Faculty extends Component {
     alert('Hello! I am not yet implemented.');
   };
 
-  removeDepartment = toRemove => {
-    let localDepts = this.state.facultyDepartments.filter(
-      title => title !== toRemove
+  /**
+   * Removes a department from the state. This method is called from `FacultyInfo`
+   * so that the state of the department transitions down to that component.
+   *
+   * @param department  Department to remove
+   */
+  removeDepartment = department => {
+    const departments = this.state.faculty.departments.filter(
+      title => title !== department
     );
-    console.log('Department removed:', toRemove);
+    console.log('Department removed:', department);
     this.enableSaveChangesButton();
-    this.setState({ facultyDepartments: localDepts });
+    this.setState({
+      faculty: {
+        ...this.state.faculty,
+        departments,
+      },
+    });
   };
-
-  createDepartmentMenu() {
-    // Manipulates departments into menu items, and then returns it as a menu object
-    const departmentsDropdownMenu = this.state.allDepartments.map(departments => (
-      <Menu.Item key={departments.id}>
-        <Button type="link">{departments.name}</Button>
-      </Menu.Item>
-    ));
-    return <Menu>{departmentsDropdownMenu}</Menu>;
-  }
-
-  createCommitteesMenu() {
-    const committeesDropdownMenu = this.state.allCommittees.map(committees => (
-      <Menu.Item key={committees.id}>
-        <Button type="link">{committees.name}</Button>
-      </Menu.Item>
-    ));
-    return <Menu>{committeesDropdownMenu}</Menu>;
-  }
 
   enableSaveChangesButton(phone, senate, committeeID) {
     // enableSaveChangesButton is triggered by child state whenever start/end dates are edited and saved
@@ -248,24 +226,23 @@ class Faculty extends Component {
     if (phone || senate) {
       this.setState({
         saved: true,
-        facultyPhone: phone,
-        facultySenate: senate,
+        faculty: {
+          ...this.state.faculty,
+          phone,
+          senate,
+        },
       });
     }
   }
 
-  undoChanges(resetState) {
+  /**
+   * Restores the latest faculty snapshot, overriding the current faculty with the
+   * last saved faculty state.
+   */
+  restoreSnapshot() {
     this.setState({
-      facultyName: resetState.facultyName,
-      facultyPhone: resetState.facultyPhone,
-      facultyEmail: resetState.facultyEmail,
-      facultyDepartments: resetState.facultyDepartments,
-      facultyJob: resetState.facultyJob,
-      facultyID: resetState.facultyID,
-      facultyExpert: resetState.facultyExpert,
-      facultySenate: resetState.facultySenate,
+      faculty: this.state.facultySnapshot,
       saved: false,
-      facultiCurrentCommittees: resetState.facultiCurrentCommittees,
     });
   }
 
@@ -279,13 +256,13 @@ class Faculty extends Component {
         <Divider type="vertical" />
         <Popconfirm
           title="Are you sure?"
-          onConfirm={() => this.undoChanges(this.initialFacultyData)}
+          onConfirm={() => this.restoreSnapshot()}
           okText="Yes!"
-          disabled={!this.state.facultyLoaded}
+          disabled={!this.state.faculty.loaded}
         >
           <Button
             type="primary"
-            disabled={!this.state.facultyLoaded}
+            disabled={!this.state.faculty.loaded}
             loading={loading}
           >
             Reset
@@ -296,25 +273,33 @@ class Faculty extends Component {
   }
 
   render() {
-    this.departmentsDropdownMenu = this.createDepartmentMenu();
-    this.committeesDropdownMenu = this.createCommitteesMenu();
+    if (Object.keys(this.state.error).length !== 0) {
+      return (
+        <div className="aligner-item">
+          <Result
+            status="500"
+            title={this.state.error.code}
+            subTitle={this.state.error.message}
+          />
+        </div>
+      );
+    }
+
     return (
       <div>
         <FacultyInfo
-          object={this.state}
-          departmentsDropdownMenu={this.departmentsDropdownMenu}
+          faculty={this.state.faculty}
+          departments={this.state.allDepartments}
           enableSaveChangesButton={this.enableSaveChangesButton}
-          updateFaculty={this.updateFaculty}
           sayHello={this.sayHello}
-          getFacultyByEmail={this.getFacultyByEmail}
           removeDepartment={this.removeDepartment}
         />
         <CommitteeTables
-          facultiCurrentCommittees={this.state.facultiCurrentCommittees}
+          facultiCurrentCommittees={this.state.faculty.currentCommittees}
           mockData={this.state.data}
           sayHello={this.sayHello}
           enableSaveChangesButton={this.enableSaveChangesButton}
-          committeesDropdownMenu={this.committeesDropdownMenu}
+          committees={this.state.allCommittees}
         />
         {this.renderSubmissionButtons(this.start)}
       </div>

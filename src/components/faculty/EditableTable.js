@@ -50,7 +50,7 @@ class EditableTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      facultiCurrentCommittees: '',
+      currentCommittees: [],
       editingKey: '',
       saved: false,
     };
@@ -132,7 +132,7 @@ class EditableTable extends Component {
 
   // TODO: Find a new way of updating child state, as this method is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
-    this.setState({ facultiCurrentCommittees: newProps.currentCommittee });
+    this.setState({ currentCommittees: newProps.currentCommittees });
   }
 
   isEditing = record => record.key === this.state.editingKey;
@@ -145,7 +145,7 @@ class EditableTable extends Component {
       if (error) {
         return;
       }
-      const newData = [...this.state.facultiCurrentCommittees];
+      const newData = [...this.state.currentCommittees];
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
         const item = newData[index];
@@ -153,11 +153,11 @@ class EditableTable extends Component {
           ...item,
           ...row,
         });
-        this.setState({ facultiCurrentCommittees: newData, editingKey: '' });
+        this.setState({ currentCommittees: newData, editingKey: '' });
         this.props.enableSaveChangesButton(); // enableSaveChangesButton is placed here to prevent undesirable behavior
       } else {
         newData.push(row);
-        this.setState({ facultiCurrentCommittees: newData, editingKey: '' });
+        this.setState({ currentCommittees: newData, editingKey: '' });
         this.props.enableSaveChangesButton(); // enableSaveChangesButton is placed here to prevent undesirable behavior
       }
     });
@@ -195,7 +195,7 @@ class EditableTable extends Component {
         <Table
           components={components}
           bordered
-          dataSource={this.state.facultiCurrentCommittees}
+          dataSource={this.state.currentCommittees}
           columns={columns}
           rowClassName="editable-row"
           pagination={{
