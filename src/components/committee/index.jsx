@@ -26,9 +26,7 @@ export default class App extends Component {
   }
 
   rerenderParentCallback() {
-    this.fetchCommittees().then(() => {
-      this.forceUpdate();
-    });
+    this.fetchCommittees();
   }
 
   fetchCommitteeInfo(id) {
