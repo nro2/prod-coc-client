@@ -16,32 +16,41 @@ export default class MembersTable extends React.Component {
     this.props.rerenderParentCallback();
   }
 
+  saveFormRef = formRef => {
+    this.formRef = formRef;
+  };
+
   render() {
     const columns = [
       {
         title: 'Name',
         dataIndex: 'facultyName',
         editable: false,
+        inputType: 'text',
       },
       {
         title: 'Email',
         dataIndex: 'facultyEmail',
         editable: false,
+        inputType: 'text',
       },
       {
         title: 'Start Date',
         dataIndex: 'startDate',
         editable: true,
+        inputType: 'date',
       },
       {
         title: 'End Date',
         dataIndex: 'endDate',
         editable: true,
+        inputType: 'date',
       },
       {
         title: 'Senate Division',
         dataIndex: 'senateDivision',
         editable: false,
+        inputType: 'text',
       },
     ];
     return (
@@ -55,7 +64,12 @@ export default class MembersTable extends React.Component {
           committeeId={this.props.id}
           rerenderParentCallback={this.rerenderParentCallback}
         />
-        <EditableFormTable data={this.props.data} columns={columns} />
+        <EditableFormTable
+          rerenderParentCallback={this.rerenderParentCallback}
+          data={this.props.data}
+          committeeId={this.props.id}
+          columns={columns}
+        />
       </div>
     );
   }
