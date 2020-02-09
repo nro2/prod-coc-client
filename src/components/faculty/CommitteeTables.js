@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Table, Button, Divider, Dropdown } from 'antd';
+import { Table, Button, Divider, Dropdown, Menu } from 'antd';
 import EditableFormTable from './EditableTable';
 import './faculty.css';
 
@@ -41,36 +41,47 @@ class CommitteeTables extends Component {
       },
     ];
     this.state = {
-      facultiCurrentCommittees: [],
-      facultiInterestedCommittees: [],
-      facultiChosenCommittees: [],
-      committeesDropdownMenu: [],
+      faculty: {
+        currentCommittees: [],
+        interestedCommittees: [],
+        chosenCommittees: [],
+      },
       committeesAreLoaded: false,
+      committees: [],
     };
   }
 
   // TODO: update this method, as it is deprecated (CF1-140)
   componentWillReceiveProps(newProps) {
-    let committeesLoaded = false;
-    if (newProps.committeesDropdownMenu) {
-      committeesLoaded = true;
-    }
+    const committeesLoaded = newProps.committees.length !== 0;
+
     this.setState({
-      facultiCurrentCommittees: newProps.facultiCurrentCommittees,
-      facultiInterestedCommittees: newProps.mockData,
-      facultiChosenCommittees: newProps.mockData,
-      committeesDropdownMenu: newProps.committeesDropdownMenu,
+      faculty: {
+        currentCommittees: newProps.facultiCurrentCommittees,
+        interestedCommittees: newProps.mockData,
+        chosenCommittees: newProps.mockData,
+      },
       committeesAreLoaded: committeesLoaded,
+      committees: newProps.committees,
     });
   }
 
+  createCommitteesMenu() {
+    const committeesDropdownMenu = this.state.committees.map(committee => (
+      <Menu.Item key={committee.id}>
+        <Button type="link">{committee.name}</Button>
+      </Menu.Item>
+    ));
+
+    return <Menu>{committeesDropdownMenu}</Menu>;
+  }
+
   renderCurrentCommittees() {
+    const committees = this.createCommitteesMenu();
+
     return (
       <span>
-        <Dropdown
-          overlay={this.state.committeesDropdownMenu}
-          disabled={!this.state.committeesAreLoaded}
-        >
+        <Dropdown overlay={committees} disabled={!this.state.committeesAreLoaded}>
           <Button
             type="primary"
             icon="plus"
@@ -82,19 +93,17 @@ class CommitteeTables extends Component {
         <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
         <EditableFormTable
           enableSaveChangesButton={this.props.enableSaveChangesButton}
-          currentCommittee={this.state.facultiCurrentCommittees}
+          currentCommittees={this.state.faculty.currentCommittees}
         />
       </span>
     );
   }
 
   renderChosenCommittees(facultyData, columnData) {
+    const committees = this.createCommitteesMenu();
     return (
       <span>
-        <Dropdown
-          overlay={this.state.committeesDropdownMenu}
-          disabled={!this.state.committeesAreLoaded}
-        >
+        <Dropdown overlay={committees} disabled={!this.state.committeesAreLoaded}>
           <Button
             type="primary"
             icon="plus"
@@ -110,12 +119,11 @@ class CommitteeTables extends Component {
   }
 
   renderInterestedCommittees(facultyData, columnData) {
+    const committees = this.createCommitteesMenu();
+
     return (
       <span>
-        <Dropdown
-          overlay={this.state.committeesDropdownMenu}
-          disabled={!this.state.committeesAreLoaded}
-        >
+        <Dropdown overlay={committees} disabled={!this.state.committeesAreLoaded}>
           <Button
             type="primary"
             icon="plus"
@@ -134,15 +142,15 @@ class CommitteeTables extends Component {
     return (
       <Fragment>
         {this.renderCurrentCommittees(
-          this.state.facultiCurrentCommittees,
+          this.state.faculty.currentCommittees,
           this.columns
         )}
         {this.renderChosenCommittees(
-          this.state.facultiChosenCommittees,
+          this.state.faculty.chosenCommittees,
           this.columns
         )}
         {this.renderInterestedCommittees(
-          this.state.facultiChosenCommittees,
+          this.state.faculty.chosenCommittees,
           this.columns
         )}
       </Fragment>
