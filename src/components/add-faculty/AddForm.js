@@ -1,14 +1,16 @@
 import { Form, Input, Select, Button } from 'antd';
 import React from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+//import { Redirect } from 'react-router-dom';
 
 const { Option } = Select;
 
-class AddForm extends React.Component {
+class AddFacultyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selected: '',
+      showForm: false,
       confirmDirty: false,
       senateDivisions: [],
       departmentsList: [],
@@ -16,41 +18,23 @@ class AddForm extends React.Component {
       loadingDivisions: true,
       loadingDepartments: true,
 
-      firstName: '',
-      lastName: '',
-      email: '',
-      jobTitle: '',
-      phoneNum: '',
-      senateDivision: '',
-      fullName: '',
       departments: [],
       redirectToGetFaculty: false,
     };
 
     this.fetchDivisions = this.fetchDivisions.bind(this);
     this.fetchDepartments = this.fetchDepartments.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeD = this.handleChangeD.bind(this);
-    this.handleFnameChange = this.handleFnameChange.bind(this);
-    this.handleLnameChange = this.handleLnameChange.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handleJobChange = this.handleJobChange.bind(this);
-    this.handlePhoneChange = this.handlePhoneChange.bind(this);
   }
-  handleFnameChange = event => {
-    this.setState({ firstName: event.target.value });
+
+  changeHandler = value => {
+    this.setState({
+      selected: value,
+      showForm: true,
+    });
   };
-  handleLnameChange = event => {
-    this.setState({ lastName: event.target.value });
-  };
-  handleEmailChange = event => {
-    this.setState({ email: event.target.value });
-  };
-  handleJobChange = event => {
-    this.setState({ jobTitle: event.target.value });
-  };
-  handlePhoneChange = event => {
-    this.setState({ phoneNum: event.target.value });
+
+  onSubmitHandler = () => {
+    this.props.onCreate(this.state.selected);
   };
 
   fetchDivisions() {
@@ -72,7 +56,7 @@ class AddForm extends React.Component {
       });
   }
 
-  handleChange(value) {
+  /*  handleChange(value) {
     this.setState({
       senateDivision: value,
     });
@@ -83,7 +67,7 @@ class AddForm extends React.Component {
       departmentsList: value,
     });
   }
-
+*/
   fetchDepartments() {
     axios
       .get('/api/departments')
@@ -108,7 +92,7 @@ class AddForm extends React.Component {
     this.fetchDepartments();
   }
 
-  handleSubmit = e => {
+  /* handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -135,7 +119,7 @@ class AddForm extends React.Component {
           });
       }
     });
-  };
+  };*/
 
   render() {
     const senateOptions = this.state.senateDivisions.map(senateDivision => (
@@ -152,38 +136,16 @@ class AddForm extends React.Component {
       </Option>
     ));
 
+    const { layout } = this.props;
     const { getFieldDecorator } = this.props.form;
 
-    const redirect = this.state.redirectToGetFaculty;
+    /*   const redirect = this.state.redirectToGetFaculty;
     if (redirect === true) {
       return <Redirect to="/get-faculty" />;
-    }
-
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 16,
-          offset: 8,
-        },
-      },
-    };
+    }*/
 
     return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+      <Form layout={layout || 'vertical'}>
         <h1>Add New faculty</h1>
         <Form.Item label="First Name">
           {getFieldDecorator('first', {
@@ -194,7 +156,7 @@ class AddForm extends React.Component {
                 whitespace: true,
               },
             ],
-          })(<Input placeholder="First Name" onChange={this.handleFnameChange} />)}
+          })(<Input placeholder="First Name" />)}
         </Form.Item>
         <Form.Item label="Last Name">
           {getFieldDecorator('last', {
@@ -205,7 +167,7 @@ class AddForm extends React.Component {
                 whitespace: true,
               },
             ],
-          })(<Input placeholder="Last Name" onChange={this.handleLnameChange} />)}
+          })(<Input placeholder="Last Name" />)}
         </Form.Item>
         <Form.Item label="E-mail">
           {getFieldDecorator('email', {
@@ -219,26 +181,24 @@ class AddForm extends React.Component {
                 message: 'Please input  e-mail',
               },
             ],
-          })(<Input placeholder="Email" onChange={this.handleEmailChange} />)}
+          })(<Input placeholder="Email" />)}
         </Form.Item>
         <Form.Item label="Job Title">
           {getFieldDecorator('job', {
             rules: [{ required: false, message: 'Please input job title' }],
-          })(<Input placeholder="Job Title" onChange={this.handleJobChange} />)}
+          })(<Input placeholder="Job Title" />)}
         </Form.Item>
         <Form.Item label="Phone Number">
           {getFieldDecorator('phone', {
             rules: [{ required: false, message: 'Please input phone number' }],
-          })(
-            <Input placeholder="###-###-####" onChange={this.handlePhoneChange} />
-          )}
+          })(<Input placeholder="###-###-####" />)}
         </Form.Item>
         <Form.Item label="Senate Division">
           <Select
             showSearch
             placeholder="Select a senate division"
+            onChange={this.changeHandler}
             optionFilterProp="children"
-            onChange={this.handleChange}
             dropdownMatchSelectWidth={false}
             loadingDivisions={this.state.loading}
           >
@@ -251,7 +211,7 @@ class AddForm extends React.Component {
             showSearch
             placeholder="Select department(s)"
             optionFilterProp="children"
-            onChange={this.handleChangeD}
+            onChange={this.changeHandler}
             dropdownMatchSelectWidth={false}
             loadingDepartments={this.state.loading}
           >
@@ -259,15 +219,16 @@ class AddForm extends React.Component {
           </Select>
         </Form.Item>
 
-        <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+        <Form.Item>
+          <Button type="primary" htmlType="submit" onSubmit={this.onSubmitHandler}>
             Submit
           </Button>
         </Form.Item>
-        <p>Message: {this.state.text}</p>
       </Form>
     );
   }
 }
 
-export default Form.create()(AddForm);
+const WrappedDisplayForm = Form.create({ name: 'AddFaculty' })(AddFacultyForm);
+
+export default WrappedDisplayForm;
