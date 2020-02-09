@@ -16,10 +16,6 @@ export default class MembersTable extends React.Component {
     this.props.rerenderParentCallback();
   }
 
-  saveFormRef = formRef => {
-    this.formRef = formRef;
-  };
-
   render() {
     const columns = [
       {
