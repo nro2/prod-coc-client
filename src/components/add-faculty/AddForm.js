@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, message, Select, Button } from 'antd';
 import React from 'react';
 import axios from 'axios';
 
@@ -32,9 +32,37 @@ class AddFacultyForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.props.postAssignment();
         console.log('Received values of form: ', values);
       }
     });
+  };
+
+  postAssignment = async (
+    firstName,
+    lastName,
+    email,
+    jobTitle,
+    phoneNum,
+    senateDivision,
+    departments
+  ) => {
+    const res = await axios
+      .post('/api/faculty', {
+        fullName: firstName + lastName,
+        email: email,
+        jobTitle: jobTitle,
+        phoneNum: phoneNum,
+        senateDivision: senateDivision,
+        departments: departments,
+      })
+      .then(() => {
+        this.props.onSuccess();
+      })
+      .catch(err => {
+        message.error(err.response.data.error);
+      });
+    return res;
   };
 
   fetchDivisions() {
@@ -99,9 +127,9 @@ class AddFacultyForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
 
     return (
-      <Form layout={layout || 'vertical'}>
+      <Form onSubmit={this.onSubmitHandler} layout={layout || 'vertical'}>
         <h1>Add New faculty</h1>
-        <Form.Item onSubmit={this.onSubmitHandler} label="First Name">
+        <Form.Item label="First Name">
           {getFieldDecorator('first', {
             rules: [
               {
