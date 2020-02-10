@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import RequirementsTable from './RequirementsTable';
-import CommitteeSlots from '../committee/CommitteeSlots';
 import './get-reports.css';
+import { Statistic } from 'antd';
 
 class GetReports extends Component {
   constructor(props) {
@@ -38,13 +38,14 @@ class GetReports extends Component {
         <h1>Reports</h1>
         {this.state.dataLoaded && (
           <React.Fragment>
-            <CommitteeSlots
-              data={{
-                slotsRemaining:
-                  this.state.reportInfo.total_slots -
-                  this.state.reportInfo.slots_filled,
-                totalSlots: this.state.reportInfo.total_slots,
-              }}
+            <Statistic
+              style={{ marginRight: 20 }}
+              title="Available Slots"
+              value={
+                this.state.reportInfo.total_slots -
+                this.state.reportInfo.slots_filled
+              }
+              suffix={`/ ${this.state.reportInfo.total_slots}`}
             />
             <RequirementsTable data={this.state.reportInfo['senate_division']} />
           </React.Fragment>
