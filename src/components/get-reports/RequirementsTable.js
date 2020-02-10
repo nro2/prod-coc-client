@@ -5,22 +5,22 @@ const pageSize = 30; // Page size to show pagination
 const reqColumns = [
   {
     title: 'Senate',
-    dataIndex: 'senateShortname',
+    dataIndex: 'senate_division',
     editable: false,
   },
   {
     title: 'Filled',
-    dataIndex: 'slotFilled',
+    dataIndex: 'SlotsFilled',
     editable: false,
   },
   {
     title: 'Required',
-    dataIndex: 'slotMinimum',
+    dataIndex: 'SlotMinimum',
     editable: false,
   },
   {
     title: 'To Be Filled',
-    dataIndex: 'slotsRemaining',
+    dataIndex: 'SlotsRemaining',
     editable: false,
   },
 ];

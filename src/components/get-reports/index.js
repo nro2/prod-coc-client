@@ -1,73 +1,54 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import RequirementsTable from './RequirementsTable';
+import CommitteeSlots from '../committee/CommitteeSlots';
 import './get-reports.css';
 
 class GetReports extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      committeeInfo: [],
+      reportInfo: '',
       dataLoaded: false,
     };
-    this.fetchCommitteeInfo = this.fetchCommitteeInfo.bind(this);
+    this.fetchReportInfo = this.fetchReportInfo.bind(this);
   }
 
-  async fetchCommitteeInfo() {
-    let committeeIds = await axios.get('/api/committees').then(response => {
-      return response.data;
-    });
-
-    const promises = committeeIds.map(async item => {
-      let res = await axios.get(`/api/committee/info/${item.committee_id}`);
-      return res.data;
-    });
-
-    const results = await Promise.all(promises);
-
-    let newCommitteeInfoState = this.state.committeeInfo.concat(results);
-    this.setState({
-      committeeInfo: newCommitteeInfoState,
-      dataLoaded: true,
-    });
+  async fetchReportInfo() {
+    await axios
+      .get('/api/reports')
+      .then(response => {
+        this.setState({
+          reportInfo: response.data,
+          dataLoaded: true,
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
-
-  stubData = [
-    {
-      senateShortname: 'AO',
-      slotFilled: 15,
-      slotMinimum: 20,
-      slotsRemaining: 5,
-    },
-    {
-      senateShortname: 'CLAS-Sci',
-      slotFilled: 30,
-      slotMinimum: 50,
-      slotsRemaining: 20,
-    },
-    {
-      senateShortname: 'CLAS-AL',
-      slotFilled: 5,
-      slotMinimum: 24,
-      slotsRemaining: 19,
-    },
-    {
-      senateShortname: 'SB',
-      slotFilled: 0,
-      slotMinimum: 20,
-      slotsRemaining: 20,
-    },
-  ];
 
   componentDidMount() {
-    this.fetchCommitteeInfo();
+    this.fetchReportInfo();
   }
 
   render() {
     return (
       <div>
         <h1>Reports</h1>
-        <RequirementsTable data={this.stubData} />
+        {this.state.dataLoaded && (
+          <React.Fragment>
+            <CommitteeSlots
+              data={{
+                slotsRemaining:
+                  this.state.reportInfo.total_slots -
+                  this.state.reportInfo.slots_filled,
+                totalSlots: this.state.reportInfo.total_slots,
+              }}
+            />
+            <RequirementsTable data={this.state.reportInfo['senate_division']} />
+          </React.Fragment>
+        )}
       </div>
     );
   }
