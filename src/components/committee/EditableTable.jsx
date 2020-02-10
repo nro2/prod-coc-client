@@ -1,5 +1,17 @@
 import React from 'react';
-import { Table, Button, InputNumber, Form, Input, Popconfirm } from 'antd';
+import {
+  Table,
+  Button,
+  InputNumber,
+  Form,
+  Input,
+  Popconfirm,
+  DatePicker,
+  message,
+  Divider,
+} from 'antd';
+import moment from 'moment';
+import axios from 'axios';
 
 const EditableContext = React.createContext();
 
@@ -8,7 +20,19 @@ class EditableCell extends React.Component {
     if (this.props.inputType === 'number') {
       return <InputNumber />;
     }
+
+    if (this.props.inputType === 'date') {
+      return <DatePicker />;
+    }
     return <Input />;
+  };
+
+  getDefaultValue = value => {
+    if (this.props.inputType === 'date') {
+      return moment(value);
+    }
+
+    return value;
   };
 
   renderCell = ({ getFieldDecorator }) => {
@@ -16,11 +40,11 @@ class EditableCell extends React.Component {
       editing,
       dataIndex,
       title,
-      inputType,
       record,
       children,
       ...restProps
     } = this.props;
+
     return (
       <td {...restProps}>
         {editing ? (
@@ -31,8 +55,11 @@ class EditableCell extends React.Component {
                   required: true,
                   message: `Please Input ${title}!`,
                 },
+                {
+                  validator: this.props.validateDate,
+                },
               ],
-              initialValue: record[dataIndex],
+              initialValue: this.getDefaultValue(record[dataIndex]),
             })(this.getInput())}
           </Form.Item>
         ) : (
@@ -53,8 +80,8 @@ class EditableTable extends React.Component {
     this.state = { data: this.props.data, editingKey: '' };
 
     const operations = {
-      title: 'operation',
-      dataIndex: 'operation',
+      title: 'Action',
+      dataIndex: 'action',
       render: (text, record) => {
         const { editingKey } = this.state;
         const editable = this.isEditing(record);
@@ -64,7 +91,9 @@ class EditableTable extends React.Component {
               {form => (
                 <Button
                   type="link"
-                  onClick={() => this.save(form, record.key)}
+                  onClick={() =>
+                    this.save(form, record.facultyEmail, this.props.committeeId)
+                  }
                   style={{ marginRight: 8 }}
                 >
                   Save
@@ -73,19 +102,30 @@ class EditableTable extends React.Component {
             </EditableContext.Consumer>
             <Popconfirm
               title="Sure to cancel?"
-              onConfirm={() => this.cancel(record.key)}
+              onConfirm={() => this.cancel(record.facultyEmail)}
             >
               <Button type="link">Cancel</Button>
             </Popconfirm>
           </span>
         ) : (
-          <Button
-            type="link"
-            disabled={editingKey !== ''}
-            onClick={() => this.edit(record.key)}
-          >
-            Edit
-          </Button>
+          <React.Fragment>
+            <Button
+              type="link"
+              disabled={editingKey !== ''}
+              onClick={() => this.edit(record.facultyEmail)}
+            >
+              Edit
+            </Button>
+            <Divider type="vertical" />
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() =>
+                this.delete(record.facultyEmail, this.props.committeeId)
+              }
+            >
+              <Button type="link">Delete</Button>
+            </Popconfirm>
+          </React.Fragment>
         );
       },
     };
@@ -94,36 +134,87 @@ class EditableTable extends React.Component {
     this.columns.push(operations);
   }
 
-  isEditing = record => record.key === this.state.editingKey;
+  isEditing = record => record.facultyEmail === this.state.editingKey;
 
-  cancel = () => {
-    this.setState({ editingKey: '' });
+  validateDateHandler = (rule, value, callback) => {
+    const { form } = this.props;
+    if (
+      value &&
+      value.format('YYYY/MM/DD') <
+        form.getFieldValue('startDate').format('YYYY/MM/DD')
+    ) {
+      callback('End date must come after start date.');
+    } else {
+      callback();
+    }
   };
 
-  save(form, key) {
+  updateAssignment = async (email, committeeId, startDate, endDate) => {
+    const res = await axios.put('api/committee-assignment', {
+      email: email,
+      committeeId: committeeId,
+      startDate: startDate,
+      endDate: endDate,
+    });
+
+    return res;
+  };
+
+  deleteAssignment = async (email, committeeId) => {
+    const res = await axios.delete(
+      `api/committee-assignment/${committeeId}/${email}`
+    );
+
+    return res;
+  };
+
+  save(form, email, committee_id) {
     form.validateFields((error, row) => {
       if (error) {
         return;
       }
-      const newData = [...this.state.data];
-      const index = newData.findIndex(item => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
+
+      this.setState({
+        editingKey: '',
+      });
+
+      const dateFormat = 'YYYY/MM/DD';
+      this.updateAssignment(
+        email,
+        committee_id,
+        row['startDate'].format(dateFormat),
+        row['endDate'].format(dateFormat)
+      )
+        .then(() => {
+          message.success('Record updated successfully!');
+        })
+        .catch(err => {
+          message.error(err.response.data.error);
         });
-        this.setState({ data: newData, editingKey: '' });
-      } else {
-        newData.push(row);
-        this.setState({ data: newData, editingKey: '' });
-      }
     });
+
+    this.props.rerenderParentCallback();
   }
 
   edit(key) {
     this.setState({ editingKey: key });
   }
+
+  cancel = () => {
+    this.setState({ editingKey: '' });
+  };
+
+  delete = (email, committeeId) => {
+    this.deleteAssignment(email, committeeId)
+      .then(() => {
+        message.success('Record deleted successfully!');
+      })
+      .catch(err => {
+        message.error(err.response.data.error);
+      });
+
+    this.props.rerenderParentCallback();
+  };
 
   render() {
     const components = {
@@ -140,9 +231,10 @@ class EditableTable extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType: col.dataIndex === 'age' ? 'number' : 'text',
+          inputType: col.inputType,
           dataIndex: col.dataIndex,
           title: col.title,
+          validateDate: this.validateDateHandler,
           editing: this.isEditing(record),
         }),
       };
