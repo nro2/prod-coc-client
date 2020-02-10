@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import RequirementsTable from './RequirementsTable';
-import './get-reports.css';
 import { Statistic } from 'antd';
 
-class GetReports extends Component {
+class Reports extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +33,7 @@ class GetReports extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ flex: 1 }}>
         <h1>Reports</h1>
         {this.state.dataLoaded && (
           <React.Fragment>
@@ -54,4 +53,4 @@ class GetReports extends Component {
     );
   }
 }
-export default GetReports;
+export default Reports;

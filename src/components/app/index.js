@@ -14,7 +14,7 @@ import GetFaculty from '../get-faculty';
 import Committee from '../committee';
 import FacultyInfo from '../faculty';
 import Home from '../home';
-import GetReports from '../get-reports';
+import Reports from '../get-reports';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -90,7 +90,7 @@ class App extends Component {
                 <Route path="/committees" component={Committees} />
                 <Route path="/committee" component={Committee} />
                 <Route path="/faculty" component={FacultyInfo} />
-                <Route path="/reports" component={GetReports} />
+                <Route path="/reports" component={Reports} />
               </Switch>
               <Redirect to="/home" />
             </Content>
