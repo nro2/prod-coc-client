@@ -32,36 +32,41 @@ class AddFacultyForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.postAssignment();
         console.log('Received values of form: ', values);
+        this.postAssignment(
+          values['first'],
+          values['email'],
+          values['job'],
+          values['phone'],
+          values['Senate Division'],
+          values['Department']
+        )
+          .then(() => {
+            this.props.onSuccess();
+          })
+          .catch(err => {
+            message.error(err.response.data.error);
+          });
       }
     });
   };
 
   postAssignment = async (
-    firstName,
-    lastName,
+    fullname,
     email,
     jobTitle,
     phoneNum,
     senateDivision,
     departments
   ) => {
-    const res = await axios
-      .post('/api/faculty', {
-        fullName: firstName + lastName,
-        email: email,
-        jobTitle: jobTitle,
-        phoneNum: phoneNum,
-        senateDivision: senateDivision,
-        departments: departments,
-      })
-      .then(() => {
-        this.props.onSuccess();
-      })
-      .catch(err => {
-        message.error(err.response.data.error);
-      });
+    const res = await axios.post('/api/faculty', {
+      fullName: fullname,
+      email: email,
+      jobTitle: jobTitle,
+      phoneNum: phoneNum,
+      senateDivision: senateDivision,
+      departments: departments,
+    });
     return res;
   };
 
