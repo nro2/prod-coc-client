@@ -49,9 +49,9 @@ class AddFaculty extends Component {
 
       this.postAssignment(
         value,
-        values['First Name'],
-        values['Last Name'],
-        values['Email'],
+        values['first'],
+        values['last'],
+        values['email'],
         values['Job Title'],
         values['Phone Number'],
         values['Senate Division'],

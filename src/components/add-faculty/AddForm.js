@@ -10,15 +10,11 @@ class AddFacultyForm extends React.Component {
     this.state = {
       selected: '',
       showForm: false,
-      confirmDirty: false,
       senateDivisions: [],
       departmentsList: [],
-      error: {},
       loadingDivisions: true,
       loadingDepartments: true,
-
       departments: [],
-      redirectToGetFaculty: false,
     };
 
     this.fetchDivisions = this.fetchDivisions.bind(this);
@@ -32,8 +28,13 @@ class AddFacultyForm extends React.Component {
     });
   };
 
-  onSubmitHandler = () => {
-    this.props.onCreate(this.state.selected);
+  onSubmitHandler = e => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
   };
 
   fetchDivisions() {
@@ -100,7 +101,7 @@ class AddFacultyForm extends React.Component {
     return (
       <Form layout={layout || 'vertical'}>
         <h1>Add New faculty</h1>
-        <Form.Item label="First Name">
+        <Form.Item onSubmit={this.onSubmitHandler} label="First Name">
           {getFieldDecorator('first', {
             rules: [
               {
@@ -173,7 +174,7 @@ class AddFacultyForm extends React.Component {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" onSubmit={this.onSubmitHandler}>
+          <Button type="primary" htmlType="submit">
             Submit
           </Button>
         </Form.Item>
