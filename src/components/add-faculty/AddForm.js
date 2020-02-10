@@ -1,4 +1,4 @@
-import { Form, Input, message, Select, Button } from 'antd';
+import { Form, Input, Select, Button } from 'antd';
 import React from 'react';
 import axios from 'axios';
 
@@ -21,51 +21,35 @@ class AddFacultyForm extends React.Component {
     this.fetchDepartments = this.fetchDepartments.bind(this);
   }
 
-  changeHandler = value => {
-    this.setState({
-      selected: value,
-      showForm: true,
-    });
-  };
-
   onSubmitHandler = e => {
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
         this.postAssignment(
-          values['first'],
+          values['first'] + ' ' + values['last'],
           values['email'],
           values['job'],
           values['phone'],
-          values['Senate Division'],
-          values['Department']
+          values['select']
         )
           .then(() => {
-            this.props.onSuccess();
+            this.props.onSuccessHandler();
           })
           .catch(err => {
-            message.error(err.response.data.error);
+            console.log(err.response);
           });
       }
     });
   };
 
-  postAssignment = async (
-    fullname,
-    email,
-    jobTitle,
-    phoneNum,
-    senateDivision,
-    departments
-  ) => {
+  postAssignment = async (fullname, email, jobTitle, phoneNum, senateDivision) => {
     const res = await axios.post('/api/faculty', {
       fullName: fullname,
       email: email,
       jobTitle: jobTitle,
       phoneNum: phoneNum,
       senateDivision: senateDivision,
-      departments: departments,
     });
     return res;
   };
@@ -76,7 +60,7 @@ class AddFacultyForm extends React.Component {
       .then(response => {
         this.setState({
           senateDivisions: response.data,
-          loading: false,
+          loadingDivisions: false,
           selected: 0,
           error: {},
         });
@@ -95,7 +79,7 @@ class AddFacultyForm extends React.Component {
       .then(response => {
         this.setState({
           departments: response.data,
-          loading2: false,
+          loadingDivisions: false,
           selected: 0,
           error: {},
         });
@@ -181,29 +165,35 @@ class AddFacultyForm extends React.Component {
           })(<Input placeholder="###-###-####" />)}
         </Form.Item>
         <Form.Item label="Senate Division">
-          <Select
-            showSearch
-            placeholder="Select a senate division"
-            onChange={this.changeHandler}
-            optionFilterProp="children"
-            dropdownMatchSelectWidth={false}
-            loadingDivisions={this.state.loading}
-          >
-            {senateOptions}
-          </Select>
+          {getFieldDecorator('select', {
+            rules: [{ required: true, message: 'Please select Senate Division' }],
+          })(
+            <Select
+              showSearch
+              placeholder="Select a senate division"
+              // optionFilterProp="children"
+              dropdownMatchSelectWidth={false}
+              //loadingDivisions={this.state.loading}
+            >
+              {senateOptions}
+            </Select>
+          )}
         </Form.Item>
         <Form.Item label="Department">
-          <Select
-            mode="multiple"
-            showSearch
-            placeholder="Select department(s)"
-            optionFilterProp="children"
-            onChange={this.changeHandler}
-            dropdownMatchSelectWidth={false}
-            loadingDepartments={this.state.loading}
-          >
-            {divisionOptions}
-          </Select>
+          {getFieldDecorator('select-multiple', {
+            rules: [{ required: true, message: 'Please select Departments' }],
+          })(
+            <Select
+              mode="multiple"
+              showSearch
+              placeholder="Select department(s)"
+              // optionFilterProp="children"
+              dropdownMatchSelectWidth={false}
+              //loadingDepartments={this.state.loading}
+            >
+              {divisionOptions}
+            </Select>
+          )}
         </Form.Item>
 
         <Form.Item>
