@@ -161,7 +161,7 @@ class EditableTable extends React.Component {
     return res;
   };
 
-  save(form, senateShortname, slotReqs, committee_id) {
+  save(form, senateShortname, committee_id) {
     form.validateFields((error, row) => {
       if (error) {
         return;
