@@ -105,6 +105,7 @@ export default class App extends Component {
               <RequirementsTable
                 data={this.state.committeeSlots}
                 committeeId={this.state.committeeId}
+                rerenderParentCallback={this.rerenderParentCallback}
               />
               <MembersTable
                 data={this.state.committeeAssignment}

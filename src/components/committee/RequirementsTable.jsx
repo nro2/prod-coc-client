@@ -8,12 +8,13 @@ export default class RequirementsTable extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      committeeId: this.props.committeeId,
-      disabled: true,
-      newSlotReqs: [],
-    };
+    this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
+
+  rerenderParentCallback() {
+    this.props.rerenderParentCallback();
+  }
+
   render() {
     const columns = [
       {
@@ -50,8 +51,9 @@ export default class RequirementsTable extends Component {
         <div style={{ marginBottom: 16 }}>
           <ReqsEditableFormTable
             data={this.props.data}
-            committeeId={this.props.id}
+            committeeId={this.props.committeeId}
             columns={columns}
+            rerenderParentCallback={this.rerenderParentCallback}
           />
         </div>
       </div>

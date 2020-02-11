@@ -12,6 +12,8 @@ import {
 import moment from 'moment';
 import axios from 'axios';
 
+const pageSize = 30;
+
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -51,7 +53,7 @@ class EditableCell extends React.Component {
                   message: `Please Input ${title}!`,
                 },
                 {
-                  validator: this.props.validateSlotRequirement,
+                  validator: this.props.validateSlotReq,
                 },
               ],
               initialValue: this.getDefaultValue(record[dataIndex]),
@@ -137,7 +139,7 @@ class EditableTable extends React.Component {
   isEditing = record => record.senateShortname === this.state.editingKey;
 
   validateSlotRequirement = (rule, value, callback) => {
-    if (value && value < 1) {
+    if (value < 1) {
       callback('Slot requirement must be greater than 0');
     } else {
       callback();
@@ -156,11 +158,9 @@ class EditableTable extends React.Component {
     const res = await axios.delete(
       `api/committee-assignment/${committeeId}/${email}`
     );
-
     return res;
   };
 
-  //TODO
   save(form, senateShortname, slotReqs, committee_id) {
     form.validateFields((error, row) => {
       if (error) {
@@ -170,8 +170,8 @@ class EditableTable extends React.Component {
       this.setState({
         editingKey: '',
       });
-
-      this.updateSlotReqs(senateShortname, committee_id, row['slotMinimum'])
+      const slotReqs = row['slotMinimum'];
+      this.updateSlotReqs(senateShortname, committee_id, slotReqs)
         .then(() => {
           message.success('Record updated successfully!');
         })
@@ -179,8 +179,8 @@ class EditableTable extends React.Component {
           message.error(err.response.data.error);
         });
     });
-    //TODO
-    //this.props.rerenderParentCallback();
+
+    this.props.rerenderParentCallback();
   }
 
   edit(key) {
@@ -237,9 +237,7 @@ class EditableTable extends React.Component {
           dataSource={this.props.data}
           columns={columns}
           rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
+          pagination={1 > pageSize && { pageSize }}
         />
       </EditableContext.Provider>
     );
