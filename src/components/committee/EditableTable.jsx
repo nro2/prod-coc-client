@@ -36,17 +36,10 @@ class EditableCell extends React.Component {
   };
 
   renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      children,
-      ...restProps
-    } = this.props;
+    const { editing, dataIndex, title, record, children } = this.props;
 
     return (
-      <td {...restProps}>
+      <td>
         {editing ? (
           <Form.Item style={{ margin: 0 }}>
             {getFieldDecorator(dataIndex, {

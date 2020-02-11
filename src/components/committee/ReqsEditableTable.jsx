@@ -33,17 +33,10 @@ class EditableCell extends React.Component {
   };
 
   renderCell = ({ getFieldDecorator }) => {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      children,
-      ...restProps
-    } = this.props;
+    const { editing, dataIndex, title, record, children } = this.props;
 
     return (
-      <td {...restProps}>
+      <td>
         {editing ? (
           <Form.Item style={{ margin: 0 }}>
             {getFieldDecorator(dataIndex, {
@@ -89,12 +82,7 @@ class EditableTable extends React.Component {
                 <Button
                   type="link"
                   onClick={() =>
-                    this.save(
-                      form,
-                      record.senateShortname,
-                      record.slotMinimum,
-                      this.props.committeeId
-                    )
+                    this.save(form, record.senateShortname, this.props.committeeId)
                   }
                   style={{ marginRight: 8 }}
                 >
@@ -150,10 +138,9 @@ class EditableTable extends React.Component {
     return res;
   };
 
-  //TODO
-  deleteAssignment = async (senateShortname, committeeId) => {
+  deleteRequirement = async (senateShortname, committeeId) => {
     const res = await axios.delete(
-      `api/committee-assignment/${committeeId}/${senateShortname}`
+      `api/committee-slots/${committeeId}/${senateShortname}`
     );
     return res;
   };
@@ -190,7 +177,7 @@ class EditableTable extends React.Component {
 
   //TODO
   delete = (senateShortname, committeeId) => {
-    this.deleteAssignment(senateShortname, committeeId)
+    this.deleteRequirement(senateShortname, committeeId)
       .then(() => {
         message.success('Record deleted successfully!');
       })
