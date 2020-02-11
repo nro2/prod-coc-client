@@ -13,8 +13,8 @@ import Committees from '../committees';
 import GetFaculty from '../get-faculty';
 import Committee from '../committee';
 import FacultyInfo from '../faculty';
-
 import Home from '../home';
+import Reports from '../get-reports';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -73,6 +73,11 @@ class App extends Component {
                 <span>Committee Info</span>
                 <Link to="/committee" />
               </Menu.Item>
+              <Menu.Item key="7">
+                <Icon type="appstore" />
+                <span>Reports</span>
+                <Link to="/reports" />
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout>
@@ -85,6 +90,7 @@ class App extends Component {
                 <Route path="/committees" component={Committees} />
                 <Route path="/committee" component={Committee} />
                 <Route path="/faculty" component={FacultyInfo} />
+                <Route path="/reports" component={Reports} />
               </Switch>
               <Redirect to="/home" />
             </Content>
