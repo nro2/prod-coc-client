@@ -23,7 +23,7 @@ class EditableCell extends React.Component {
   };
 
   getDefaultValue = value => {
-    if (this.props.inputType === 'number') {
+    if (this.props.inputType === 'date') {
       return moment(value);
     }
 
@@ -87,7 +87,12 @@ class EditableTable extends React.Component {
                 <Button
                   type="link"
                   onClick={() =>
-                    this.save(form, record.senateShortname, this.props.committeeId)
+                    this.save(
+                      form,
+                      record.senateShortname,
+                      record.slotMinimum,
+                      this.props.committeeId
+                    )
                   }
                   style={{ marginRight: 8 }}
                 >
@@ -139,8 +144,7 @@ class EditableTable extends React.Component {
     }
   };
 
-  //TODO
-  updateAssignment = async (senateShortname, committeeId, slotReqs) => {
+  updateSlotReqs = async (senateShortname, committeeId, slotReqs) => {
     const res = axios.put(`api/committee-slots/${committeeId}/${senateShortname}`, {
       slotRequirements: slotReqs,
     });
@@ -157,7 +161,7 @@ class EditableTable extends React.Component {
   };
 
   //TODO
-  save(form, email, committee_id) {
+  save(form, senateShortname, slotReqs, committee_id) {
     form.validateFields((error, row) => {
       if (error) {
         return;
@@ -167,13 +171,7 @@ class EditableTable extends React.Component {
         editingKey: '',
       });
 
-      const dateFormat = 'YYYY/MM/DD';
-      this.updateAssignment(
-        email,
-        committee_id,
-        row['startDate'].format(dateFormat),
-        row['endDate'].format(dateFormat)
-      )
+      this.updateSlotReqs(senateShortname, committee_id, row['slotMinimum'])
         .then(() => {
           message.success('Record updated successfully!');
         })
@@ -181,8 +179,8 @@ class EditableTable extends React.Component {
           message.error(err.response.data.error);
         });
     });
-
-    this.props.rerenderParentCallback();
+    //TODO
+    //this.props.rerenderParentCallback();
   }
 
   edit(key) {
@@ -224,7 +222,7 @@ class EditableTable extends React.Component {
           inputType: col.inputType,
           dataIndex: col.dataIndex,
           title: col.title,
-          validateDate: this.validateSlotRequirement,
+          validateSlotReq: this.validateSlotRequirement,
           editing: this.isEditing(record),
         }),
       };

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Table, Divider, InputNumber, Button, message } from 'antd';
-import axios from 'axios';
-import ReqsEditableFormTable from './ReqsEditableTable';
+import { Divider } from 'antd';
+import 'antd/dist/antd.css';
+import './index.css';
+import ReqsEditableFormTable from './ReqsEditableTable.jsx';
 
 export default class RequirementsTable extends Component {
   constructor(props) {
@@ -12,33 +13,7 @@ export default class RequirementsTable extends Component {
       disabled: true,
       newSlotReqs: [],
     };
-
-    this.handleReqChange = this.handleReqChange.bind(this);
-    this.handleSave = this.handleSave.bind(this);
   }
-
-  handleReqChange = (value, senateShortname) => {
-    let newSlotReqsState = this.state.newSlotReqs;
-
-    let exists = false;
-    newSlotReqsState.map(item => {
-      if (item.senateShortname === senateShortname) {
-        item.slotReqs = value;
-        exists = true;
-      }
-      return item;
-    });
-
-    if (exists === false) {
-      newSlotReqsState = this.state.newSlotReqs.concat({
-        senateShortname: senateShortname,
-        slotReqs: value,
-      });
-    }
-
-    this.setState({ newSlotReqs: newSlotReqsState });
-  };
-
   render() {
     const columns = [
       {
@@ -73,12 +48,6 @@ export default class RequirementsTable extends Component {
           Requirements
         </Divider>
         <div style={{ marginBottom: 16 }}>
-          <Button style={{ marginRight: 8 }} onClick={this.toggle} type="primary">
-            Edit
-          </Button>
-          <Button onClick={this.handleSave} type="primary">
-            Save
-          </Button>
           <ReqsEditableFormTable
             data={this.props.data}
             committeeId={this.props.id}
