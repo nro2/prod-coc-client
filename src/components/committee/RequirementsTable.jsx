@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Divider, InputNumber, Button, message } from 'antd';
 import axios from 'axios';
-
-const pageSize = 30; // Page size to show pagination
+import ReqsEditableFormTable from './ReqsEditableTable';
 
 export default class RequirementsTable extends Component {
   constructor(props) {
@@ -40,71 +39,34 @@ export default class RequirementsTable extends Component {
     this.setState({ newSlotReqs: newSlotReqsState });
   };
 
-  handleSave = () => {
-    this.state.newSlotReqs.map(item => {
-      let res = axios
-        .put(
-          `api/committee-slots/${this.props.committeeId}/${item.senateShortname}`,
-          {
-            slotRequirements: item.slotReqs,
-          }
-        )
-        .then(response => {
-          message.success('Slot requirements successfully updated');
-          this.setState({ disabled: true });
-          return response;
-        })
-        .catch(err => {
-          message.error(err.response.data.error);
-          this.setState({ disabled: true });
-          return err;
-        });
-      return res;
-    });
-
-    this.setState({
-      newSlotReqs: [],
-    });
-  };
-
-  toggle = () => {
-    this.setState({
-      disabled: !this.state.disabled,
-    });
-  };
-
-  reqColumns = [
-    {
-      title: 'Senate',
-      dataIndex: 'senateShortname',
-      editable: false,
-    },
-    {
-      title: 'Filled',
-      dataIndex: 'slotFilled',
-      editable: false,
-    },
-    {
-      title: 'Required',
-      dataIndex: 'slotMinimum',
-      render: (initValue, key) => (
-        <InputNumber
-          min={1}
-          defaultValue={initValue}
-          disabled={this.state.disabled}
-          onChange={value => {
-            this.handleReqChange(value, key.senateShortname);
-          }}
-        />
-      ),
-    },
-    {
-      title: 'To Be Filled',
-      dataIndex: 'slotsRemaining',
-      editable: false,
-    },
-  ];
   render() {
+    const columns = [
+      {
+        title: 'Senate',
+        dataIndex: 'senateShortname',
+        editable: false,
+        inputType: 'text',
+      },
+      {
+        title: 'Filled',
+        dataIndex: 'slotFilled',
+        editable: false,
+        inputType: 'text',
+      },
+      {
+        title: 'Required',
+        dataIndex: 'slotMinimum',
+        editable: true,
+        inputType: 'number',
+      },
+      {
+        title: 'To Be Filled',
+        dataIndex: 'slotsRemaining',
+        editable: false,
+        inputType: 'text',
+      },
+    ];
+
     return (
       <div>
         <Divider type="horizontal" orientation="left">
@@ -117,15 +79,12 @@ export default class RequirementsTable extends Component {
           <Button onClick={this.handleSave} type="primary">
             Save
           </Button>
+          <ReqsEditableFormTable
+            data={this.props.data}
+            committeeId={this.props.id}
+            columns={columns}
+          />
         </div>
-        <Table
-          rowKey="senateShortname"
-          bordered
-          dataSource={this.props.data}
-          columns={this.reqColumns}
-          pagination={1 > pageSize && { pageSize }}
-          size="small"
-        />
       </div>
     );
   }
