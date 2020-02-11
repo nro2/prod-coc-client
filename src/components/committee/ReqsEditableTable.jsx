@@ -102,10 +102,7 @@ class EditableTable extends React.Component {
                 </Button>
               )}
             </EditableContext.Consumer>
-            <Popconfirm
-              title="Sure to cancel?"
-              onConfirm={() => this.cancel(record.senateShortname)}
-            >
+            <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel()}>
               <Button type="link">Cancel</Button>
             </Popconfirm>
           </span>
@@ -154,9 +151,9 @@ class EditableTable extends React.Component {
   };
 
   //TODO
-  deleteAssignment = async (email, committeeId) => {
+  deleteAssignment = async (senateShortname, committeeId) => {
     const res = await axios.delete(
-      `api/committee-assignment/${committeeId}/${email}`
+      `api/committee-assignment/${committeeId}/${senateShortname}`
     );
     return res;
   };
@@ -192,8 +189,8 @@ class EditableTable extends React.Component {
   };
 
   //TODO
-  delete = (email, committeeId) => {
-    this.deleteAssignment(email, committeeId)
+  delete = (senateShortname, committeeId) => {
+    this.deleteAssignment(senateShortname, committeeId)
       .then(() => {
         message.success('Record deleted successfully!');
       })
