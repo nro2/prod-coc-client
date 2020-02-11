@@ -31,10 +31,11 @@ class AddFacultyForm extends React.Component {
           values['email'],
           values['job'],
           values['phone'],
-          values['select']
+          values['select'],
+          values['select-multiple']
         )
           .then(() => {
-            this.props.onSuccessHandler();
+            this.props.onSuccess(values['email']);
           })
           .catch(err => {
             console.log(err.response);
@@ -43,13 +44,27 @@ class AddFacultyForm extends React.Component {
     });
   };
 
-  postAssignment = async (fullname, email, jobTitle, phoneNum, senateDivision) => {
+  postAssignment = async (
+    fullname,
+    email,
+    jobTitle,
+    phoneNum,
+    senateDivision,
+    departments
+  ) => {
+    const departmentAssociations = departments.map(item => {
+      return {
+        department_id: item,
+      };
+    });
+
     const res = await axios.post('/api/faculty', {
       fullName: fullname,
       email: email,
       jobTitle: jobTitle,
       phoneNum: phoneNum,
       senateDivision: senateDivision,
+      departmentAssociations: departmentAssociations,
     });
     return res;
   };
@@ -107,7 +122,7 @@ class AddFacultyForm extends React.Component {
       </Option>
     ));
     const divisionOptions = this.state.departments.map(departments => (
-      <Option key={departments.name} value={departments.name}>
+      <Option key={departments.department_id} value={departments.department_id}>
         {departments.name}
       </Option>
     ));
@@ -171,9 +186,9 @@ class AddFacultyForm extends React.Component {
             <Select
               showSearch
               placeholder="Select a senate division"
-              // optionFilterProp="children"
+              optionFilterProp="children"
               dropdownMatchSelectWidth={false}
-              //loadingDivisions={this.state.loading}
+              loadingDivisions={this.state.loading}
             >
               {senateOptions}
             </Select>
@@ -187,9 +202,9 @@ class AddFacultyForm extends React.Component {
               mode="multiple"
               showSearch
               placeholder="Select department(s)"
-              // optionFilterProp="children"
+              optionFilterProp="children"
               dropdownMatchSelectWidth={false}
-              //loadingDepartments={this.state.loading}
+              loadingDepartments={this.state.loading}
             >
               {divisionOptions}
             </Select>

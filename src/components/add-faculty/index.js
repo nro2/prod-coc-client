@@ -7,20 +7,27 @@ import { Redirect } from 'react-router-dom';
 class AddFaculty extends Component {
   state = {
     redirectToGetFaculty: false,
-    dataMembers: [],
     selected: '',
   };
 
-  onSuccessHandler = () => {
+  onSuccessHandler = value => {
     this.setState({
       redirectToGetFaculty: true,
+      selected: value,
     });
   };
 
   render() {
     const redirect = this.state.redirectToGetFaculty;
     if (redirect === true) {
-      return <Redirect to="/get-faculty" />;
+      return (
+        <Redirect
+          to={{
+            pathname: '/get-faculty',
+            state: { showInfo: true, selected: this.state.selected },
+          }}
+        />
+      );
     }
     return (
       <div className="Add">
@@ -28,7 +35,6 @@ class AddFaculty extends Component {
           wrappedComponentRef={this.saveFormRef}
           onSuccess={this.onSuccessHandler}
           title="Add New Faculty"
-          dataMembers={this.state.dataMembers}
         />
       </div>
     );
