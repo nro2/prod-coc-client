@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Button, notification, Divider, Popconfirm, Result } from 'antd';
 import './faculty.css';
+import FacultyHeader from './FacultyHeader';
 import FacultyInfo from './FacultyInfo';
 import CommitteeTables from './CommitteeTables';
 import axios from 'axios';
@@ -287,6 +288,7 @@ class Faculty extends Component {
 
     return (
       <div>
+        <FacultyHeader faculty={this.state.faculty} />
         <FacultyInfo
           faculty={this.state.faculty}
           departments={this.state.allDepartments}
