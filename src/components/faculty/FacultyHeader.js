@@ -26,6 +26,12 @@ const buildSurnameForename = fullName => {
 };
 
 export default class FacultyHeader extends Component {
+  /**
+   * Child component callback that re-renders the view with the faculty object passed
+   * back by the callback.
+   *
+   * @param faculty Faculty object modified by the child component
+   */
   onCreate = faculty => {
     this.props.onCreate(faculty);
   };
