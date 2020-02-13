@@ -6,12 +6,13 @@ import {
   Form,
   Input,
   Popconfirm,
-  DatePicker,
   message,
   Divider,
 } from 'antd';
 import moment from 'moment';
 import axios from 'axios';
+
+const pageSize = 30;
 
 const EditableContext = React.createContext();
 
@@ -19,10 +20,6 @@ class EditableCell extends React.Component {
   getInput = () => {
     if (this.props.inputType === 'number') {
       return <InputNumber />;
-    }
-
-    if (this.props.inputType === 'date') {
-      return <DatePicker />;
     }
     return <Input />;
   };
@@ -49,7 +46,7 @@ class EditableCell extends React.Component {
                   message: `Please Input ${title}!`,
                 },
                 {
-                  validator: this.props.validateDate,
+                  validator: this.props.validateSlotReq,
                 },
               ],
               initialValue: this.getDefaultValue(record[dataIndex]),
@@ -85,7 +82,7 @@ class EditableTable extends React.Component {
                 <Button
                   type="link"
                   onClick={() =>
-                    this.save(form, record.facultyEmail, this.props.committeeId)
+                    this.save(form, record.senateShortname, this.props.committeeId)
                   }
                   style={{ marginRight: 8 }}
                 >
@@ -93,10 +90,7 @@ class EditableTable extends React.Component {
                 </Button>
               )}
             </EditableContext.Consumer>
-            <Popconfirm
-              title="Sure to cancel?"
-              onConfirm={() => this.cancel(record.facultyEmail)}
-            >
+            <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel()}>
               <Button type="link">Cancel</Button>
             </Popconfirm>
           </span>
@@ -105,7 +99,7 @@ class EditableTable extends React.Component {
             <Button
               type="link"
               disabled={editingKey !== ''}
-              onClick={() => this.edit(record.facultyEmail)}
+              onClick={() => this.edit(record.senateShortname)}
             >
               Edit
             </Button>
@@ -113,7 +107,7 @@ class EditableTable extends React.Component {
             <Popconfirm
               title="Sure to delete?"
               onConfirm={() =>
-                this.delete(record.facultyEmail, this.props.committeeId)
+                this.delete(record.senateShortname, this.props.committeeId)
               }
             >
               <Button type="link">Delete</Button>
@@ -127,41 +121,31 @@ class EditableTable extends React.Component {
     this.columns.push(operations);
   }
 
-  isEditing = record => record.facultyEmail === this.state.editingKey;
+  isEditing = record => record.senateShortname === this.state.editingKey;
 
-  validateDateHandler = (rule, value, callback) => {
-    const { form } = this.props;
-    if (
-      value &&
-      value.format('YYYY/MM/DD') <
-        form.getFieldValue('startDate').format('YYYY/MM/DD')
-    ) {
-      callback('End date must come after start date.');
+  validateSlotRequirement = (rule, value, callback) => {
+    if (value < 1) {
+      callback('Slot requirement must be greater than 0');
     } else {
       callback();
     }
   };
 
-  updateAssignment = async (email, committeeId, startDate, endDate) => {
-    const res = await axios.put('api/committee-assignment', {
-      email: email,
-      committeeId: committeeId,
-      startDate: startDate,
-      endDate: endDate,
+  updateSlotReqs = async (senateShortname, committeeId, slotReqs) => {
+    const res = axios.put(`api/committee-slots/${committeeId}/${senateShortname}`, {
+      slotRequirements: slotReqs,
     });
-
     return res;
   };
 
-  deleteAssignment = async (email, committeeId) => {
+  deleteRequirement = async (senateShortname, committeeId) => {
     const res = await axios.delete(
-      `api/committee-assignment/${committeeId}/${email}`
+      `api/committee-slots/${committeeId}/${senateShortname}`
     );
-
     return res;
   };
 
-  save(form, email, committee_id) {
+  save(form, senateShortname, committee_id) {
     form.validateFields((error, row) => {
       if (error) {
         return;
@@ -170,14 +154,8 @@ class EditableTable extends React.Component {
       this.setState({
         editingKey: '',
       });
-
-      const dateFormat = 'YYYY/MM/DD';
-      this.updateAssignment(
-        email,
-        committee_id,
-        row['startDate'].format(dateFormat),
-        row['endDate'].format(dateFormat)
-      )
+      const slotReqs = row['slotMinimum'];
+      this.updateSlotReqs(senateShortname, committee_id, slotReqs)
         .then(() => {
           message.success('Record updated successfully!');
         })
@@ -197,8 +175,9 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' });
   };
 
-  delete = (email, committeeId) => {
-    this.deleteAssignment(email, committeeId)
+  //TODO
+  delete = (senateShortname, committeeId) => {
+    this.deleteRequirement(senateShortname, committeeId)
       .then(() => {
         message.success('Record deleted successfully!');
       })
@@ -227,7 +206,7 @@ class EditableTable extends React.Component {
           inputType: col.inputType,
           dataIndex: col.dataIndex,
           title: col.title,
-          validateDate: this.validateDateHandler,
+          validateSlotReq: this.validateSlotRequirement,
           editing: this.isEditing(record),
         }),
       };
@@ -235,22 +214,20 @@ class EditableTable extends React.Component {
     return (
       <EditableContext.Provider value={this.props.form}>
         <Table
-          rowKey="facultyEmail"
+          rowKey="senateShortname"
           size="small"
           components={components}
           bordered
           dataSource={this.props.data}
           columns={columns}
           rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
+          pagination={1 > pageSize && { pageSize }}
         />
       </EditableContext.Provider>
     );
   }
 }
 
-const EditableFormTable = Form.create()(EditableTable);
+const ReqsEditableFormTable = Form.create()(EditableTable);
 
-export default EditableFormTable;
+export default ReqsEditableFormTable;

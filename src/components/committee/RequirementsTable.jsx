@@ -1,131 +1,61 @@
 import React, { Component } from 'react';
-import { Table, Divider, InputNumber, Button, message } from 'antd';
-import axios from 'axios';
-
-const pageSize = 30; // Page size to show pagination
+import { Divider } from 'antd';
+import 'antd/dist/antd.css';
+import './index.css';
+import ReqsEditableFormTable from './ReqsEditableTable.jsx';
 
 export default class RequirementsTable extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      committeeId: this.props.committeeId,
-      disabled: true,
-      newSlotReqs: [],
-    };
-
-    this.handleReqChange = this.handleReqChange.bind(this);
-    this.handleSave = this.handleSave.bind(this);
+    this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
 
-  handleReqChange = (value, senateShortname) => {
-    let newSlotReqsState = this.state.newSlotReqs;
+  rerenderParentCallback() {
+    this.props.rerenderParentCallback();
+  }
 
-    let exists = false;
-    newSlotReqsState.map(item => {
-      if (item.senateShortname === senateShortname) {
-        item.slotReqs = value;
-        exists = true;
-      }
-      return item;
-    });
-
-    if (exists === false) {
-      newSlotReqsState = this.state.newSlotReqs.concat({
-        senateShortname: senateShortname,
-        slotReqs: value,
-      });
-    }
-
-    this.setState({ newSlotReqs: newSlotReqsState });
-  };
-
-  handleSave = () => {
-    this.state.newSlotReqs.map(item => {
-      let res = axios
-        .put(
-          `api/committee-slots/${this.props.committeeId}/${item.senateShortname}`,
-          {
-            slotRequirements: item.slotReqs,
-          }
-        )
-        .then(response => {
-          message.success('Slot requirements successfully updated');
-          this.setState({ disabled: true });
-          return response;
-        })
-        .catch(err => {
-          message.error(err.response.data.error);
-          this.setState({ disabled: true });
-          return err;
-        });
-      return res;
-    });
-
-    this.setState({
-      newSlotReqs: [],
-    });
-  };
-
-  toggle = () => {
-    this.setState({
-      disabled: !this.state.disabled,
-    });
-  };
-
-  reqColumns = [
-    {
-      title: 'Senate',
-      dataIndex: 'senateShortname',
-      editable: false,
-    },
-    {
-      title: 'Filled',
-      dataIndex: 'slotFilled',
-      editable: false,
-    },
-    {
-      title: 'Required',
-      dataIndex: 'slotMinimum',
-      render: (initValue, key) => (
-        <InputNumber
-          min={1}
-          defaultValue={initValue}
-          disabled={this.state.disabled}
-          onChange={value => {
-            this.handleReqChange(value, key.senateShortname);
-          }}
-        />
-      ),
-    },
-    {
-      title: 'To Be Filled',
-      dataIndex: 'slotsRemaining',
-      editable: false,
-    },
-  ];
   render() {
+    const columns = [
+      {
+        title: 'Senate',
+        dataIndex: 'senateShortname',
+        editable: false,
+        inputType: 'text',
+      },
+      {
+        title: 'Filled',
+        dataIndex: 'slotFilled',
+        editable: false,
+        inputType: 'text',
+      },
+      {
+        title: 'Required',
+        dataIndex: 'slotMinimum',
+        editable: true,
+        inputType: 'number',
+      },
+      {
+        title: 'To Be Filled',
+        dataIndex: 'slotsRemaining',
+        editable: false,
+        inputType: 'text',
+      },
+    ];
+
     return (
       <div>
         <Divider type="horizontal" orientation="left">
           Requirements
         </Divider>
         <div style={{ marginBottom: 16 }}>
-          <Button style={{ marginRight: 8 }} onClick={this.toggle} type="primary">
-            Edit
-          </Button>
-          <Button onClick={this.handleSave} type="primary">
-            Save
-          </Button>
+          <ReqsEditableFormTable
+            data={this.props.data}
+            committeeId={this.props.committeeId}
+            columns={columns}
+            rerenderParentCallback={this.rerenderParentCallback}
+          />
         </div>
-        <Table
-          rowKey="senateShortname"
-          bordered
-          dataSource={this.props.data}
-          columns={this.reqColumns}
-          pagination={1 > pageSize && { pageSize }}
-          size="small"
-        />
       </div>
     );
   }
