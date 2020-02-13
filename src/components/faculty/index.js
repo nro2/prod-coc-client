@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Button, notification, Divider, Popconfirm, Result } from 'antd';
 import './faculty.css';
 import FacultyHeader from './FacultyHeader';
-import FacultyInfo from './FacultyInfo';
+// import FacultyInfo from './FacultyInfo';
 import CommitteeTables from './CommitteeTables';
 import axios from 'axios';
 
@@ -45,6 +45,7 @@ class Faculty extends Component {
     };
     this.enableSaveChangesButton = this.enableSaveChangesButton.bind(this);
     this.onFacultyEdit = this.onFacultyEdit.bind(this);
+    this.updateFaculty = this.updateFaculty.bind(this);
   }
 
   async componentDidMount() {
@@ -273,6 +274,12 @@ class Faculty extends Component {
     );
   }
 
+  updateFaculty(faculty) {
+    this.setState({
+      faculty,
+    });
+  }
+
   render() {
     if (Object.keys(this.state.error).length !== 0) {
       return (
@@ -288,14 +295,7 @@ class Faculty extends Component {
 
     return (
       <div>
-        <FacultyHeader faculty={this.state.faculty} />
-        <FacultyInfo
-          faculty={this.state.faculty}
-          departments={this.state.allDepartments}
-          enableSaveChangesButton={this.enableSaveChangesButton}
-          sayHello={this.sayHello}
-          removeDepartment={this.removeDepartment}
-        />
+        <FacultyHeader onCreate={this.updateFaculty} faculty={this.state.faculty} />
         <CommitteeTables
           facultiCurrentCommittees={this.state.faculty.currentCommittees}
           mockData={this.state.data}

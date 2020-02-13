@@ -1,5 +1,6 @@
-import { Button, Descriptions, Divider, Modal, PageHeader } from 'antd';
+import { Descriptions, Divider, PageHeader } from 'antd';
 import React, { Component } from 'react';
+import FacultyHeaderModal from './FacultyHeaderModal';
 
 /**
  * Builds a name in the format Surname, Forename.
@@ -25,41 +26,13 @@ const buildSurnameForename = fullName => {
 };
 
 export default class FacultyHeader extends Component {
-  state = { visible: false };
-
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  handleOk = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  handleCancel = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
+  onCreate = faculty => {
+    this.props.onCreate(faculty);
   };
 
   render() {
     const name = buildSurnameForename(this.props.faculty.name);
     const { email, job, phone } = this.props.faculty;
-
-    const form = () => {
-      return (
-        <div>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </div>
-      );
-    };
 
     return (
       <div>
@@ -67,19 +40,11 @@ export default class FacultyHeader extends Component {
           title={name}
           style={{ paddingLeft: 0 }}
           extra={[
-            <div key="1">
-              <Button type="primary" onClick={this.showModal}>
-                Edit
-              </Button>
-              <Modal
-                title="Edit Faculty"
-                visible={this.state.visible}
-                onOk={this.handleOk}
-                onCancel={this.handleCancel}
-              >
-                {form()}
-              </Modal>
-            </div>,
+            <FacultyHeaderModal
+              key="1"
+              faculty={this.props.faculty}
+              onCreate={this.onCreate}
+            />,
           ]}
           avatar={{ icon: 'user' }}
         />
