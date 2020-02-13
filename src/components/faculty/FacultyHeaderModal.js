@@ -20,11 +20,19 @@ class FacultyHeaderModal extends React.Component {
    * @param faculty Faculty to be passed by the callback
    */
   handleOk = faculty => {
-    this.setState({
-      faculty,
-      visible: false,
+    const { form } = this.formRef.props;
+
+    form.validateFields(err => {
+      if (err) {
+        return;
+      }
+
+      this.setState({
+        faculty,
+        visible: false,
+      });
+      this.props.onCreate(faculty);
     });
-    this.props.onCreate(faculty);
   };
 
   handleCancel = () => {
