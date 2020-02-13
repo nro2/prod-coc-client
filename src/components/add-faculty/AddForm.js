@@ -46,21 +46,32 @@ class AddFacultyForm extends React.Component {
     senateDivision,
     departments
   ) => {
-    const departmentAssociations = departments.map(item => {
-      return {
-        department_id: item,
-      };
-    });
+    if (departments) {
+      const departmentAssociations = departments.map(item => {
+        return {
+          department_id: item,
+        };
+      });
 
-    const res = await axios.post('/api/faculty', {
-      fullName: fullname,
-      email: email,
-      jobTitle: jobTitle,
-      phoneNum: phoneNum,
-      senateDivision: senateDivision,
-      departmentAssociations: departmentAssociations,
-    });
-    return res;
+      const res = await axios.post('/api/faculty', {
+        fullName: fullname,
+        email: email,
+        jobTitle: jobTitle,
+        phoneNum: phoneNum,
+        senateDivision: senateDivision,
+        departmentAssociations: departmentAssociations,
+      });
+      return res;
+    } else {
+      const res = await axios.post('/api/faculty', {
+        fullName: fullname,
+        email: email,
+        jobTitle: jobTitle,
+        phoneNum: phoneNum,
+        senateDivision: senateDivision,
+      });
+      return res;
+    }
   };
 
   fetchDivisions() {
