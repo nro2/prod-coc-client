@@ -8,12 +8,7 @@ class AddFacultyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: '',
-      showForm: false,
       senateDivisions: [],
-      departmentsList: [],
-      loadingDivisions: true,
-      loadingDepartments: true,
       departments: [],
     };
 
@@ -25,7 +20,6 @@ class AddFacultyForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         this.postAssignment(
           values['first'] + ' ' + values['last'],
           values['email'],
@@ -75,15 +69,12 @@ class AddFacultyForm extends React.Component {
       .then(response => {
         this.setState({
           senateDivisions: response.data,
-          loadingDivisions: false,
-          selected: 0,
           error: {},
         });
       })
       .catch(err => {
         this.setState({
           error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
         });
       });
   }
@@ -94,15 +85,12 @@ class AddFacultyForm extends React.Component {
       .then(response => {
         this.setState({
           departments: response.data,
-          loadingDivisions: false,
-          selected: 0,
           error: {},
         });
       })
       .catch(err => {
         this.setState({
           error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
         });
       });
   }
@@ -188,7 +176,6 @@ class AddFacultyForm extends React.Component {
               placeholder="Select a senate division"
               optionFilterProp="children"
               dropdownMatchSelectWidth={false}
-              loadingDivisions={this.state.loading}
             >
               {senateOptions}
             </Select>
@@ -196,7 +183,7 @@ class AddFacultyForm extends React.Component {
         </Form.Item>
         <Form.Item label="Department">
           {getFieldDecorator('select-multiple', {
-            rules: [{ required: true, message: 'Please select Departments' }],
+            rules: [{ required: false, message: 'Please select Departments' }],
           })(
             <Select
               mode="multiple"
@@ -204,7 +191,6 @@ class AddFacultyForm extends React.Component {
               placeholder="Select department(s)"
               optionFilterProp="children"
               dropdownMatchSelectWidth={false}
-              loadingDepartments={this.state.loading}
             >
               {divisionOptions}
             </Select>

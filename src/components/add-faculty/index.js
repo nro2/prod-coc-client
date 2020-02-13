@@ -32,7 +32,6 @@ class AddFaculty extends Component {
     return (
       <div className="Add">
         <WrappedDisplayForm
-          wrappedComponentRef={this.saveFormRef}
           onSuccess={this.onSuccessHandler}
           title="Add New Faculty"
         />
