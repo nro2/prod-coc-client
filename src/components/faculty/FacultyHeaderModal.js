@@ -58,6 +58,7 @@ class FacultyHeaderModal extends React.Component {
           onCancel={this.handleCancel}
           onOk={this.handleOk}
           wrappedComponentRef={this.saveFormRef}
+          senateDivisions={this.props.senateDivisions}
         />
       </div>
     );

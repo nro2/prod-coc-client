@@ -50,6 +50,7 @@ export default class FacultyHeader extends Component {
               key="1"
               faculty={this.props.faculty}
               onCreate={this.onCreate}
+              senateDivisions={this.props.senateDivisions}
             />,
           ]}
           avatar={{ icon: 'user' }}

@@ -40,6 +40,7 @@ class Faculty extends Component {
         id: -1,
         loaded: false,
       },
+      senateDivisions: [],
       facultySnapshot: {},
       saved: false,
     };
@@ -49,9 +50,8 @@ class Faculty extends Component {
   }
 
   async componentDidMount() {
-    // This request to populate the dropdowns can be asynchronous, so that it runs
-    // without blocking while the synchronous faculty info request is processed
-    this.retrieveDropdownOptions();
+    await this.retrieveDropdownOptions();
+    await this.retrieveSenateDivisions();
 
     await axios
       .get(`api/faculty/info/${this.email}`)
@@ -126,6 +126,14 @@ class Faculty extends Component {
       this.setState({
         allDepartments: departmentList,
         departmentsLoaded: true,
+      });
+    });
+  };
+
+  retrieveSenateDivisions = async () => {
+    await axios.get('/api/senate-divisions').then(response => {
+      this.setState({
+        senateDivisions: response.data,
       });
     });
   };
@@ -295,7 +303,11 @@ class Faculty extends Component {
 
     return (
       <div>
-        <FacultyHeader onCreate={this.updateFaculty} faculty={this.state.faculty} />
+        <FacultyHeader
+          onCreate={this.updateFaculty}
+          faculty={this.state.faculty}
+          senateDivisions={this.state.senateDivisions}
+        />
         <CommitteeTables
           facultiCurrentCommittees={this.state.faculty.currentCommittees}
           mockData={this.state.data}

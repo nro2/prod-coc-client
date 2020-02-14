@@ -1,7 +1,13 @@
 import React from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Select } from 'antd';
+
+const { Option } = Select;
 
 class EditFacultyForm extends React.Component {
+  state = {
+    selectedSenateDivision: '',
+  };
+
   /**
    * Triggers when the "Save" button is clicked, invoking the callback function
    * from the parent component with an updated faculty object.
@@ -13,6 +19,7 @@ class EditFacultyForm extends React.Component {
       name: form.getFieldValue('name'),
       phone: form.getFieldValue('phone'),
       job: form.getFieldValue('title'),
+      senate: this.state.selectedSenateDivision,
     };
 
     this.props.onOk(faculty);
@@ -20,6 +27,29 @@ class EditFacultyForm extends React.Component {
 
   onCancelHandler = () => {
     this.props.onCancel();
+  };
+
+  renderSenateDivisions = () => {
+    const handleChange = value => {
+      this.setState({
+        selectedSenateDivision: value,
+      });
+    };
+
+    const senateOptions = this.props.senateDivisions.map(senateDivision => (
+      <Option
+        key={senateDivision.senate_division_short_name}
+        value={senateDivision.senate_division_short_name}
+      >
+        {senateDivision.senate_division_short_name}
+      </Option>
+    ));
+
+    return (
+      <Select defaultValue={this.props.faculty.senate} onChange={handleChange}>
+        {senateOptions}
+      </Select>
+    );
   };
 
   render() {
@@ -79,6 +109,9 @@ class EditFacultyForm extends React.Component {
                 },
               ],
             })(<Input />)}
+          </Form.Item>
+          <Form.Item label="Senate Division">
+            {this.renderSenateDivisions()}
           </Form.Item>
         </Form>
       </Modal>
