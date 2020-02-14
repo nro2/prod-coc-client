@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, message } from 'antd';
 import axios from 'axios';
-import WrappedDisplayForm from './AddCommitteeAssignmentForm';
+import WrappedDisplayForm from './AddSenateRequirementForm.jsx';
 
 class AddSenateRequirement extends React.Component {
   state = {
@@ -31,6 +31,7 @@ class AddSenateRequirement extends React.Component {
   showModal = () => {
     this.setState({ visible: true });
     this.fetchData();
+    this.findValidSenatesDivisions();
   };
 
   handleCancel = () => {
@@ -89,8 +90,8 @@ class AddSenateRequirement extends React.Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           okText="Add"
-          title="Add New Senate Division Requirement"
-          dataMembers={this.state.dataMembers}
+          title="Add New Senate Requirement"
+          dataMembers={this.state.validSenateDivisions}
           committeeId={this.props.committeeId}
         />
       </div>
