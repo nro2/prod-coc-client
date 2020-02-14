@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Modal,
-  Form,
-  Divider,
-  DatePicker,
-  Select,
-  Descriptions,
-  InputNumber,
-} from 'antd';
+import { Modal, Form, Divider, Select, Descriptions, InputNumber } from 'antd';
 import SearchDropDown from '../common/SearchDropDown.jsx';
 
 const { Option } = Select;
@@ -63,7 +55,7 @@ class AddCommitteeAssignmentForm extends React.Component {
     if (faculty !== undefined) {
       Object.entries(faculty).forEach(([key, value]) =>
         items.push(
-          <Descriptions.Item key={key} label={key}>
+          <Descriptions.Item key={key} label="name">
             {value}
           </Descriptions.Item>
         )
@@ -73,7 +65,7 @@ class AddCommitteeAssignmentForm extends React.Component {
     const config = {
       rules: [
         {
-          type: 'object',
+          type: 'number',
           required: true,
           message: 'Please select a senate division!',
         },

@@ -31,7 +31,6 @@ class AddSenateRequirement extends React.Component {
   showModal = () => {
     this.setState({ visible: true });
     this.fetchData();
-    this.findValidSenatesDivisions();
   };
 
   handleCancel = () => {
@@ -60,7 +59,7 @@ class AddSenateRequirement extends React.Component {
 
       this.formRef.resetState();
 
-      this.postAssignment(value, this.props.committeeId, values['slotReqs'])
+      this.postAssignment(this.props.committeeId, value, values['slotReq'])
         .then(() => {
           message.success('Record inserted successfully!');
         })
@@ -91,7 +90,7 @@ class AddSenateRequirement extends React.Component {
           onCreate={this.handleCreate}
           okText="Add"
           title="Add New Senate Requirement"
-          dataMembers={this.state.validSenateDivisions}
+          dataMembers={this.state.dataMembers}
           committeeId={this.props.committeeId}
         />
       </div>
