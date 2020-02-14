@@ -91,23 +91,11 @@ class EditFacultyForm extends React.Component {
           <Form.Item label="Phone">
             {getFieldDecorator('phone', {
               initialValue: faculty.phone,
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input the phone number',
-                },
-              ],
             })(<Input />)}
           </Form.Item>
           <Form.Item label="Title">
             {getFieldDecorator('title', {
               initialValue: faculty.job,
-              rules: [
-                {
-                  required: true,
-                  message: 'Please input the job title',
-                },
-              ],
             })(<Input />)}
           </Form.Item>
           <Form.Item label="Senate Division">
