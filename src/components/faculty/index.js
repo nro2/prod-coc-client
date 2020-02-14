@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { Button, notification, Divider, Popconfirm, Result } from 'antd';
 import './faculty.css';
 import FacultyHeader from './FacultyHeader';
-// import FacultyInfo from './FacultyInfo';
 import CommitteeTables from './CommitteeTables';
 import axios from 'axios';
 
@@ -23,7 +22,7 @@ class Faculty extends Component {
     this.state = {
       data: this.facultyData,
       allCommittees: [],
-      allDepartments: [],
+      departments: [],
       committeesLoaded: false,
       departmentsLoaded: false,
       loading: false,
@@ -114,17 +113,17 @@ class Faculty extends Component {
       });
     });
 
-    axios.get('/api/departments').then(departments => {
-      const departmentList = [];
-      departments.data.forEach(department => {
-        departmentList.push({
+    axios.get('/api/departments').then(response => {
+      const departments = [];
+      response.data.forEach(department => {
+        departments.push({
           id: department.department_id,
           name: department.name,
         });
       });
 
       this.setState({
-        allDepartments: departmentList,
+        departments,
         departmentsLoaded: true,
       });
     });
@@ -202,26 +201,6 @@ class Faculty extends Component {
    */
   sayHello = () => {
     alert('Hello! I am not yet implemented.');
-  };
-
-  /**
-   * Removes a department from the state. This method is called from `FacultyInfo`
-   * so that the state of the department transitions down to that component.
-   *
-   * @param department  Department to remove
-   */
-  removeDepartment = department => {
-    const departments = this.state.faculty.departments.filter(
-      title => title !== department
-    );
-    console.log('Department removed:', department);
-    this.enableSaveChangesButton();
-    this.setState({
-      faculty: {
-        ...this.state.faculty,
-        departments,
-      },
-    });
   };
 
   enableSaveChangesButton(phone, senate, committeeID) {
