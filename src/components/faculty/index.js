@@ -61,7 +61,7 @@ class Faculty extends Component {
 
         const faculty = {
           currentCommittees,
-          departments,
+          departments: departments.map(department => department.name),
           name: data.full_name,
           email: data.email,
           phone: data.phone_num,
@@ -286,6 +286,7 @@ class Faculty extends Component {
           onCreate={this.updateFaculty}
           faculty={this.state.faculty}
           senateDivisions={this.state.senateDivisions}
+          departments={this.state.departments}
         />
         <CommitteeTables
           facultiCurrentCommittees={this.state.faculty.currentCommittees}

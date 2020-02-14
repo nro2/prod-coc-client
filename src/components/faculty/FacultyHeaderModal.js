@@ -59,6 +59,7 @@ class FacultyHeaderModal extends React.Component {
           onOk={this.handleOk}
           wrappedComponentRef={this.saveFormRef}
           senateDivisions={this.props.senateDivisions}
+          departments={this.props.departments}
         />
       </div>
     );

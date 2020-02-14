@@ -6,6 +6,7 @@ const { Option } = Select;
 class EditFacultyForm extends React.Component {
   state = {
     selectedSenateDivision: '',
+    selectedDepartments: [],
   };
 
   /**
@@ -14,12 +15,22 @@ class EditFacultyForm extends React.Component {
    */
   onSubmitHandler = () => {
     const { form } = this.props;
+    const senate =
+      this.state.selectedSenateDivision === ''
+        ? this.props.faculty.senate
+        : this.state.selectedSenateDivision;
+    const departments =
+      this.state.selectedDepartments.length === 0
+        ? this.props.faculty.departments
+        : this.state.selectedDepartments;
+
     const faculty = {
       ...this.props.faculty,
       name: form.getFieldValue('name'),
       phone: form.getFieldValue('phone'),
       job: form.getFieldValue('title'),
-      senate: this.state.selectedSenateDivision,
+      senate,
+      departments,
     };
 
     this.props.onOk(faculty);
@@ -48,6 +59,39 @@ class EditFacultyForm extends React.Component {
     return (
       <Select defaultValue={this.props.faculty.senate} onChange={handleChange}>
         {senateOptions}
+      </Select>
+    );
+  };
+
+  renderDepartments = () => {
+    const handleChange = value => {
+      this.setState({
+        selectedDepartments: value,
+      });
+    };
+
+    const defaultDepartments = [];
+    this.props.faculty.departments.forEach(department => {
+      defaultDepartments.push(department);
+    });
+
+    const divisionOptions = this.props.departments.map(departments => (
+      <Option key={departments.name} value={departments.name}>
+        {departments.name}
+      </Option>
+    ));
+
+    return (
+      <Select
+        mode="multiple"
+        showSearch
+        placeholder="Select department(s)"
+        defaultValue={defaultDepartments}
+        optionFilterProp="children"
+        onChange={handleChange}
+        dropdownMatchSelectWidth={false}
+      >
+        {divisionOptions}
       </Select>
     );
   };
@@ -101,6 +145,7 @@ class EditFacultyForm extends React.Component {
           <Form.Item label="Senate Division">
             {this.renderSenateDivisions()}
           </Form.Item>
+          <Form.Item label="Departments">{this.renderDepartments()}</Form.Item>
         </Form>
       </Modal>
     );
