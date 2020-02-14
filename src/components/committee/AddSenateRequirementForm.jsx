@@ -46,20 +46,28 @@ class AddCommitteeAssignmentForm extends React.Component {
       </Option>
     ));
 
-    const faculty = this.props.dataMembers.find(
-      faculty => faculty.senate_division_short_name === this.state.selected
+    const senate = this.props.dataMembers.find(
+      senate => senate.senate_division_short_name === this.state.selected
     );
 
     let items = [];
 
-    if (faculty !== undefined) {
-      Object.entries(faculty).forEach(([key, value]) =>
-        items.push(
-          <Descriptions.Item key={key} label="name">
-            {value}
-          </Descriptions.Item>
-        )
-      );
+    if (senate !== undefined) {
+      Object.entries(senate).forEach(([key, value]) => {
+        if (key === 'name') {
+          items.push(
+            <Descriptions.Item key={key} label="Name">
+              {value}
+            </Descriptions.Item>
+          );
+        } else {
+          items.push(
+            <Descriptions.Item key={key} label="Abbreviation">
+              {value}
+            </Descriptions.Item>
+          );
+        }
+      });
     }
 
     const config = {
@@ -67,7 +75,7 @@ class AddCommitteeAssignmentForm extends React.Component {
         {
           type: 'number',
           required: true,
-          message: 'Please select a senate division!',
+          message: 'Please select a requirement!',
         },
       ],
     };
@@ -88,7 +96,7 @@ class AddCommitteeAssignmentForm extends React.Component {
           placeholder="Select Senate Division"
           dividerText="Slot Requirements"
         />
-        <Descriptions>{items}</Descriptions>
+        <Descriptions layout="vertical">{items}</Descriptions>
         {this.state.showForm && (
           <Form layout={layout || 'vertical'}>
             <Divider orientation="left" />
