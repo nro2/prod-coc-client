@@ -64,7 +64,11 @@ class AddSenateRequirement extends React.Component {
           message.success('Record inserted successfully!');
         })
         .catch(err => {
-          message.error(err.response.data.error);
+          if (err.response.status === 409) {
+            message.error('Senate requirement already exists for this committee');
+          } else {
+            message.error(err.response.data.error);
+          }
         });
 
       form.resetFields();
