@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Button, notification, Divider, Popconfirm, Result } from 'antd';
 import './faculty.css';
-import FacultyInfo from './FacultyInfo';
+import FacultyHeader from './FacultyHeader';
 import CommitteeTables from './CommitteeTables';
 import axios from 'axios';
 
@@ -22,7 +22,7 @@ class Faculty extends Component {
     this.state = {
       data: this.facultyData,
       allCommittees: [],
-      allDepartments: [],
+      departments: [],
       committeesLoaded: false,
       departmentsLoaded: false,
       loading: false,
@@ -39,17 +39,18 @@ class Faculty extends Component {
         id: -1,
         loaded: false,
       },
+      senateDivisions: [],
       facultySnapshot: {},
       saved: false,
     };
     this.enableSaveChangesButton = this.enableSaveChangesButton.bind(this);
     this.onFacultyEdit = this.onFacultyEdit.bind(this);
+    this.updateFaculty = this.updateFaculty.bind(this);
   }
 
   async componentDidMount() {
-    // This request to populate the dropdowns can be asynchronous, so that it runs
-    // without blocking while the synchronous faculty info request is processed
-    this.retrieveDropdownOptions();
+    await this.retrieveDropdownOptions();
+    await this.retrieveSenateDivisions();
 
     await axios
       .get(`api/faculty/info/${this.email}`)
@@ -60,7 +61,7 @@ class Faculty extends Component {
 
         const faculty = {
           currentCommittees,
-          departments,
+          departments: departments.map(department => department.name),
           name: data.full_name,
           email: data.email,
           phone: data.phone_num,
@@ -112,18 +113,26 @@ class Faculty extends Component {
       });
     });
 
-    axios.get('/api/departments').then(departments => {
-      const departmentList = [];
-      departments.data.forEach(department => {
-        departmentList.push({
+    axios.get('/api/departments').then(response => {
+      const departments = [];
+      response.data.forEach(department => {
+        departments.push({
           id: department.department_id,
           name: department.name,
         });
       });
 
       this.setState({
-        allDepartments: departmentList,
+        departments,
         departmentsLoaded: true,
+      });
+    });
+  };
+
+  retrieveSenateDivisions = async () => {
+    await axios.get('/api/senate-divisions').then(response => {
+      this.setState({
+        senateDivisions: response.data,
       });
     });
   };
@@ -194,26 +203,6 @@ class Faculty extends Component {
     alert('Hello! I am not yet implemented.');
   };
 
-  /**
-   * Removes a department from the state. This method is called from `FacultyInfo`
-   * so that the state of the department transitions down to that component.
-   *
-   * @param department  Department to remove
-   */
-  removeDepartment = department => {
-    const departments = this.state.faculty.departments.filter(
-      title => title !== department
-    );
-    console.log('Department removed:', department);
-    this.enableSaveChangesButton();
-    this.setState({
-      faculty: {
-        ...this.state.faculty,
-        departments,
-      },
-    });
-  };
-
   enableSaveChangesButton(phone, senate, committeeID) {
     // enableSaveChangesButton is triggered by child state whenever start/end dates are edited and saved
     // this is what allows the 'save changes button' to be enabled when changes are made
@@ -272,6 +261,12 @@ class Faculty extends Component {
     );
   }
 
+  updateFaculty(faculty) {
+    this.setState({
+      faculty,
+    });
+  }
+
   render() {
     if (Object.keys(this.state.error).length !== 0) {
       return (
@@ -287,12 +282,11 @@ class Faculty extends Component {
 
     return (
       <div>
-        <FacultyInfo
+        <FacultyHeader
+          onCreate={this.updateFaculty}
           faculty={this.state.faculty}
-          departments={this.state.allDepartments}
-          enableSaveChangesButton={this.enableSaveChangesButton}
-          sayHello={this.sayHello}
-          removeDepartment={this.removeDepartment}
+          senateDivisions={this.state.senateDivisions}
+          departments={this.state.departments}
         />
         <CommitteeTables
           facultiCurrentCommittees={this.state.faculty.currentCommittees}
