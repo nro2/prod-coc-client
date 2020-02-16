@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import WrappedDisplayForm from './AddForm';
-//import { message } from 'antd';
 import { Redirect } from 'react-router-dom';
-//import axios from 'axios';
 
 class AddFaculty extends Component {
   state = {
