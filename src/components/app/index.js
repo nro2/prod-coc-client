@@ -12,7 +12,7 @@ import AddFaculty from '../add-faculty';
 import Committees from '../committees';
 import GetFaculty from '../get-faculty';
 import Committee from '../committee';
-import FacultyInfo from '../faculty';
+import Faculty from '../faculty';
 import Home from '../home';
 import Reports from '../get-reports';
 
@@ -89,7 +89,7 @@ class App extends Component {
                 <Route path="/get-faculty" component={GetFaculty} />
                 <Route path="/committees" component={Committees} />
                 <Route path="/committee" component={Committee} />
-                <Route path="/faculty" component={FacultyInfo} />
+                <Route path="/faculty" component={Faculty} />
                 <Route path="/reports" component={Reports} />
               </Switch>
               <Redirect to="/home" />

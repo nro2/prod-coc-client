@@ -3,6 +3,7 @@ import { Divider } from 'antd';
 import 'antd/dist/antd.css';
 import './index.css';
 import ReqsEditableFormTable from './ReqsEditableTable.jsx';
+import AddSenateRequirement from './AddSenateRequirement';
 
 export default class RequirementsTable extends Component {
   constructor(props) {
@@ -48,6 +49,12 @@ export default class RequirementsTable extends Component {
         <Divider type="horizontal" orientation="left">
           Requirements
         </Divider>
+        <AddSenateRequirement
+          buttonLabel="Add Requirement"
+          endpoint="api/senate-divisions"
+          committeeId={this.props.committeeId}
+          rerenderParentCallback={this.rerenderParentCallback}
+        />
         <div style={{ marginBottom: 16 }}>
           <ReqsEditableFormTable
             data={this.props.data}
