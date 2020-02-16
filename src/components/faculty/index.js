@@ -6,6 +6,7 @@ import CommitteeTables from './CommitteeTables';
 import CommitteesTable from './CommitteesTable.jsx';
 import axios from 'axios';
 import SearchDropDown from '../common/SearchDropDown.jsx';
+import SurveyTable from './SurveyTable';
 
 const { Option } = Select;
 
@@ -24,6 +25,20 @@ class Faculty extends Component {
       error: {},
       faculty: {
         currentCommittees: [],
+        recentSurvey: {
+          survey_date: '',
+          is_interested: false,
+          expertise: '',
+          choices: [
+            {
+              choice_id: 0,
+              committee_id: 0,
+              name: '',
+              description: '',
+              total_slots: 0,
+            },
+          ],
+        },
         departments: [{ department_id: 1, name: 'none' }],
         name: 'Faculty Name',
         email: 'none-specified',
@@ -43,6 +58,7 @@ class Faculty extends Component {
       .then(response => {
         const faculty = {
           currentCommittees: response.data['committees'],
+          recentSurvey: response.data['surveys'],
           departments: response.data['departments'],
           name: response.data.full_name,
           email: response.data.email,
@@ -80,6 +96,7 @@ class Faculty extends Component {
           .then(secondResponse => {
             const faculty = {
               currentCommittees: secondResponse.data['committees'],
+              recentSurvey: secondResponse.data['surveys'],
               departments: secondResponse.data['departments'],
               name: secondResponse.data.full_name,
               email: secondResponse.data.email,
@@ -199,7 +216,7 @@ class Faculty extends Component {
               email={this.state.faculty.email}
               rerenderParentCallback={this.rerenderParentCallback}
             />
-
+            <SurveyTable data={this.state.faculty.recentSurvey} />
             <CommitteeTables
               facultiCurrentCommittees={this.state.faculty.currentCommittees}
               mockData={this.state.data}
