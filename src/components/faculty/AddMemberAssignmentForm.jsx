@@ -57,21 +57,22 @@ class AddMemberAssignmentForm extends React.Component {
       <Option key={committee.committee_id}>{committee.name}</Option>
     ));
 
-    console.log(this.props.dataMembers);
     const committee = this.props.dataMembers.find(
-      committee => committee.committee_id === this.state.selected
+      committee => committee.committee_id == this.state.selected
     );
 
     let items = [];
-    //TODO CF1-179
+
     if (committee !== undefined) {
-      Object.entries(committee).forEach(([key, value]) =>
-        items.push(
-          <Descriptions.Item key={key} label={key}>
-            {value}
-          </Descriptions.Item>
-        )
-      );
+      Object.entries(committee).forEach(([key, value]) => {
+        if (key === 'name' || key === 'total_slots') {
+          items.push(
+            <Descriptions.Item key={key} label={key}>
+              {value}
+            </Descriptions.Item>
+          );
+        }
+      });
     }
 
     const config = {

@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { Table, Button, Divider, Dropdown, Menu } from 'antd';
-import EditableFormTable from './EditableTable';
 import './faculty.css';
 
 class CommitteeTables extends Component {
@@ -76,29 +75,6 @@ class CommitteeTables extends Component {
     return <Menu>{committeesDropdownMenu}</Menu>;
   }
 
-  renderCurrentCommittees() {
-    const committees = this.createCommitteesMenu();
-
-    return (
-      <span>
-        <Dropdown overlay={committees} disabled={!this.state.committeesAreLoaded}>
-          <Button
-            type="primary"
-            icon="plus"
-            size="small"
-            onClick={() => this.props.sayHello()}
-          />
-        </Dropdown>
-        <Divider type="vertical" />
-        <h1 style={{ display: 'inline' }}>Currently a part of:</h1>
-        <EditableFormTable
-          enableSaveChangesButton={this.props.enableSaveChangesButton}
-          currentCommittees={this.state.faculty.currentCommittees}
-        />
-      </span>
-    );
-  }
-
   renderChosenCommittees(facultyData, columnData) {
     const committees = this.createCommitteesMenu();
     return (
@@ -141,10 +117,6 @@ class CommitteeTables extends Component {
   render() {
     return (
       <Fragment>
-        {this.renderCurrentCommittees(
-          this.state.faculty.currentCommittees,
-          this.columns
-        )}
         {this.renderChosenCommittees(
           this.state.faculty.chosenCommittees,
           this.columns

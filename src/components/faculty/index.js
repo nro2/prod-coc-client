@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Result, Select } from 'antd';
 import './faculty.css';
 import FacultyHeader from './FacultyHeader';
-//import CommitteeTables from './CommitteeTables';
+import CommitteeTables from './CommitteeTables';
 import CommitteesTable from './CommitteesTable.jsx';
 import axios from 'axios';
 import SearchDropDown from '../common/SearchDropDown.jsx';
@@ -199,7 +199,7 @@ class Faculty extends Component {
               email={this.state.faculty.email}
               rerenderParentCallback={this.rerenderParentCallback}
             />
-            {/*
+
             <CommitteeTables
               facultiCurrentCommittees={this.state.faculty.currentCommittees}
               mockData={this.state.data}
@@ -207,8 +207,6 @@ class Faculty extends Component {
               enableSaveChangesButton={this.enableSaveChangesButton}
               committees={this.state.allCommittees}
             />
-            {this.renderSubmissionButtons(this.start)}
-            */}
           </React.Fragment>
         )}
       </div>

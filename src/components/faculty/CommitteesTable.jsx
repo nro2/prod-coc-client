@@ -51,7 +51,7 @@ export default class CommitteesTable extends Component {
 
         <div style={{ marginBottom: 16 }}>
           <AddMemberAssignment
-            buttonLabel="Add Member"
+            buttonLabel="Add Committee"
             endpoint="api/committees"
             email={this.props.email}
             rerenderParentCallback={this.rerenderParentCallback}
