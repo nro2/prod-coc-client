@@ -126,11 +126,19 @@ class AddFacultyForm extends React.Component {
       </Option>
     ));
 
-    const { layout } = this.props;
     const { getFieldDecorator } = this.props.form;
 
+    const formItemLayout = {
+      labelCol: {
+        sp: { span: 20 },
+      },
+      wrapperCol: {
+        sp: { span: 20 },
+      },
+    };
+
     return (
-      <Form onSubmit={this.onSubmitHandler} layout={layout || 'vertical'}>
+      <Form onSubmit={this.onSubmitHandler} {...formItemLayout} labelAlign="left">
         <h1>Add New faculty</h1>
         <Form.Item label="First Name">
           {getFieldDecorator('first', {
@@ -139,6 +147,7 @@ class AddFacultyForm extends React.Component {
                 required: true,
                 message: 'Please input first name',
                 whitespace: true,
+                labelAlign: 'left',
               },
             ],
           })(<Input placeholder="First Name" />)}
