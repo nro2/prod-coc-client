@@ -100,7 +100,11 @@ export default class App extends Component {
                 default={this.state.defaultCommittee}
                 showInfo={true}
               />
-              <CommitteeHeader data={this.state.committee} />
+              <CommitteeHeader
+                data={this.state.committee}
+                committeeId={this.state.committeeId}
+                rerenderParentCallback={this.rerenderParentCallback}
+              />
 
               <RequirementsTable
                 data={this.state.committeeSlots}

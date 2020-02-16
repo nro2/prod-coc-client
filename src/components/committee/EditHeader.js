@@ -7,7 +7,7 @@ import WrappedDisplayForm from './EditHeaderForm';
 class EditCommitteeHeader extends React.Component {
   state = {
     visible: false,
-    dataMembers: [],
+    data: this.props.data,
     selected: '',
   };
 
@@ -57,7 +57,7 @@ class EditCommitteeHeader extends React.Component {
 
       form.resetFields();
       this.setState({ visible: false });
-      //this.props.rerenderParentCallback();
+      this.props.rerenderParentCallback();
     });
   };
 
@@ -78,7 +78,7 @@ class EditCommitteeHeader extends React.Component {
           onCreate={this.handleCreate}
           okText="Edit"
           title="Update committee info"
-          dataMembers={this.state.dataMembers}
+          data={this.state.data}
           committeeId={this.props.committeeId}
         />
       </div>
