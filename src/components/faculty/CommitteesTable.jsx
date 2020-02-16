@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Divider } from 'antd';
 import 'antd/dist/antd.css';
 import EditableCommitteeTable from './EditableCommitteeTable';
+import AddMemberAssignment from './AddMemberAssignment';
 
 export default class CommitteesTable extends Component {
   constructor(props) {
@@ -47,7 +48,14 @@ export default class CommitteesTable extends Component {
         <Divider type="horizontal" orientation="left">
           Committees
         </Divider>
+
         <div style={{ marginBottom: 16 }}>
+          <AddMemberAssignment
+            buttonLabel="Add Member"
+            endpoint="api/committees"
+            email={this.props.email}
+            rerenderParentCallback={this.rerenderParentCallback}
+          />
           <EditableCommitteeTable
             data={this.props.data}
             email={this.props.email}

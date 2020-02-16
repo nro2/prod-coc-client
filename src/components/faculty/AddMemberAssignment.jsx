@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, message } from 'antd';
-import WrappedDisplayForm from './AddCommitteeAssignmentForm.jsx';
+import WrappedDisplayForm from './AddMemberAssignmentForm.jsx';
 import axios from 'axios';
 
-class AddCommitteeAssignment extends React.Component {
+class AddMemberAssignment extends React.Component {
   state = {
     visible: false,
     dataMembers: [],
@@ -39,7 +39,7 @@ class AddCommitteeAssignment extends React.Component {
     form.resetFields();
   };
 
-  postAssignment = async (email, committeeId, startDate, endDate) => {
+  postAssignment = async (committeeId, email, startDate, endDate) => {
     const res = await axios.post('api/committee-assignment', {
       email: email,
       committeeId: committeeId,
@@ -63,7 +63,7 @@ class AddCommitteeAssignment extends React.Component {
       const dateFormat = 'YYYY/MM/DD';
       this.postAssignment(
         value,
-        this.props.committeeId,
+        this.props.email,
         values['start-date'].format(dateFormat),
         values['end-date'].format(dateFormat)
       )
@@ -96,13 +96,13 @@ class AddCommitteeAssignment extends React.Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           okText="Add"
-          title="Add New Committee Member"
+          title="Add New Committee"
           dataMembers={this.state.dataMembers}
-          committeeId={this.props.committeeId}
+          email={this.props.email}
         />
       </div>
     );
   }
 }
 
-export default AddCommitteeAssignment;
+export default AddMemberAssignment;

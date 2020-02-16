@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider } from 'antd';
 import 'antd/dist/antd.css';
 import './index.css';
-import AddCommitteeAsignment from './AddCommitteeAssignment.jsx';
+import AddCommitteeAssignment from './AddCommitteeAssignment.jsx';
 import EditableFormTable from './EditableTable.jsx';
 
 export default class MembersTable extends React.Component {
@@ -54,7 +54,7 @@ export default class MembersTable extends React.Component {
         <Divider type="horizontal" orientation="left">
           Members
         </Divider>
-        <AddCommitteeAsignment
+        <AddCommitteeAssignment
           buttonLabel="Add Member"
           endpoint="api/faculty"
           committeeId={this.props.id}
