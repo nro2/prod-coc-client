@@ -130,10 +130,12 @@ class AddFacultyForm extends React.Component {
 
     const formItemLayout = {
       labelCol: {
-        sp: { span: 20 },
+        xs: { span: 24 },
+        sm: { span: 10 },
       },
       wrapperCol: {
-        sp: { span: 20 },
+        xs: { span: 24 },
+        sm: { span: 14 },
       },
     };
 
