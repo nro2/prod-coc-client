@@ -7,6 +7,7 @@ class EditHeaderForm extends React.Component {
     totalSlots: this.props.data['totalSlots'],
     description: this.props.data['description'],
     name: this.props.data['name'],
+    showForm: true,
   };
 
   resetState = () => {

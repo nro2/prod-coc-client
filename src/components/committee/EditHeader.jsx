@@ -32,7 +32,7 @@ class EditCommitteeHeader extends React.Component {
     return res;
   };
 
-  handleCreate = value => {
+  handleCreate = () => {
     const { form } = this.formRef.props;
 
     form.validateFields((err, values) => {
@@ -42,9 +42,13 @@ class EditCommitteeHeader extends React.Component {
 
       this.formRef.resetState();
 
+      if (values['description'] === '') {
+        values['description'] = ' ';
+      }
+
       this.updateCommittee(
         this.props.committeeId,
-        value,
+        values['name'],
         values['description'],
         values['totalSlots']
       )
