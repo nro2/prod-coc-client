@@ -7,7 +7,6 @@ import WrappedDisplayForm from './EditHeaderForm';
 class EditCommitteeHeader extends React.Component {
   state = {
     visible: false,
-    data: this.props.data,
     selected: '',
   };
 
@@ -78,7 +77,7 @@ class EditCommitteeHeader extends React.Component {
           onCreate={this.handleCreate}
           okText="Save"
           title="Update committee info"
-          data={this.state.data}
+          data={this.props.data}
           committeeId={this.props.committeeId}
         />
       </div>

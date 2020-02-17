@@ -24,6 +24,11 @@ export default class CommitteeHeader extends Component {
   constructor(props) {
     super(props);
     this.getHeader = this.getHeader.bind(this);
+    this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
+  }
+
+  rerenderParentCallback() {
+    this.props.rerenderParentCallback();
   }
 
   getHeader = function() {
@@ -66,7 +71,7 @@ export default class CommitteeHeader extends Component {
           buttonLabel="Edit"
           committeeId={this.props.committeeId}
           data={this.props.data}
-          rerenderParentCallback={this.props.rerenderParentCallback}
+          rerenderParentCallback={this.rerenderParentCallback}
         />
       </PageHeader>
     );
