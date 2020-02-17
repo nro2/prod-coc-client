@@ -50,6 +50,10 @@ class EditHeaderForm extends React.Component {
       ],
     };
 
+    const descriptionConfig = {
+      initialValue: this.props.data['description'],
+    };
+
     const { TextArea } = Input;
     return (
       <Modal
@@ -69,9 +73,10 @@ class EditHeaderForm extends React.Component {
           </Form.Item>
           <Form.Item label="Description">
             {' '}
-            {getFieldDecorator('description', {
-              initialValue: this.props.data['description'],
-            })(<TextArea rows={4} />)}
+            {getFieldDecorator(
+              'description',
+              descriptionConfig
+            )(<TextArea rows={4} />)}
           </Form.Item>
           <Form.Item label="Total slots">
             {' '}
