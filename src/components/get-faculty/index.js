@@ -29,7 +29,6 @@ class GetFaculty extends Component {
         this.setState({
           facultyMembers: response.data,
           loading: false,
-          selected: 0,
           error: {},
         });
       })
@@ -50,6 +49,12 @@ class GetFaculty extends Component {
 
   componentDidMount() {
     this.fetchFaculty();
+    if (typeof this.props.location.state != 'undefined') {
+      this.setState({
+        showInfo: this.props.location.state.showInfo,
+        selected: this.props.location.state.selected,
+      });
+    }
   }
 
   render() {
@@ -86,10 +91,10 @@ class GetFaculty extends Component {
                   {this.state.selected + "'s Info"}
                 </Divider>
                 <Descriptions>
-                  <Descriptions.Item label="Name">
+                  <Descriptions.Item label="Name"></Descriptions.Item>
+                  <Descriptions.Item label="Email">
                     {this.state.selected}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Email">{}</Descriptions.Item>
                   <Descriptions.Item label="Phone">{}</Descriptions.Item>
                   <Descriptions.Item label="Job Title">{}</Descriptions.Item>
                   <Descriptions.Item label="Senate Division">{}</Descriptions.Item>
