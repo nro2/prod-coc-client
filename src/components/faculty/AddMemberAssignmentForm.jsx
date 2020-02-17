@@ -58,7 +58,7 @@ class AddMemberAssignmentForm extends React.Component {
     ));
 
     const committee = this.props.dataMembers.find(
-      committee => committee.committee_id == this.state.selected
+      committee => committee.committee_id === parseInt(this.state.selected)
     );
 
     let items = [];
