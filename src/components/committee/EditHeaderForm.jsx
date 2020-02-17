@@ -4,11 +4,17 @@ import { Modal, Form, Divider, Input, InputNumber } from 'antd';
 class EditHeaderForm extends React.Component {
   state = {
     selected: '',
+    totalSlots: this.props.data['totalSlots'],
+    description: this.props.data['description'],
+    name: this.props.data['name'],
   };
 
   resetState = () => {
     this.setState({
       selected: '',
+      totalSlots: this.props.data['totalSlots'],
+      description: this.props.data['description'],
+      name: this.props.data['name'],
     });
   };
 
@@ -28,6 +34,7 @@ class EditHeaderForm extends React.Component {
     const { getFieldDecorator } = form;
 
     const slotsConfig = {
+      initialValue: this.state.totalSlots,
       rules: [
         {
           type: 'number',
@@ -38,9 +45,10 @@ class EditHeaderForm extends React.Component {
     };
 
     const nameConfig = {
+      initialValue: this.state.name,
       rules: [
         {
-          type: 'text',
+          type: 'string',
           required: true,
           message: 'Committee must have a name',
         },
@@ -62,23 +70,17 @@ class EditHeaderForm extends React.Component {
           <Divider orientation="left" />
           <Form.Item label="Name">
             {' '}
-            {getFieldDecorator(
-              'name',
-              nameConfig
-            )(<Input defaultValue={this.props.data['name']} />)}
+            {getFieldDecorator('name', nameConfig)(<Input />)}
           </Form.Item>
           <Form.Item label="Description">
             {' '}
-            {getFieldDecorator('description')(
-              <TextArea rows={4} defaultValue={this.props.data['description']} />
-            )}
+            {getFieldDecorator('description', {
+              initialValue: this.state.description,
+            })(<TextArea rows={4} />)}
           </Form.Item>
           <Form.Item label="Total slots">
             {' '}
-            {getFieldDecorator(
-              'totalSlots',
-              slotsConfig
-            )(<InputNumber min={1} defaultValue={this.props.data['totalSlots']} />)}
+            {getFieldDecorator('totalSlots', slotsConfig)(<InputNumber min={1} />)}
           </Form.Item>
         </Form>
       </Modal>

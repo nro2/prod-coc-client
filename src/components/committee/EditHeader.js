@@ -76,7 +76,7 @@ class EditCommitteeHeader extends React.Component {
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
-          okText="Edit"
+          okText="Save"
           title="Update committee info"
           data={this.state.data}
           committeeId={this.props.committeeId}

@@ -63,7 +63,7 @@ export default class CommitteeHeader extends Component {
           {content}
         </Content>
         <EditCommitteeHeader
-          buttonLabel="Edit Committee Info"
+          buttonLabel="Edit"
           committeeId={this.props.data['id']}
           data={this.props.data}
           rerenderParentCallback={this.props.rerenderParentCallback}
