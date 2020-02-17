@@ -26,6 +26,14 @@
   },
   "plugins": ["react"],
   "rules": {
-    "react/prop-types": [0]
+    "react/prop-types": [0],
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "any",
+        "ignoreReadBeforeAssign": false
+      }
+    ],
+    "no-var": "error"
   }
 }
