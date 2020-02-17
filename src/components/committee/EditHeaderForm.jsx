@@ -4,18 +4,12 @@ import { Modal, Form, Divider, Input, InputNumber } from 'antd';
 class EditHeaderForm extends React.Component {
   state = {
     selected: '',
-    totalSlots: this.props.data['totalSlots'],
-    description: this.props.data['description'],
-    name: this.props.data['name'],
     showForm: true,
   };
 
   resetState = () => {
     this.setState({
       selected: '',
-      totalSlots: this.props.data['totalSlots'],
-      description: this.props.data['description'],
-      name: this.props.data['name'],
     });
   };
 
@@ -35,7 +29,7 @@ class EditHeaderForm extends React.Component {
     const { getFieldDecorator } = form;
 
     const slotsConfig = {
-      initialValue: this.state.totalSlots,
+      initialValue: this.props.data['totalSlots'],
       rules: [
         {
           type: 'number',
@@ -46,7 +40,7 @@ class EditHeaderForm extends React.Component {
     };
 
     const nameConfig = {
-      initialValue: this.state.name,
+      initialValue: this.props.data['name'],
       rules: [
         {
           type: 'string',
@@ -76,7 +70,7 @@ class EditHeaderForm extends React.Component {
           <Form.Item label="Description">
             {' '}
             {getFieldDecorator('description', {
-              initialValue: this.state.description,
+              initialValue: this.props.data['description'],
             })(<TextArea rows={4} />)}
           </Form.Item>
           <Form.Item label="Total slots">

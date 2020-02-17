@@ -42,10 +42,6 @@ class EditCommitteeHeader extends React.Component {
 
       this.formRef.resetState();
 
-      if (values['description'] === '') {
-        values['description'] = ' ';
-      }
-
       this.updateCommittee(
         this.props.committeeId,
         values['name'],
