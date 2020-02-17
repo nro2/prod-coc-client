@@ -175,7 +175,6 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' });
   };
 
-  //TODO
   delete = (senateShortname, committeeId) => {
     this.deleteRequirement(senateShortname, committeeId)
       .then(() => {

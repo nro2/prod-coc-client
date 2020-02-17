@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { PageHeader, Typography, Row, Statistic } from 'antd';
+import EditCommitteeHeader from './EditHeader';
 
 const { Paragraph } = Typography;
 
@@ -23,6 +24,11 @@ export default class CommitteeHeader extends Component {
   constructor(props) {
     super(props);
     this.getHeader = this.getHeader.bind(this);
+    this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
+  }
+
+  rerenderParentCallback() {
+    this.props.rerenderParentCallback();
   }
 
   getHeader = function() {
@@ -61,6 +67,12 @@ export default class CommitteeHeader extends Component {
         >
           {content}
         </Content>
+        <EditCommitteeHeader
+          buttonLabel="Edit"
+          committeeId={this.props.committeeId}
+          data={this.props.data}
+          rerenderParentCallback={this.rerenderParentCallback}
+        />
       </PageHeader>
     );
   };
