@@ -46,7 +46,6 @@ export default class SurveyTable extends Component {
             dataSource={this.props.data.choices}
             columns={columns}
           />
-          ;
         </div>
       </div>
     );
