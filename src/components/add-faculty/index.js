@@ -1,16 +1,38 @@
 import React, { Component } from 'react';
-import AddForm from './AddForm';
+import WrappedDisplayForm from './AddForm';
+import { Redirect } from 'react-router-dom';
 
 class AddFaculty extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  state = {
+    redirectToGetFaculty: false,
+    selected: '',
+  };
+
+  onSuccessHandler = value => {
+    this.setState({
+      redirectToGetFaculty: true,
+      selected: value,
+    });
+  };
 
   render() {
+    const redirect = this.state.redirectToGetFaculty;
+    if (redirect === true) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/get-faculty',
+            state: { showInfo: true, selected: this.state.selected },
+          }}
+        />
+      );
+    }
     return (
       <div className="Add">
-        <AddForm />
+        <WrappedDisplayForm
+          onSuccess={this.onSuccessHandler}
+          title="Add New Faculty"
+        />
       </div>
     );
   }

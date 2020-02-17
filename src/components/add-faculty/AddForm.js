@@ -1,56 +1,77 @@
 import { Form, Input, Select, Button } from 'antd';
 import React from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 
 const { Option } = Select;
 
-class AddForm extends React.Component {
+class AddFacultyForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      confirmDirty: false,
       senateDivisions: [],
-      departmentsList: [],
-      error: {},
-      loadingDivisions: true,
-      loadingDepartments: true,
-
-      firstName: '',
-      lastName: '',
-      email: '',
-      jobTitle: '',
-      phoneNum: '',
-      senateDivision: '',
-      fullName: '',
       departments: [],
-      redirectToGetFaculty: false,
     };
 
     this.fetchDivisions = this.fetchDivisions.bind(this);
     this.fetchDepartments = this.fetchDepartments.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeD = this.handleChangeD.bind(this);
-    this.handleFnameChange = this.handleFnameChange.bind(this);
-    this.handleLnameChange = this.handleLnameChange.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handleJobChange = this.handleJobChange.bind(this);
-    this.handlePhoneChange = this.handlePhoneChange.bind(this);
   }
-  handleFnameChange = event => {
-    this.setState({ firstName: event.target.value });
+
+  onSubmitHandler = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.postAssignment(
+          values['first'] + ' ' + values['last'],
+          values['email'],
+          values['job'],
+          values['phone'],
+          values['select'],
+          values['select-multiple']
+        )
+          .then(() => {
+            this.props.onSuccess(values['email']);
+          })
+          .catch(err => {
+            console.log(err.response);
+          });
+      }
+    });
   };
-  handleLnameChange = event => {
-    this.setState({ lastName: event.target.value });
-  };
-  handleEmailChange = event => {
-    this.setState({ email: event.target.value });
-  };
-  handleJobChange = event => {
-    this.setState({ jobTitle: event.target.value });
-  };
-  handlePhoneChange = event => {
-    this.setState({ phoneNum: event.target.value });
+
+  postAssignment = async (
+    fullname,
+    email,
+    jobTitle,
+    phoneNum,
+    senateDivision,
+    departments
+  ) => {
+    if (departments) {
+      const departmentAssociations = departments.map(item => {
+        return {
+          department_id: item,
+        };
+      });
+
+      const res = await axios.post('/api/faculty', {
+        fullName: fullname,
+        email: email,
+        jobTitle: jobTitle,
+        phoneNum: phoneNum,
+        senateDivision: senateDivision,
+        departmentAssociations: departmentAssociations,
+      });
+      return res;
+    } else {
+      const res = await axios.post('/api/faculty', {
+        fullName: fullname,
+        email: email,
+        jobTitle: jobTitle,
+        phoneNum: phoneNum,
+        senateDivision: senateDivision,
+      });
+      return res;
+    }
   };
 
   fetchDivisions() {
@@ -59,29 +80,14 @@ class AddForm extends React.Component {
       .then(response => {
         this.setState({
           senateDivisions: response.data,
-          loading: false,
-          selected: 0,
           error: {},
         });
       })
       .catch(err => {
         this.setState({
           error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
         });
       });
-  }
-
-  handleChange(value) {
-    this.setState({
-      senateDivision: value,
-    });
-  }
-
-  handleChangeD(value) {
-    this.setState({
-      departmentsList: value,
-    });
   }
 
   fetchDepartments() {
@@ -90,15 +96,12 @@ class AddForm extends React.Component {
       .then(response => {
         this.setState({
           departments: response.data,
-          loading2: false,
-          selected: 0,
           error: {},
         });
       })
       .catch(err => {
         this.setState({
           error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
         });
       });
   }
@@ -107,35 +110,6 @@ class AddForm extends React.Component {
     this.fetchDivisions();
     this.fetchDepartments();
   }
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-        axios
-          .post('/api/faculty', {
-            fullName: this.state.firstName + ' ' + this.state.lastName,
-            email: this.state.email,
-            jobTitle: this.state.jobTitle,
-            phoneNum: this.state.phoneNum,
-            senateDivision: this.state.senateDivision,
-            departments: this.state.departments,
-          })
-          .then(() => {
-            this.setState({
-              redirectToGetFaculty: true,
-            });
-          })
-          .catch(err => {
-            this.setState({
-              text: 'Insert was not successful',
-            });
-            console.log(err);
-          });
-      }
-    });
-  };
 
   render() {
     const senateOptions = this.state.senateDivisions.map(senateDivision => (
@@ -147,43 +121,26 @@ class AddForm extends React.Component {
       </Option>
     ));
     const divisionOptions = this.state.departments.map(departments => (
-      <Option key={departments.name} value={departments.name}>
+      <Option key={departments.department_id} value={departments.department_id}>
         {departments.name}
       </Option>
     ));
 
     const { getFieldDecorator } = this.props.form;
 
-    const redirect = this.state.redirectToGetFaculty;
-    if (redirect === true) {
-      return <Redirect to="/get-faculty" />;
-    }
-
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
+        sm: { span: 10 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 16,
-          offset: 8,
-        },
+        sm: { span: 14 },
       },
     };
 
     return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.onSubmitHandler} {...formItemLayout} labelAlign="left">
         <h1>Add New faculty</h1>
         <Form.Item label="First Name">
           {getFieldDecorator('first', {
@@ -192,9 +149,10 @@ class AddForm extends React.Component {
                 required: true,
                 message: 'Please input first name',
                 whitespace: true,
+                labelAlign: 'left',
               },
             ],
-          })(<Input placeholder="First Name" onChange={this.handleFnameChange} />)}
+          })(<Input placeholder="First Name" />)}
         </Form.Item>
         <Form.Item label="Last Name">
           {getFieldDecorator('last', {
@@ -205,7 +163,7 @@ class AddForm extends React.Component {
                 whitespace: true,
               },
             ],
-          })(<Input placeholder="Last Name" onChange={this.handleLnameChange} />)}
+          })(<Input placeholder="Last Name" />)}
         </Form.Item>
         <Form.Item label="E-mail">
           {getFieldDecorator('email', {
@@ -219,55 +177,58 @@ class AddForm extends React.Component {
                 message: 'Please input  e-mail',
               },
             ],
-          })(<Input placeholder="Email" onChange={this.handleEmailChange} />)}
+          })(<Input placeholder="Email" />)}
         </Form.Item>
         <Form.Item label="Job Title">
           {getFieldDecorator('job', {
             rules: [{ required: false, message: 'Please input job title' }],
-          })(<Input placeholder="Job Title" onChange={this.handleJobChange} />)}
+          })(<Input placeholder="Job Title" />)}
         </Form.Item>
         <Form.Item label="Phone Number">
           {getFieldDecorator('phone', {
             rules: [{ required: false, message: 'Please input phone number' }],
-          })(
-            <Input placeholder="###-###-####" onChange={this.handlePhoneChange} />
-          )}
+          })(<Input placeholder="###-###-####" />)}
         </Form.Item>
         <Form.Item label="Senate Division">
-          <Select
-            showSearch
-            placeholder="Select a senate division"
-            optionFilterProp="children"
-            onChange={this.handleChange}
-            dropdownMatchSelectWidth={false}
-            loadingDivisions={this.state.loading}
-          >
-            {senateOptions}
-          </Select>
+          {getFieldDecorator('select', {
+            rules: [{ required: true, message: 'Please select Senate Division' }],
+          })(
+            <Select
+              showSearch
+              placeholder="Select a senate division"
+              optionFilterProp="children"
+              dropdownMatchSelectWidth={false}
+            >
+              {senateOptions}
+            </Select>
+          )}
         </Form.Item>
         <Form.Item label="Department">
-          <Select
-            mode="multiple"
-            showSearch
-            placeholder="Select department(s)"
-            optionFilterProp="children"
-            onChange={this.handleChangeD}
-            dropdownMatchSelectWidth={false}
-            loadingDepartments={this.state.loading}
-          >
-            {divisionOptions}
-          </Select>
+          {getFieldDecorator('select-multiple', {
+            rules: [{ required: false, message: 'Please select Departments' }],
+          })(
+            <Select
+              mode="multiple"
+              showSearch
+              placeholder="Select department(s)"
+              optionFilterProp="children"
+              dropdownMatchSelectWidth={false}
+            >
+              {divisionOptions}
+            </Select>
+          )}
         </Form.Item>
 
-        <Form.Item {...tailFormItemLayout}>
+        <Form.Item>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
         </Form.Item>
-        <p>Message: {this.state.text}</p>
       </Form>
     );
   }
 }
 
-export default Form.create()(AddForm);
+const WrappedDisplayForm = Form.create({ name: 'AddFaculty' })(AddFacultyForm);
+
+export default WrappedDisplayForm;

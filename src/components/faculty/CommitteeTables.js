@@ -50,19 +50,21 @@ class CommitteeTables extends Component {
     };
   }
 
-  // TODO: update this method, as it is deprecated (CF1-140)
-  componentWillReceiveProps(newProps) {
-    const committeesLoaded = newProps.committees.length !== 0;
-
-    this.setState({
-      faculty: {
-        currentCommittees: newProps.facultiCurrentCommittees,
-        interestedCommittees: newProps.mockData,
-        chosenCommittees: newProps.mockData,
-      },
-      committeesAreLoaded: committeesLoaded,
-      committees: newProps.committees,
-    });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const committeesLoaded = nextProps.committees.length !== 0;
+    if (nextProps.facultiCurrentCommittees !== prevState.facultiCurrentCommittees) {
+      return {
+        faculty: {
+          currentCommittees: nextProps.facultiCurrentCommittees,
+          interestedCommittees: nextProps.mockData,
+          chosenCommittees: nextProps.mockData,
+        },
+        committees: nextProps.committees,
+        committeesAreLoaded: committeesLoaded,
+      };
+    } else {
+      return null;
+    }
   }
 
   createCommitteesMenu() {

@@ -130,9 +130,12 @@ class EditableTable extends Component {
     ];
   }
 
-  // TODO: Find a new way of updating child state, as this method is deprecated (CF1-140)
-  componentWillReceiveProps(newProps) {
-    this.setState({ currentCommittees: newProps.currentCommittees });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.currentCommittees !== prevState.currentCommittees) {
+      return { currentCommittees: nextProps.currentCommittees };
+    } else {
+      return null;
+    }
   }
 
   isEditing = record => record.key === this.state.editingKey;
