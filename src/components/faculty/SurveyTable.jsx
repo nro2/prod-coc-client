@@ -3,10 +3,6 @@ import { Divider, Table, Descriptions } from 'antd';
 import 'antd/dist/antd.css';
 
 export default class SurveyTable extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const columns = [
       {
