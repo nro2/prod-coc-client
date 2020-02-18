@@ -19,7 +19,7 @@ export default class SurveyTable extends Component {
       },
     ];
 
-    let items = [];
+    const items = [];
     if (this.props.data !== undefined) {
       Object.entries(this.props.data).forEach(([key, value]) => {
         if (key !== 'choices') {

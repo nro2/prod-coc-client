@@ -61,7 +61,7 @@ class AddMemberAssignmentForm extends React.Component {
       committee => committee.committee_id === parseInt(this.state.selected)
     );
 
-    let items = [];
+    const items = [];
 
     if (committee !== undefined) {
       Object.entries(committee).forEach(([key, value]) => {

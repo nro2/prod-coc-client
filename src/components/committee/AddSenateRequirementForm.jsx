@@ -50,7 +50,7 @@ class AddCommitteeAssignmentForm extends React.Component {
       senate => senate.senate_division_short_name === this.state.selected
     );
 
-    let items = [];
+    const items = [];
 
     if (senate !== undefined) {
       Object.entries(senate).forEach(([key, value]) => {
