@@ -61,7 +61,7 @@ class AddCommitteeAssignmentForm extends React.Component {
       faculty => faculty.email === this.state.selected
     );
 
-    let items = [];
+    const items = [];
 
     if (faculty !== undefined) {
       Object.entries(faculty).forEach(([key, value]) =>

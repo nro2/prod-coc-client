@@ -32,7 +32,7 @@ export default class CommitteeHeader extends Component {
   }
 
   getHeader = function() {
-    let modifiedDescription = this.props.data['description']
+    const modifiedDescription = this.props.data['description']
       .split('\n')
       .map((item, i) => {
         return <li key={i}>{item}</li>;
