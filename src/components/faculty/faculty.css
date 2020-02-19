@@ -5,3 +5,7 @@
   font-size: 85%;
   white-space: pre-line;
 }
+
+.department-item .ant-list-item {
+  padding-top: 5px;
+}

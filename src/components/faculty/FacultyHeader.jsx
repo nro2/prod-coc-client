@@ -1,4 +1,4 @@
-import { Descriptions, Divider, PageHeader } from 'antd';
+import { Descriptions, Divider, PageHeader, List, Tooltip } from 'antd';
 import React, { Component } from 'react';
 import FacultyHeaderModal from './FacultyHeaderModal';
 
@@ -38,8 +38,8 @@ export default class FacultyHeader extends Component {
 
   render() {
     const name = buildSurnameForename(this.props.faculty.name);
-    const { email, job, phone } = this.props.faculty;
-
+    const { email, job, phone, departments } = this.props.faculty;
+    console.log(departments);
     return (
       <div>
         <PageHeader
@@ -65,6 +65,23 @@ export default class FacultyHeader extends Component {
           </Descriptions.Item>
           <Descriptions.Item label="Phone">{phone}</Descriptions.Item>
           <Descriptions.Item label="Title">{job}</Descriptions.Item>
+        </Descriptions>
+        <Descriptions size="small" layout="vertical">
+          <Descriptions.Item label="Departments">
+            <List
+              roKey={departments.department_id}
+              itemLayout="horizontal"
+              dataSource={departments}
+              className="department-item"
+              renderItem={item => (
+                <Tooltip title={item.description} placement="right">
+                  <List.Item>
+                    <List.Item.Meta title={item.name} />
+                  </List.Item>
+                </Tooltip>
+              )}
+            />
+          </Descriptions.Item>
         </Descriptions>
         <Divider type="horizontal" orientation="left" />
       </div>
