@@ -24,7 +24,7 @@ class AddCommitteeForm extends React.Component {
           values['totalSlots']
         )
           .then(() => {
-            this.props.onSuccess(values['email']);
+            this.props.onSuccess(values['committeeId']);
           })
           .catch(err => {
             console.log(err.response);
@@ -33,40 +33,14 @@ class AddCommitteeForm extends React.Component {
     });
   };
 
-  postAssignment = async (
-    fullname,
-    email,
-    jobTitle,
-    phoneNum,
-    senateDivision,
-    departments
-  ) => {
-    if (departments) {
-      const departmentAssociations = departments.map(item => {
-        return {
-          department_id: item,
-        };
-      });
-
-      const res = await axios.post('/api/faculty', {
-        fullName: fullname,
-        email: email,
-        jobTitle: jobTitle,
-        phoneNum: phoneNum,
-        senateDivision: senateDivision,
-        departmentAssociations: departmentAssociations,
-      });
-      return res;
-    } else {
-      const res = await axios.post('/api/faculty', {
-        fullName: fullname,
-        email: email,
-        jobTitle: jobTitle,
-        phoneNum: phoneNum,
-        senateDivision: senateDivision,
-      });
-      return res;
-    }
+  postAssignment = async (committeeName, description, totalSlots) => {
+    const res = await axios.post('/api/committee', {
+      name: committeeName,
+      description: description,
+      totalSlots: totalSlots,
+    });
+    //console.log(res.headers.location)
+    return res;
   };
 
   render() {
@@ -106,7 +80,7 @@ class AddCommitteeForm extends React.Component {
           })(<Input placeholder="Committee Name" />)}
         </Form.Item>
         <Form.Item label="Description">
-          {getFieldDecorator('desription', descriptionConfig, {
+          {getFieldDecorator('description', descriptionConfig, {
             rules: [
               {
                 required: true,
