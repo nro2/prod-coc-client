@@ -20,7 +20,7 @@ export default class SurveyTable extends Component {
     ];
 
     const items = [];
-    if (this.props.data !== undefined) {
+    if (this.props.data !== null) {
       Object.entries(this.props.data).forEach(([key, value]) => {
         if (key !== 'choices') {
           if (typeof value === 'boolean') {
@@ -34,6 +34,11 @@ export default class SurveyTable extends Component {
         }
       });
     }
+
+    let choices = [];
+    if (this.props.data !== null) {
+      choices = this.props.data.choices;
+    }
     return (
       <div>
         <Divider type="horizontal" orientation="left">
@@ -41,11 +46,7 @@ export default class SurveyTable extends Component {
         </Divider>
         <Descriptions>{items}</Descriptions>
         <div style={{ marginBottom: 16 }}>
-          <Table
-            rowKey="choice_id"
-            dataSource={this.props.data.choices}
-            columns={columns}
-          />
+          <Table rowKey="choice_id" dataSource={choices} columns={columns} />
         </div>
       </div>
     );

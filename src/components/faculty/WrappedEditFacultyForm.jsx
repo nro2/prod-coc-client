@@ -71,9 +71,11 @@ class EditFacultyForm extends React.Component {
     };
 
     const defaultDepartments = [];
-    this.props.faculty.departments.forEach(department => {
-      defaultDepartments.push(department.name);
-    });
+    if (this.props.faculty.departments !== null) {
+      this.props.faculty.departments.forEach(department => {
+        defaultDepartments.push(department.name);
+      });
+    }
 
     const divisionOptions = this.props.departments.map(departments => (
       <Option key={departments.name} value={departments.name}>
