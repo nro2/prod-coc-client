@@ -9,7 +9,8 @@ class FacultyHeaderModal extends React.Component {
   };
 
   errorMessages = {
-    404: 'Missing field(s) in faculty request',
+    400: 'Missing field(s) in faculty request',
+    404: 'Email does not exist',
     500: 'Error updating faculty',
   };
 
