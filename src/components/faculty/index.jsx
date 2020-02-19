@@ -216,7 +216,9 @@ class Faculty extends Component {
               email={this.state.faculty.email}
               rerenderParentCallback={this.rerenderParentCallback}
             />
-            <SurveyTable data={this.state.faculty.recentSurvey} />
+            {this.state.faculty.recentSurvey !== null && (
+              <SurveyTable data={this.state.faculty.recentSurvey} />
+            )}
             <CommitteeTables
               facultiCurrentCommittees={this.state.faculty.currentCommittees}
               mockData={this.state.data}
