@@ -66,7 +66,6 @@ export default class FacultyHeader extends Component {
           <Descriptions.Item label="Phone">{phone}</Descriptions.Item>
           <Descriptions.Item label="Title">{job}</Descriptions.Item>
         </Descriptions>
-        <Divider type="horizontal" orientation="left" />
       </div>
     );
   }
