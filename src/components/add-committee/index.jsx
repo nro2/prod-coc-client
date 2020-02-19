@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 class AddCommittee extends Component {
   state = {
-    redirectToGetFaculty: false,
+    redirectToGetCommittee: false,
     selected: '',
   };
 
@@ -16,7 +16,7 @@ class AddCommittee extends Component {
   };
 
   render() {
-    const redirect = this.state.redirectCommitteeInfo;
+    const redirect = this.state.redirectToGetCommittee;
     if (redirect === true) {
       return (
         <Redirect

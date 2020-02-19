@@ -18,28 +18,27 @@ class AddCommitteeForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.postAssignment(
+        this.postCommittee(
           values['committeeName'],
           values['description'],
           values['totalSlots']
-        )
-          .then(() => {
-            this.props.onSuccess(values['committeeId']);
-          })
-          .catch(err => {
-            console.log(err.response);
-          });
+        ).catch(err => {
+          console.log(err.response);
+        });
       }
     });
   };
-
-  postAssignment = async (committeeName, description, totalSlots) => {
-    const res = await axios.post('/api/committee', {
-      name: committeeName,
-      description: description,
-      totalSlots: totalSlots,
-    });
-    //console.log(res.headers.location)
+  postCommittee = async (committeeName, description, totalSlots) => {
+    const res = await axios
+      .post('/api/committee', {
+        name: committeeName,
+        description: description,
+        totalSlots: totalSlots,
+      })
+      .then(response => {
+        const split = response.headers.location.split('/');
+        this.props.onSuccess(split[5]);
+      });
     return res;
   };
 
