@@ -87,7 +87,7 @@ class AddCommitteeAssignment extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button type="primary" className="add-button" onClick={this.showModal}>
           {this.props.buttonLabel || 'Add'}
         </Button>
         <WrappedDisplayForm
