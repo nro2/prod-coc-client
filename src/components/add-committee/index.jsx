@@ -10,7 +10,7 @@ class AddCommittee extends Component {
 
   onSuccessHandler = value => {
     this.setState({
-      redirectToCommitteeInfo: true,
+      redirectToGetCommittee: true,
       selected: value,
     });
   };
