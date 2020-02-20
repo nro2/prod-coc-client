@@ -10,23 +10,23 @@ class AddMemberAssignment extends React.Component {
     selected: '',
   };
 
-  fetchData() {
+  errorMessages = {
+    400: 'No committees found on record',
+    500: 'Unable to complete transaction',
+  };
+
+  fetchData = () => {
     axios
       .get(this.props.endpoint)
       .then(response => {
         this.setState({
           dataMembers: response.data,
-          loading: false,
-          error: {},
         });
       })
       .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
-        });
+        this.handleErrors(err);
       });
-  }
+  };
 
   showModal = () => {
     this.setState({ visible: true });
@@ -71,13 +71,26 @@ class AddMemberAssignment extends React.Component {
           message.success('Record inserted successfully!');
         })
         .catch(err => {
-          message.error(err.response.data.error);
+          this.handleErrors(err);
         });
 
       form.resetFields();
       this.setState({ visible: false });
       this.props.rerenderParentCallback();
     });
+  };
+
+  handleErrors = error => {
+    const { data, status } = error.response;
+    const errorMessage = this.errorMessages[status];
+
+    if (status === 409 && data.detail) {
+      message.error(data.detail);
+    } else if (!errorMessage) {
+      message.error('Unknown error');
+    } else {
+      message.error(errorMessage);
+    }
   };
 
   saveFormRef = formRef => {
