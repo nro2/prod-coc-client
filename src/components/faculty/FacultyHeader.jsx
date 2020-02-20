@@ -78,7 +78,7 @@ export default class FacultyHeader extends Component {
             <Tooltip
               title={item.description}
               placement="topRight"
-              mouseEnterDelay="0.2"
+              mouseEnterDelay="0.25"
               mouseLeaveDelay="0.05"
             >
               <List.Item>
