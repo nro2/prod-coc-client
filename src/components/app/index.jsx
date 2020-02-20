@@ -53,25 +53,15 @@ class App extends Component {
               </Menu.Item>
               <Menu.Item key="3">
                 <Icon type="user" />
-                <span>Get Faculty</span>
-                <Link to="/get-faculty" />
-              </Menu.Item>
-              <Menu.Item key="4">
-                <Icon type="appstore" />
-                <span>Committees</span>
-                <Link to="/committees" />
-              </Menu.Item>
-              <Menu.Item key="5">
-                <Icon type="user" />
                 <span>Faculty Info</span>
                 <Link to="/faculty" />
               </Menu.Item>
-              <Menu.Item key="6">
+              <Menu.Item key="4">
                 <Icon type="user" />
                 <span>Committee Info</span>
                 <Link to="/committee" />
               </Menu.Item>
-              <Menu.Item key="7">
+              <Menu.Item key="5">
                 <Icon type="appstore" />
                 <span>Reports</span>
                 <Link to="/reports" />
