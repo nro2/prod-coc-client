@@ -85,8 +85,8 @@ export default class FacultyHeader extends Component {
             renderItem={item => (
               <Tooltip
                 title={item.description}
-                mouseEnterDelay="0.75"
-                mouseLeaveDelay="0.05"
+                mouseEnterDelay={0.75}
+                mouseLeaveDelay={0.05}
                 arrowPointAtCenter="true"
               >
                 <List.Item>
