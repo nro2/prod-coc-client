@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Result, Select } from 'antd';
 import './faculty.css';
 import FacultyHeader from './FacultyHeader';
-import CommitteeTables from './CommitteeTables';
 import CommitteesTable from './CommitteesTable.jsx';
 import axios from 'axios';
 import SearchDropDown from '../common/SearchDropDown.jsx';
@@ -217,13 +216,6 @@ class Faculty extends Component {
               rerenderParentCallback={this.rerenderParentCallback}
             />
             <SurveyTable data={this.state.faculty.recentSurvey} />
-            <CommitteeTables
-              facultiCurrentCommittees={this.state.faculty.currentCommittees}
-              mockData={this.state.data}
-              sayHello={this.sayHello}
-              enableSaveChangesButton={this.enableSaveChangesButton}
-              committees={this.state.allCommittees}
-            />
           </React.Fragment>
         )}
       </div>
