@@ -9,8 +9,6 @@ import {
 import { Layout, Menu, Icon } from 'antd';
 import './app.css';
 import AddFaculty from '../add-faculty';
-import Committees from '../committees';
-import GetFaculty from '../get-faculty';
 import Committee from '../committee';
 import Faculty from '../faculty';
 import Home from '../home';
@@ -86,8 +84,6 @@ class App extends Component {
               <Switch>
                 <Route path="/home" component={Home} />
                 <Route path="/add-faculty" component={AddFaculty} />
-                <Route path="/get-faculty" component={GetFaculty} />
-                <Route path="/committees" component={Committees} />
                 <Route path="/committee" component={Committee} />
                 <Route path="/faculty" component={Faculty} />
                 <Route path="/reports" component={Reports} />
