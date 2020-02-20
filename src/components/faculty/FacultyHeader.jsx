@@ -47,8 +47,6 @@ export default class FacultyHeader extends Component {
       hasDepartments = false;
     }
 
-    console.log(hasDepartments);
-
     return (
       <div>
         <PageHeader
