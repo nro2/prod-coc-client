@@ -40,12 +40,7 @@ export default class FacultyHeader extends Component {
     const name = buildSurnameForename(this.props.faculty.name);
     const { email, job, phone, senate, departments } = this.props.faculty;
 
-    let hasDepartments;
-    if (Array.isArray(departments) && departments.length) {
-      hasDepartments = true;
-    } else {
-      hasDepartments = false;
-    }
+    const hasDepartments = Array.isArray(departments) && departments.length !== 0;
 
     return (
       <div>
@@ -83,20 +78,19 @@ export default class FacultyHeader extends Component {
             dataSource={departments}
             className="department-item"
             renderItem={item => (
-              <Tooltip
-                title={item.description}
-                mouseEnterDelay={0.75}
-                mouseLeaveDelay={0.05}
-                arrowPointAtCenter="true"
-              >
-                <List.Item>
+              <List.Item>
+                <Tooltip
+                  title={item.description}
+                  mouseEnterDelay={0.75}
+                  mouseLeaveDelay={0.05}
+                  placement="topLeft"
+                >
                   <List.Item.Meta title={item.name} />
-                </List.Item>
-              </Tooltip>
+                </Tooltip>
+              </List.Item>
             )}
           />
         )}
-        <Divider type="horizontal" orientation="left" />
       </div>
     );
   }
