@@ -73,7 +73,7 @@ export default class App extends Component {
       });
   }
 
-  changeHandler = value => {
+  handleChange = value => {
     this.setState({
       selected: value,
     });
@@ -94,7 +94,7 @@ export default class App extends Component {
               <SearchDropDown
                 dataMembers={options}
                 placeholder="Search Committees"
-                onChange={this.changeHandler}
+                onChange={this.handleChange}
                 dividerText="Committee Info"
                 default={this.state.defaultCommittee}
                 showInfo={true}

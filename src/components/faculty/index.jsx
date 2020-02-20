@@ -47,7 +47,7 @@ class Faculty extends Component {
       },
     };
 
-    this.updateFaculty = this.updateFaculty.bind(this);
+    this.handleCreate = this.handleCreate.bind(this);
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
 
@@ -133,7 +133,7 @@ class Faculty extends Component {
     this.fetchFaculty();
   }
 
-  changeHandler = value => {
+  handleChange = value => {
     this.setState({
       selected: value,
     });
@@ -165,7 +165,7 @@ class Faculty extends Component {
     });
   };
 
-  updateFaculty(faculty) {
+  handleCreate(faculty) {
     this.setState({
       faculty,
     });
@@ -195,13 +195,13 @@ class Faculty extends Component {
             <SearchDropDown
               dataMembers={options}
               placeholder="Search Committees"
-              onChange={this.changeHandler}
+              onChange={this.handleChange}
               dividerText="Faculty Info"
               default={this.state.selected}
               showInfo={true}
             />
             <FacultyHeader
-              onCreate={this.updateFaculty}
+              onCreate={this.handleCreate}
               faculty={this.state.faculty}
               senateDivisions={this.state.senateDivisions}
               departments={this.state.allDepartments}

@@ -9,7 +9,7 @@ class EditCommitteeHeader extends React.Component {
     visible: false,
   };
 
-  showModal = () => {
+  handleClick = () => {
     this.setState({ visible: true });
   };
 
@@ -84,7 +84,7 @@ class EditCommitteeHeader extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button type="primary" onClick={this.handleClick}>
           {this.props.buttonLabel || 'Add'}
         </Button>
         <WrappedDisplayForm

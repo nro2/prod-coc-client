@@ -21,7 +21,7 @@ class AddFacultyForm extends React.Component {
     this.fetchDepartments();
   }
 
-  onSubmitHandler = e => {
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -167,7 +167,7 @@ class AddFacultyForm extends React.Component {
     };
 
     return (
-      <Form onSubmit={this.onSubmitHandler} {...formItemLayout} labelAlign="left">
+      <Form onSubmit={this.handleSubmit} {...formItemLayout} labelAlign="left">
         <h1>Add New faculty</h1>
         <Form.Item label="First Name">
           {getFieldDecorator('first', {

@@ -38,7 +38,7 @@ class AddSenateRequirement extends React.Component {
       });
   };
 
-  showModal = () => {
+  handleClick = () => {
     this.setState({ visible: true });
     this.fetchData();
   };
@@ -107,7 +107,7 @@ class AddSenateRequirement extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" className="add-button" onClick={this.showModal}>
+        <Button type="primary" className="add-button" onClick={this.handleClick}>
           {this.props.buttonLabel || 'Add'}
         </Button>
         <WrappedDisplayForm
