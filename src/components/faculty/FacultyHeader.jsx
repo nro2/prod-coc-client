@@ -67,23 +67,26 @@ export default class FacultyHeader extends Component {
           <Descriptions.Item label="Title">{job}</Descriptions.Item>
           <Descriptions.Item label="Senate Division">{senate}</Descriptions.Item>
         </Descriptions>
-        <Descriptions size="small" layout="vertical">
-          <Descriptions.Item label="Departments">
-            <List
-              rowKey={departments.department_id}
-              itemLayout="horizontal"
-              dataSource={departments}
-              className="department-item"
-              renderItem={item => (
-                <Tooltip title={item.description} placement="right">
-                  <List.Item>
-                    <List.Item.Meta title={item.name} />
-                  </List.Item>
-                </Tooltip>
-              )}
-            />
-          </Descriptions.Item>
-        </Descriptions>
+        <span>Departments:</span>
+        <List
+          rowKey={departments.department_id}
+          itemLayout="horizontal"
+          grid={{ gutter: 2, column: 4, size: 'small' }}
+          dataSource={departments}
+          className="department-item"
+          renderItem={item => (
+            <Tooltip
+              title={item.description}
+              placement="topRight"
+              mouseEnterDelay="0.2"
+              mouseLeaveDelay="0.05"
+            >
+              <List.Item>
+                <List.Item.Meta title={item.name} />
+              </List.Item>
+            </Tooltip>
+          )}
+        />
         <Divider type="horizontal" orientation="left" />
       </div>
     );
