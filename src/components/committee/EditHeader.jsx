@@ -32,6 +32,24 @@ class EditCommitteeHeader extends React.Component {
   };
 
   handleCreate = () => {
+    const errorMessages = {
+      400: 'Missing field(s) in request',
+      404: 'Committee does not exist',
+      409: 'Committee slot already exists',
+      500: 'Unable to complete transaction',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     const { form } = this.formRef.props;
 
     form.validateFields((err, values) => {
@@ -51,7 +69,7 @@ class EditCommitteeHeader extends React.Component {
           message.success('Record inserted successfully!');
         })
         .catch(err => {
-          message.error(err.response.data.error);
+          handleErrors(err);
         });
 
       form.resetFields();

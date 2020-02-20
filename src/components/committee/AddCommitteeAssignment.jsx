@@ -10,23 +10,34 @@ class AddCommitteeAssignment extends React.Component {
     selected: '',
   };
 
-  fetchData() {
+  fetchData = () => {
+    const errorMessages = {
+      404: 'There are no faculty members',
+      500: 'Unable to save record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     axios
       .get(this.props.endpoint)
       .then(response => {
         this.setState({
           dataMembers: response.data,
-          loading: false,
-          error: {},
         });
       })
       .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
-        });
+        handleErrors(err);
       });
-  }
+  };
 
   showModal = () => {
     this.setState({ visible: true });
@@ -54,6 +65,23 @@ class AddCommitteeAssignment extends React.Component {
     const { form } = this.formRef.props;
 
     form.validateFields((err, values) => {
+      const errorMessages = {
+        400: 'Missing field(s) in request',
+        409: 'Faculty is already a member of this committee',
+        500: 'Unable to save record',
+      };
+
+      const handleErrors = error => {
+        const { status } = error.response;
+        const errorMessage = errorMessages[status];
+
+        if (!errorMessage) {
+          message.error('Unknown error');
+        } else {
+          message.error(errorMessage);
+        }
+      };
+
       if (err) {
         return;
       }
@@ -71,7 +99,7 @@ class AddCommitteeAssignment extends React.Component {
           message.success('Record inserted successfully!');
         })
         .catch(err => {
-          message.error(err.response.data.error);
+          handleErrors(err);
         });
 
       form.resetFields();

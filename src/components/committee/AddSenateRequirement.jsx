@@ -10,23 +10,34 @@ class AddSenateRequirement extends React.Component {
     selected: '',
   };
 
-  fetchData() {
+  fetchData = () => {
+    const errorMessages = {
+      404: 'Found no senate divisions',
+      500: 'Unable to retrieve record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     axios
       .get(this.props.endpoint)
       .then(response => {
         this.setState({
           dataMembers: response.data,
-          loading: false,
-          error: {},
         });
       })
       .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-          loading: false,
-        });
+        handleErrors(err);
       });
-  }
+  };
 
   showModal = () => {
     this.setState({ visible: true });
@@ -50,6 +61,23 @@ class AddSenateRequirement extends React.Component {
   };
 
   handleCreate = value => {
+    const errorMessages = {
+      400: 'Missing field(s) in request',
+      409: 'Committee already has this senate requirement',
+      500: 'Unable to save record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     const { form } = this.formRef.props;
 
     form.validateFields((err, values) => {
@@ -64,11 +92,7 @@ class AddSenateRequirement extends React.Component {
           message.success('Record inserted successfully!');
         })
         .catch(err => {
-          if (err.response.status === 409) {
-            message.error('Senate requirement already exists for this committee');
-          } else {
-            message.error(err.response.data.error);
-          }
+          handleErrors(err);
         });
 
       form.resetFields();

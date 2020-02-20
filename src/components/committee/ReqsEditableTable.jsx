@@ -146,6 +146,23 @@ class EditableTable extends React.Component {
   };
 
   save(form, senateShortname, committee_id) {
+    const errorMessages = {
+      400: 'Missing field(s) in request',
+      404: 'Committee ID or senate do not exist',
+      500: 'Unable to complete transaction',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     form.validateFields((error, row) => {
       if (error) {
         return;
@@ -160,7 +177,7 @@ class EditableTable extends React.Component {
           message.success('Record updated successfully!');
         })
         .catch(err => {
-          message.error(err.response.data.error);
+          handleErrors(err);
         });
     });
 
@@ -176,12 +193,28 @@ class EditableTable extends React.Component {
   };
 
   delete = (senateShortname, committeeId) => {
+    const errorMessages = {
+      404: 'No committee found with requested id and senate division name',
+      500: 'Unable to delete record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     this.deleteRequirement(senateShortname, committeeId)
       .then(() => {
         message.success('Record deleted successfully!');
       })
       .catch(err => {
-        message.error(err.response.data.error);
+        handleErrors(err);
       });
 
     this.props.rerenderParentCallback();

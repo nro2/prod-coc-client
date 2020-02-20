@@ -162,6 +162,24 @@ class EditableTable extends React.Component {
   };
 
   save(form, email, committee_id) {
+    const errorMessages = {
+      400: 'Missing field(s) in request',
+      404: 'Unable to update committee assignment with requested email and id',
+      409: 'Start date must come before end date',
+      500: 'Unable to save record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     form.validateFields((error, row) => {
       if (error) {
         return;
@@ -182,7 +200,7 @@ class EditableTable extends React.Component {
           message.success('Record updated successfully!');
         })
         .catch(err => {
-          message.error(err.response.data.error);
+          handleErrors(err);
         });
     });
 
@@ -198,12 +216,28 @@ class EditableTable extends React.Component {
   };
 
   delete = (email, committeeId) => {
+    const errorMessages = {
+      404: 'No committee assignment with requested id and email',
+      500: 'Unable to delete record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     this.deleteAssignment(email, committeeId)
       .then(() => {
         message.success('Record deleted successfully!');
       })
       .catch(err => {
-        message.error(err.response.data.error);
+        handleErrors(err);
       });
 
     this.props.rerenderParentCallback();

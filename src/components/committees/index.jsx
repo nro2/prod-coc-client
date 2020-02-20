@@ -69,7 +69,6 @@ class Committees extends Component {
     }
 
     return (
-      // TODO: render an actual committee component here (CF1-52)
       <div>
         {JSON.stringify(
           this.state.committees.find(
