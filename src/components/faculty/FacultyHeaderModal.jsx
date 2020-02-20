@@ -48,7 +48,6 @@ class FacultyHeaderModal extends React.Component {
       }
 
       this.setState({
-        faculty,
         visible: false,
       });
 
@@ -64,7 +63,7 @@ class FacultyHeaderModal extends React.Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
   };

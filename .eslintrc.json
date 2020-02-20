@@ -49,7 +49,7 @@
     "react/no-render-return-value": [2],
     "react/no-this-in-sfc": [2],
     "react/no-unsafe": [2],
-    //    "react/no-unused-state": [2],
+    "react/no-unused-state": [2],
     "react/prop-types": [0],
     "react/require-render-return": [2],
     "react/self-closing-comp": [2],

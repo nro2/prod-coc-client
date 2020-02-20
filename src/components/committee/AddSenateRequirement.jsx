@@ -7,7 +7,6 @@ class AddSenateRequirement extends React.Component {
   state = {
     visible: false,
     dataMembers: [],
-    selected: '',
   };
 
   fetchData = () => {
@@ -45,7 +44,7 @@ class AddSenateRequirement extends React.Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
   };

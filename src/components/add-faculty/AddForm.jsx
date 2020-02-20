@@ -101,7 +101,6 @@ class AddFacultyForm extends React.Component {
       .then(response => {
         this.setState({
           senateDivisions: response.data,
-          error: {},
         });
       })
       .catch(err => {
@@ -132,7 +131,6 @@ class AddFacultyForm extends React.Component {
       .then(response => {
         this.setState({
           departments: response.data,
-          error: {},
         });
       })
       .catch(err => {

@@ -7,7 +7,6 @@ class AddMemberAssignment extends React.Component {
   state = {
     visible: false,
     dataMembers: [],
-    selected: '',
   };
 
   errorMessages = {
@@ -34,7 +33,7 @@ class AddMemberAssignment extends React.Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
   };

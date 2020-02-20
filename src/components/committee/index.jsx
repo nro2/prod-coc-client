@@ -76,7 +76,6 @@ export default class App extends Component {
   changeHandler = value => {
     this.setState({
       selected: value,
-      showForm: true,
     });
 
     this.fetchCommitteeInfo(value);

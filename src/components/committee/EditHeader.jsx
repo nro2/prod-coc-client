@@ -7,7 +7,6 @@ import WrappedDisplayForm from './EditHeaderForm';
 class EditCommitteeHeader extends React.Component {
   state = {
     visible: false,
-    selected: '',
   };
 
   showModal = () => {
@@ -15,7 +14,7 @@ class EditCommitteeHeader extends React.Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
   };

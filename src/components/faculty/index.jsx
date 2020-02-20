@@ -16,7 +16,6 @@ class Faculty extends Component {
 
     this.state = {
       selected: '',
-      email: '',
       dataLoaded: false,
       allCommittees: [],
       allDepartments: [],
@@ -75,7 +74,6 @@ class Faculty extends Component {
         };
         this.setState({
           faculty,
-          email: faculty.email,
           dataLoaded: true,
         });
       })
@@ -87,7 +85,6 @@ class Faculty extends Component {
             message: data ? data.error : 'Internal Server Error',
             code: data ? data.status : 500,
           },
-          loading: false,
         });
       });
   }
@@ -117,7 +114,6 @@ class Faculty extends Component {
               faculty,
               allFaculty: firstResponse.data,
               selected: faculty.email,
-              email: faculty.email,
               dataLoaded: true,
             });
           });
@@ -129,7 +125,6 @@ class Faculty extends Component {
             message: data ? data.error : 'Internal Server Error',
             code: err.response.status,
           },
-          loading: false,
         });
       });
   }
@@ -141,7 +136,6 @@ class Faculty extends Component {
   changeHandler = value => {
     this.setState({
       selected: value,
-      showForm: true,
     });
 
     this.fetchFacultyInfo(value);
