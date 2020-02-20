@@ -19,10 +19,6 @@ class EditFacultyForm extends React.Component {
       this.state.selectedSenateDivision === ''
         ? this.props.faculty.senate
         : this.state.selectedSenateDivision;
-    const departments =
-      this.state.selectedDepartments.length === 0
-        ? this.props.faculty.departments
-        : this.state.selectedDepartments;
 
     const faculty = {
       ...this.props.faculty,
@@ -30,7 +26,7 @@ class EditFacultyForm extends React.Component {
       phone: form.getFieldValue('phone'),
       job: form.getFieldValue('title'),
       senate,
-      departments,
+      departments: this.state.selectedDepartments,
     };
 
     this.props.onOk(faculty);
@@ -64,9 +60,15 @@ class EditFacultyForm extends React.Component {
   };
 
   renderDepartments = () => {
-    const handleChange = value => {
+    const handleChange = (value, option) => {
+      const departments = value.map((name, index) => {
+        const { key: department_id } = option[index];
+        const { description } = option[index].props;
+        return { department_id, name, description };
+      });
+
       this.setState({
-        selectedDepartments: value,
+        selectedDepartments: departments,
       });
     };
 
@@ -77,9 +79,13 @@ class EditFacultyForm extends React.Component {
       });
     }
 
-    const divisionOptions = this.props.departments.map(departments => (
-      <Option key={departments.name} value={departments.name}>
-        {departments.name}
+    const divisionOptions = this.props.departments.map(department => (
+      <Option
+        key={department.department_id}
+        value={department.name}
+        description={department.description}
+      >
+        {department.name}
       </Option>
     ));
 
