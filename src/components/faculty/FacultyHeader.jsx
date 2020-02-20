@@ -79,7 +79,7 @@ export default class FacultyHeader extends Component {
           <List
             rowKey={departments.department_id}
             itemLayout="horizontal"
-            grid={{ gutter: 2, column: 4, size: 'small' }}
+            grid={{ gutter: 16, column: 4, size: 'small' }}
             dataSource={departments}
             className="department-item"
             renderItem={item => (
