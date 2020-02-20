@@ -38,7 +38,7 @@ export default class FacultyHeader extends Component {
 
   render() {
     const name = buildSurnameForename(this.props.faculty.name);
-    const { email, job, phone } = this.props.faculty;
+    const { email, job, phone, senate } = this.props.faculty;
 
     return (
       <div>
@@ -65,8 +65,8 @@ export default class FacultyHeader extends Component {
           </Descriptions.Item>
           <Descriptions.Item label="Phone">{phone}</Descriptions.Item>
           <Descriptions.Item label="Title">{job}</Descriptions.Item>
+          <Descriptions.Item label="Senate Division">{senate}</Descriptions.Item>
         </Descriptions>
-        <Divider type="horizontal" orientation="left" />
       </div>
     );
   }
