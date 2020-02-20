@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, message } from 'antd';
 import React from 'react';
 import axios from 'axios';
 
@@ -80,6 +80,22 @@ class AddFacultyForm extends React.Component {
   };
 
   fetchDivisions() {
+    const errorMessages = {
+      404: 'Found no senate divisions',
+      500: 'Unable to retrieve record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     axios
       .get('/api/senate-divisions')
       .then(response => {
@@ -89,13 +105,28 @@ class AddFacultyForm extends React.Component {
         });
       })
       .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-        });
+        handleErrors(err);
       });
   }
 
   fetchDepartments() {
+    const errorMessages = {
+      400: 'Missing field(s) in request',
+      404: 'Found no matching department',
+      500: 'Unable to retrieve record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     axios
       .get('/api/departments')
       .then(response => {
@@ -105,9 +136,7 @@ class AddFacultyForm extends React.Component {
         });
       })
       .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-        });
+        handleErrors(err);
       });
   }
 
