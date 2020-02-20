@@ -69,7 +69,7 @@ export default class FacultyHeader extends Component {
         <Descriptions size="small" layout="vertical">
           <Descriptions.Item label="Departments">
             <List
-              roKey={departments.department_id}
+              rowKey={departments.department_id}
               itemLayout="horizontal"
               dataSource={departments}
               className="department-item"
