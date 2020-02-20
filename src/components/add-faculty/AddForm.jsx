@@ -16,6 +16,11 @@ class AddFacultyForm extends React.Component {
     this.fetchDepartments = this.fetchDepartments.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchDivisions();
+    this.fetchDepartments();
+  }
+
   onSubmitHandler = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -104,11 +109,6 @@ class AddFacultyForm extends React.Component {
           error: { message: err.response.data.error, code: err.response.status },
         });
       });
-  }
-
-  componentDidMount() {
-    this.fetchDivisions();
-    this.fetchDepartments();
   }
 
   render() {

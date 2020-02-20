@@ -25,6 +25,10 @@ export default class App extends Component {
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchCommittees();
+  }
+
   rerenderParentCallback() {
     this.fetchCommittees();
   }
@@ -77,10 +81,6 @@ export default class App extends Component {
 
     this.fetchCommitteeInfo(value);
   };
-
-  componentDidMount() {
-    this.fetchCommittees();
-  }
 
   render() {
     const options = this.state.committees.map(committees => (

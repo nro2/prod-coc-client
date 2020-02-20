@@ -52,6 +52,13 @@ class Faculty extends Component {
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
 
+  async componentDidMount() {
+    this.fetchFaculty();
+    await this.retrieveCommittees();
+    await this.retrieveDepartments();
+    await this.retrieveSenateDivisions();
+  }
+
   fetchFacultyInfo(email) {
     axios
       .get(`/api/faculty/info/${email}`)
@@ -139,13 +146,6 @@ class Faculty extends Component {
 
     this.fetchFacultyInfo(value);
   };
-
-  async componentDidMount() {
-    this.fetchFaculty();
-    await this.retrieveCommittees();
-    await this.retrieveDepartments();
-    await this.retrieveSenateDivisions();
-  }
 
   retrieveCommittees = async () => {
     await axios.get('/api/committees').then(response => {
