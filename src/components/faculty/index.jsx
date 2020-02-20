@@ -74,10 +74,11 @@ class Faculty extends Component {
       })
       .catch(err => {
         const data = err.response;
+        console.log(err);
         this.setState({
           error: {
             message: data ? data.error : 'Internal Server Error',
-            code: err.response.status,
+            code: data ? data.status : 500,
           },
           loading: false,
         });
