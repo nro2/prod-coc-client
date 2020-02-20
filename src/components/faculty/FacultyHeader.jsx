@@ -40,6 +40,15 @@ export default class FacultyHeader extends Component {
     const name = buildSurnameForename(this.props.faculty.name);
     const { email, job, phone, senate, departments } = this.props.faculty;
 
+    let hasDepartments;
+    if (Array.isArray(departments) && departments.length) {
+      hasDepartments = true;
+    } else {
+      hasDepartments = false;
+    }
+
+    console.log(hasDepartments);
+
     return (
       <div>
         <PageHeader
@@ -68,25 +77,27 @@ export default class FacultyHeader extends Component {
           <Descriptions.Item label="Senate Division">{senate}</Descriptions.Item>
         </Descriptions>
         <span>Departments:</span>
-        <List
-          rowKey={departments.department_id}
-          itemLayout="horizontal"
-          grid={{ gutter: 2, column: 4, size: 'small' }}
-          dataSource={departments}
-          className="department-item"
-          renderItem={item => (
-            <Tooltip
-              title={item.description}
-              mouseEnterDelay="0.75"
-              mouseLeaveDelay="0.05"
-              arrowPointAtCenter="true"
-            >
-              <List.Item>
-                <List.Item.Meta title={item.name} />
-              </List.Item>
-            </Tooltip>
-          )}
-        />
+        {hasDepartments && (
+          <List
+            rowKey={departments.department_id}
+            itemLayout="horizontal"
+            grid={{ gutter: 2, column: 4, size: 'small' }}
+            dataSource={departments}
+            className="department-item"
+            renderItem={item => (
+              <Tooltip
+                title={item.description}
+                mouseEnterDelay="0.75"
+                mouseLeaveDelay="0.05"
+                arrowPointAtCenter="true"
+              >
+                <List.Item>
+                  <List.Item.Meta title={item.name} />
+                </List.Item>
+              </Tooltip>
+            )}
+          />
+        )}
         <Divider type="horizontal" orientation="left" />
       </div>
     );
