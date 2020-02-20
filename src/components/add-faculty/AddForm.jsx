@@ -32,7 +32,7 @@ class AddFacultyForm extends React.Component {
             this.props.onSuccess(values['email']);
           })
           .catch(err => {
-            console.log(err.response);
+            console.debug(err.response);
           });
       }
     });
