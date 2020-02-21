@@ -32,7 +32,7 @@ export default class FacultyHeader extends Component {
    *
    * @param faculty Faculty object modified by the child component
    */
-  onCreate = faculty => {
+  handleCreate = faculty => {
     this.props.onCreate(faculty);
   };
 
@@ -51,7 +51,7 @@ export default class FacultyHeader extends Component {
             <FacultyHeaderModal
               key="1"
               faculty={this.props.faculty}
-              onCreate={this.onCreate}
+              onCreate={this.handleCreate}
               senateDivisions={this.props.senateDivisions}
               departments={this.props.departments}
             />,

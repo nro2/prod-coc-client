@@ -18,6 +18,10 @@ class Committees extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchCommittees();
+  }
+
   fetchCommittees() {
     axios
       .get('/api/committees')
@@ -41,10 +45,6 @@ class Committees extends Component {
     this.setState({
       selected: value,
     });
-  }
-
-  componentDidMount() {
-    this.fetchCommittees();
   }
 
   renderBody = () => {

@@ -8,7 +8,7 @@ class AddFaculty extends Component {
     selected: '',
   };
 
-  onSuccessHandler = value => {
+  handleSuccess = value => {
     this.setState({
       redirectToGetFaculty: true,
       selected: value,
@@ -30,7 +30,7 @@ class AddFaculty extends Component {
     return (
       <div className="Add">
         <WrappedDisplayForm
-          onSuccess={this.onSuccessHandler}
+          onSuccess={this.handleSuccess}
           title="Add New Faculty"
         />
       </div>
