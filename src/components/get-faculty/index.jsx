@@ -1,3 +1,5 @@
+/* eslint-disable */
+// this component is going to be retired by CF1-185
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Select, Descriptions, Divider } from 'antd';

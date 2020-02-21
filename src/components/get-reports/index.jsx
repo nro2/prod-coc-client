@@ -13,6 +13,10 @@ class Reports extends Component {
     this.fetchReportInfo = this.fetchReportInfo.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchReportInfo();
+  }
+
   async fetchReportInfo() {
     await axios
       .get('/api/reports')
@@ -25,10 +29,6 @@ class Reports extends Component {
       .catch(err => {
         console.debug('Failed to fetch: ', { err });
       });
-  }
-
-  componentDidMount() {
-    this.fetchReportInfo();
   }
 
   render() {

@@ -13,11 +13,11 @@ class EditHeaderForm extends React.Component {
     });
   };
 
-  onSubmitHandler = () => {
+  handleOk = () => {
     this.props.onCreate(this.state.selected);
   };
 
-  onCancelHandler = () => {
+  handleCancel = () => {
     this.setState({
       selected: '',
     });
@@ -60,8 +60,8 @@ class EditHeaderForm extends React.Component {
         visible={visible}
         title={title || 'Create a new collection'}
         okText={okText || 'Save'}
-        onCancel={this.onCancelHandler}
-        onOk={this.onSubmitHandler}
+        onCancel={this.handleCancel}
+        onOk={this.handleOk}
         okButtonProps={{ disabled: !this.state.showForm }}
         destroyOnClose
       >
