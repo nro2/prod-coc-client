@@ -22,8 +22,7 @@ console.debug = function() {
   if (!console.debugging) return;
   console.log.apply(this, arguments);
 };
-console.debugging = true;
-// TRUE enables console logging, FALSE disables
+console.debugging = process.env.NODE_ENV !== 'production';
 
 class App extends Component {
   constructor(props) {
