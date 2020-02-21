@@ -1,4 +1,4 @@
-import { Descriptions, Divider, PageHeader } from 'antd';
+import { Descriptions, Divider, PageHeader, List, Tooltip } from 'antd';
 import React, { Component } from 'react';
 import FacultyHeaderModal from './FacultyHeaderModal';
 
@@ -38,7 +38,9 @@ export default class FacultyHeader extends Component {
 
   render() {
     const name = buildSurnameForename(this.props.faculty.name);
-    const { email, job, phone, senate } = this.props.faculty;
+    const { email, job, phone, senate, departments } = this.props.faculty;
+
+    const hasDepartments = Array.isArray(departments) && departments.length !== 0;
 
     return (
       <div>
@@ -67,6 +69,28 @@ export default class FacultyHeader extends Component {
           <Descriptions.Item label="Title">{job}</Descriptions.Item>
           <Descriptions.Item label="Senate Division">{senate}</Descriptions.Item>
         </Descriptions>
+        <span>Departments:</span>
+        {hasDepartments && (
+          <List
+            rowKey={departments.department_id}
+            itemLayout="horizontal"
+            grid={{ gutter: 16, column: 4, size: 'small' }}
+            dataSource={departments}
+            className="department-item"
+            renderItem={item => (
+              <List.Item>
+                <Tooltip
+                  title={item.description}
+                  mouseEnterDelay={0.75}
+                  mouseLeaveDelay={0.05}
+                  placement="topLeft"
+                >
+                  <List.Item.Meta title={item.name} />
+                </Tooltip>
+              </List.Item>
+            )}
+          />
+        )}
       </div>
     );
   }
