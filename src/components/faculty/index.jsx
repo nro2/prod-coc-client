@@ -16,7 +16,6 @@ class Faculty extends Component {
 
     this.state = {
       selected: '',
-      email: '',
       dataLoaded: false,
       allCommittees: [],
       allDepartments: [],
@@ -48,8 +47,15 @@ class Faculty extends Component {
       },
     };
 
-    this.updateFaculty = this.updateFaculty.bind(this);
+    this.handleCreate = this.handleCreate.bind(this);
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
+  }
+
+  async componentDidMount() {
+    this.fetchFaculty();
+    await this.retrieveCommittees();
+    await this.retrieveDepartments();
+    await this.retrieveSenateDivisions();
   }
 
   fetchFacultyInfo(email) {
@@ -68,18 +74,17 @@ class Faculty extends Component {
         };
         this.setState({
           faculty,
-          email: faculty.email,
           dataLoaded: true,
         });
       })
       .catch(err => {
         const data = err.response;
+        console.log(err);
         this.setState({
           error: {
             message: data ? data.error : 'Internal Server Error',
-            code: err.response.status,
+            code: data ? data.status : 500,
           },
-          loading: false,
         });
       });
   }
@@ -109,7 +114,6 @@ class Faculty extends Component {
               faculty,
               allFaculty: firstResponse.data,
               selected: faculty.email,
-              email: faculty.email,
               dataLoaded: true,
             });
           });
@@ -121,7 +125,6 @@ class Faculty extends Component {
             message: data ? data.error : 'Internal Server Error',
             code: err.response.status,
           },
-          loading: false,
         });
       });
   }
@@ -130,21 +133,13 @@ class Faculty extends Component {
     this.fetchFaculty();
   }
 
-  changeHandler = value => {
+  handleChange = value => {
     this.setState({
       selected: value,
-      showForm: true,
     });
 
     this.fetchFacultyInfo(value);
   };
-
-  async componentDidMount() {
-    this.fetchFaculty();
-    await this.retrieveCommittees();
-    await this.retrieveDepartments();
-    await this.retrieveSenateDivisions();
-  }
 
   retrieveCommittees = async () => {
     await axios.get('/api/committees').then(response => {
@@ -170,7 +165,7 @@ class Faculty extends Component {
     });
   };
 
-  updateFaculty(faculty) {
+  handleCreate(faculty) {
     this.setState({
       faculty,
     });
@@ -200,13 +195,13 @@ class Faculty extends Component {
             <SearchDropDown
               dataMembers={options}
               placeholder="Search Committees"
-              onChange={this.changeHandler}
+              onChange={this.handleChange}
               dividerText="Faculty Info"
               default={this.state.selected}
               showInfo={true}
             />
             <FacultyHeader
-              onCreate={this.updateFaculty}
+              onCreate={this.handleCreate}
               faculty={this.state.faculty}
               senateDivisions={this.state.senateDivisions}
               departments={this.state.allDepartments}

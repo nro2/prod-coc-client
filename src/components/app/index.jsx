@@ -28,7 +28,7 @@ class App extends Component {
     };
   }
 
-  onCollapse = collapsed => {
+  handleCollapse = collapsed => {
     console.log(collapsed);
     this.setState({ collapsed });
   };
@@ -40,7 +40,7 @@ class App extends Component {
           <Sider
             collapsible
             collapsed={this.state.collapsed}
-            onCollapse={this.onCollapse}
+            onCollapse={this.handleCollapse}
           >
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">

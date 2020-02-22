@@ -1,14 +1,34 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import WrappedEditFacultyForm from './WrappedEditFacultyForm';
+import axios from 'axios';
 
 class FacultyHeaderModal extends React.Component {
   state = {
     visible: false,
   };
 
-  showModal = () => {
+  errorMessages = {
+    400: 'Missing field(s) in faculty request',
+    404: 'Email does not exist',
+    500: 'Error updating faculty',
+  };
+
+  handleClick = () => {
     this.setState({ visible: true });
+  };
+
+  updateFaculty = async faculty => {
+    const { name, email, job, phone, senate, departments } = faculty;
+
+    return axios.put('/api/faculty', {
+      fullName: name,
+      email,
+      jobTitle: job,
+      phoneNum: phone,
+      senateDivision: senate,
+      departmentAssociations: departments,
+    });
   };
 
   /**
@@ -28,17 +48,35 @@ class FacultyHeaderModal extends React.Component {
       }
 
       this.setState({
-        faculty,
         visible: false,
       });
-      this.props.onCreate(faculty);
+
+      this.updateFaculty(faculty)
+        .then(() => {
+          message.success('Faculty updated successfully');
+          this.props.onCreate(faculty);
+        })
+        .catch(err => {
+          this.handleErrors(err);
+        });
     });
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
+  };
+
+  handleErrors = error => {
+    const { status } = error.response;
+    const errorMessage = this.errorMessages[status];
+
+    if (!errorMessage) {
+      message.error('Unknown error');
+    } else {
+      message.error(errorMessage);
+    }
   };
 
   saveFormRef = formRef => {
@@ -48,7 +86,7 @@ class FacultyHeaderModal extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button type="primary" onClick={this.handleClick}>
           Edit
         </Button>
         <WrappedEditFacultyForm

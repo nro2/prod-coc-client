@@ -10,7 +10,7 @@ class AddMemberAssignmentForm extends React.Component {
     showForm: false,
   };
 
-  changeHandler = value => {
+  handleChange = value => {
     this.setState({
       selected: value,
       showForm: true,
@@ -24,11 +24,11 @@ class AddMemberAssignmentForm extends React.Component {
     });
   };
 
-  onSubmitHandler = () => {
+  handleOk = () => {
     this.props.onCreate(this.state.selected);
   };
 
-  onCancelHandler = () => {
+  handleCancel = () => {
     this.setState({
       selected: '',
       showForm: false,
@@ -84,14 +84,14 @@ class AddMemberAssignmentForm extends React.Component {
         visible={visible}
         title={title || 'Create a new collection'}
         okText={okText || 'Save'}
-        onCancel={this.onCancelHandler}
-        onOk={this.onSubmitHandler}
+        onCancel={this.handleCancel}
+        onOk={this.handleOk}
         okButtonProps={{ disabled: !this.state.showForm }}
         destroyOnClose
       >
         <SearchDropDown
           dataMembers={options}
-          onChange={this.changeHandler}
+          onChange={this.handleChange}
           placeholder="Select Committee"
           dividerText="Committee Info"
         />

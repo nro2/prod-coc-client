@@ -18,6 +18,10 @@ class Committees extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchCommittees();
+  }
+
   fetchCommittees() {
     axios
       .get('/api/committees')
@@ -43,10 +47,6 @@ class Committees extends Component {
     });
   }
 
-  componentDidMount() {
-    this.fetchCommittees();
-  }
-
   renderBody = () => {
     if (this.state.selected === 0) {
       return (
@@ -69,7 +69,6 @@ class Committees extends Component {
     }
 
     return (
-      // TODO: render an actual committee component here (CF1-52)
       <div>
         {JSON.stringify(
           this.state.committees.find(

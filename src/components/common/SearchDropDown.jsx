@@ -5,7 +5,6 @@ class SearchDropDown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataMembers: [],
       showInfo: this.props.showInfo,
     };
 
@@ -14,7 +13,6 @@ class SearchDropDown extends React.Component {
 
   handleChange(event) {
     this.setState({
-      selected: event,
       showInfo: true,
     });
 

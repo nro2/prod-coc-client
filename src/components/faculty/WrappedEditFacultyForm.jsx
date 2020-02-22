@@ -13,16 +13,12 @@ class EditFacultyForm extends React.Component {
    * Triggers when the "Save" button is clicked, invoking the callback function
    * from the parent component with an updated faculty object.
    */
-  onSubmitHandler = () => {
+  handleOk = () => {
     const { form } = this.props;
     const senate =
       this.state.selectedSenateDivision === ''
         ? this.props.faculty.senate
         : this.state.selectedSenateDivision;
-    const departments =
-      this.state.selectedDepartments.length === 0
-        ? this.props.faculty.departments
-        : this.state.selectedDepartments;
 
     const faculty = {
       ...this.props.faculty,
@@ -30,13 +26,13 @@ class EditFacultyForm extends React.Component {
       phone: form.getFieldValue('phone'),
       job: form.getFieldValue('title'),
       senate,
-      departments,
+      departments: this.state.selectedDepartments,
     };
 
     this.props.onOk(faculty);
   };
 
-  onCancelHandler = () => {
+  handleCancel = () => {
     this.props.onCancel();
   };
 
@@ -64,20 +60,32 @@ class EditFacultyForm extends React.Component {
   };
 
   renderDepartments = () => {
-    const handleChange = value => {
+    const handleChange = (value, option) => {
+      const departments = value.map((name, index) => {
+        const { key: department_id } = option[index];
+        const { description } = option[index].props;
+        return { department_id, name, description };
+      });
+
       this.setState({
-        selectedDepartments: value,
+        selectedDepartments: departments,
       });
     };
 
     const defaultDepartments = [];
-    this.props.faculty.departments.forEach(department => {
-      defaultDepartments.push(department.name);
-    });
+    if (this.props.faculty.departments !== null) {
+      this.props.faculty.departments.forEach(department => {
+        defaultDepartments.push(department.name);
+      });
+    }
 
-    const divisionOptions = this.props.departments.map(departments => (
-      <Option key={departments.name} value={departments.name}>
-        {departments.name}
+    const divisionOptions = this.props.departments.map(department => (
+      <Option
+        key={department.department_id}
+        value={department.name}
+        description={department.description}
+      >
+        {department.name}
       </Option>
     ));
 
@@ -116,8 +124,8 @@ class EditFacultyForm extends React.Component {
         visible={visible}
         title={title}
         okText="Save"
-        onCancel={this.onCancelHandler}
-        onOk={this.onSubmitHandler}
+        onCancel={this.handleCancel}
+        onOk={this.handleOk}
         destroyOnClose
       >
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
