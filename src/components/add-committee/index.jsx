@@ -8,7 +8,7 @@ class AddCommittee extends Component {
     selected: '',
   };
 
-  onSuccessHandler = value => {
+  handleSuccess = value => {
     this.setState({
       redirectToGetCommittee: true,
       selected: value,
@@ -30,7 +30,7 @@ class AddCommittee extends Component {
     return (
       <div className="Add">
         <WrappedDisplayForm
-          handleOnSuccess={this.onSuccessHandler}
+          onSuccess={this.handleSuccess}
           title="Add New Committee"
         />
       </div>

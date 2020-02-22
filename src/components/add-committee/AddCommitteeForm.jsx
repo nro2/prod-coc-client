@@ -5,11 +5,7 @@ import axios from 'axios';
 const { TextArea } = Input;
 
 class AddCommitteeForm extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  onSubmitHandler = e => {
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -59,11 +55,7 @@ class AddCommitteeForm extends React.Component {
     };
 
     return (
-      <Form
-        handleOnSubmit={this.onSubmitHandler}
-        {...formItemLayout}
-        labelAlign="left"
-      >
+      <Form onSubmit={this.handleSubmit} {...formItemLayout} labelAlign="left">
         <h1>Add New Committee</h1>
         <Form.Item label="Committee Name">
           {getFieldDecorator('committeeName', {
