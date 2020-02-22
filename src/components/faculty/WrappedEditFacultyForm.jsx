@@ -13,7 +13,7 @@ class EditFacultyForm extends React.Component {
    * Triggers when the "Save" button is clicked, invoking the callback function
    * from the parent component with an updated faculty object.
    */
-  onSubmitHandler = () => {
+  handleOk = () => {
     const { form } = this.props;
     const senate =
       this.state.selectedSenateDivision === ''
@@ -32,7 +32,7 @@ class EditFacultyForm extends React.Component {
     this.props.onOk(faculty);
   };
 
-  onCancelHandler = () => {
+  handleCancel = () => {
     this.props.onCancel();
   };
 
@@ -124,8 +124,8 @@ class EditFacultyForm extends React.Component {
         visible={visible}
         title={title}
         okText="Save"
-        onCancel={this.onCancelHandler}
-        onOk={this.onSubmitHandler}
+        onCancel={this.handleCancel}
+        onOk={this.handleOk}
         destroyOnClose
       >
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>

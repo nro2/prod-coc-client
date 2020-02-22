@@ -14,7 +14,7 @@ class FacultyHeaderModal extends React.Component {
     500: 'Error updating faculty',
   };
 
-  showModal = () => {
+  handleClick = () => {
     this.setState({ visible: true });
   };
 
@@ -48,7 +48,6 @@ class FacultyHeaderModal extends React.Component {
       }
 
       this.setState({
-        faculty,
         visible: false,
       });
 
@@ -64,7 +63,7 @@ class FacultyHeaderModal extends React.Component {
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
   };
@@ -87,7 +86,7 @@ class FacultyHeaderModal extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button type="primary" onClick={this.handleClick}>
           Edit
         </Button>
         <WrappedEditFacultyForm
