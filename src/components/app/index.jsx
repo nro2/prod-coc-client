@@ -16,6 +16,12 @@ import Reports from '../get-reports';
 
 const { Header, Content, Footer, Sider } = Layout;
 
+console.debug = function() {
+  if (!console.debugging) return;
+  console.log.apply(this, arguments);
+};
+console.debugging = process.env.NODE_ENV !== 'production';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +32,7 @@ class App extends Component {
   }
 
   handleCollapse = collapsed => {
-    console.log(collapsed);
+    console.log('Action', { collapsed });
     this.setState({ collapsed });
   };
 
