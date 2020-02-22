@@ -141,6 +141,12 @@ class Faculty extends Component {
 
   async componentDidMount() {
     this.fetchFaculty();
+    if (typeof this.props.location.state != 'undefined') {
+      this.setState({
+        showInfo: this.props.location.showInfo,
+        selected: this.props.location.state.selected,
+      });
+    }
     await this.retrieveCommittees();
     await this.retrieveDepartments();
     await this.retrieveSenateDivisions();

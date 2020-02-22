@@ -21,7 +21,7 @@ class AddFaculty extends Component {
       return (
         <Redirect
           to={{
-            pathname: `/faculty/${this.state.selected}`,
+            pathname: '/faculty/',
             state: { showInfo: true, selected: this.state.selected },
           }}
         />
