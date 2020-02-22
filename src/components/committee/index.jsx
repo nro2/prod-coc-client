@@ -69,7 +69,7 @@ export default class App extends Component {
           });
       })
       .catch(err => {
-        console.log(err);
+        console.debug('Failed to fetch: ', { err });
       });
   }
 
