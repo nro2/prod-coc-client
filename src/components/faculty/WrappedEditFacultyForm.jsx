@@ -7,6 +7,7 @@ class EditFacultyForm extends React.Component {
   state = {
     selectedSenateDivision: '',
     selectedDepartments: [],
+    initialDepartments: [],
   };
 
   /**
@@ -20,13 +21,19 @@ class EditFacultyForm extends React.Component {
         ? this.props.faculty.senate
         : this.state.selectedSenateDivision;
 
+    const departmentAssociations = form.getFieldValue('departments').map(item => {
+      return {
+        department_id: item,
+      };
+    });
+
     const faculty = {
       ...this.props.faculty,
       name: form.getFieldValue('name'),
       phone: form.getFieldValue('phone'),
       job: form.getFieldValue('title'),
       senate,
-      departments: this.state.selectedDepartments,
+      departments: departmentAssociations,
     };
 
     this.props.onOk(faculty);
@@ -60,7 +67,7 @@ class EditFacultyForm extends React.Component {
   };
 
   renderDepartments = () => {
-    const handleChange = (value, option) => {
+    /*const handleChange = (value, option) => {
       const departments = value.map((name, index) => {
         const { key: department_id } = option[index];
         const { description } = option[index].props;
@@ -70,16 +77,14 @@ class EditFacultyForm extends React.Component {
       this.setState({
         selectedDepartments: departments,
       });
-    };
-
-    const defaultDepartments = [];
+    };*/
+    /*const defaultDepartments = [];
     if (this.props.faculty.departments !== null) {
       this.props.faculty.departments.forEach(department => {
         defaultDepartments.push(department.name);
       });
-    }
-
-    const divisionOptions = this.props.departments.map(department => (
+    }*/
+    /*const divisionOptions = this.props.departments.map(department => (
       <Option
         key={department.department_id}
         value={department.name}
@@ -87,9 +92,8 @@ class EditFacultyForm extends React.Component {
       >
         {department.name}
       </Option>
-    ));
-
-    return (
+    ));*/
+    /*return (
       <Select
         mode="multiple"
         showSearch
@@ -101,8 +105,30 @@ class EditFacultyForm extends React.Component {
       >
         {divisionOptions}
       </Select>
-    );
+    );*/
   };
+
+  initializeDepartments = () => {
+    const defaultDepartments = [];
+    if (this.props.faculty.departments !== null) {
+      this.props.faculty.departments.forEach(department => {
+        defaultDepartments.push(department.name);
+      });
+      return defaultDepartments;
+    }
+  };
+
+  /*handleChange = (value, option) => {
+    const departments = value.map((name, index) => {
+      const { key: department_id } = option[index];
+      const { description } = option[index].props;
+      return { department_id, name, description };
+    });
+
+    this.setState({
+      selectedDepartments: departments,
+    });
+  };*/
 
   render() {
     const { visible, form, title, faculty } = this.props;
@@ -119,6 +145,17 @@ class EditFacultyForm extends React.Component {
       },
     };
 
+    const defaultDepartments = [];
+    if (this.props.faculty.departments !== null) {
+      this.props.faculty.departments.forEach(department => {
+        defaultDepartments.push(department.name);
+      });
+    }
+
+    const divisionOptions = this.props.departments.map(department => (
+      <Option key={department.department_id}>{department.name}</Option>
+    ));
+
     return (
       <Modal
         visible={visible}
@@ -132,6 +169,7 @@ class EditFacultyForm extends React.Component {
           <Form.Item label="Name">
             {getFieldDecorator('name', {
               initialValue: faculty.name,
+              valuePropName: 'option',
               rules: [
                 {
                   required: true,
@@ -153,7 +191,23 @@ class EditFacultyForm extends React.Component {
           <Form.Item label="Senate Division">
             {this.renderSenateDivisions()}
           </Form.Item>
-          <Form.Item label="Departments">{this.renderDepartments()}</Form.Item>
+          <Form.Item label="Departments">
+            {getFieldDecorator('departments', {
+              valuePropName: 'option',
+              rules: [{ required: false }],
+            })(
+              <Select
+                mode="multiple"
+                showSearch
+                placeholder="Select department(s)"
+                optionFilterProp="children"
+                dropdownMatchSelectWidth={false}
+                defaultValue={defaultDepartments}
+              >
+                {divisionOptions}
+              </Select>
+            )}
+          </Form.Item>
         </Form>
       </Modal>
     );
