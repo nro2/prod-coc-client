@@ -17,7 +17,6 @@ class Faculty extends Component {
       selected: '',
       email: '',
       dataLoaded: false,
-      allCommittees: [],
       allDepartments: [],
       allFaculty: [],
       senateDivisions: [],
@@ -140,18 +139,9 @@ class Faculty extends Component {
 
   async componentDidMount() {
     this.fetchFaculty();
-    await this.retrieveCommittees();
     await this.retrieveDepartments();
     await this.retrieveSenateDivisions();
   }
-
-  retrieveCommittees = async () => {
-    await axios.get('/api/committees').then(response => {
-      this.setState({
-        allCommittees: response.data,
-      });
-    });
-  };
 
   retrieveDepartments = async () => {
     await axios.get('/api/departments').then(response => {
