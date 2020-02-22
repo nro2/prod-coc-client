@@ -30,7 +30,7 @@ class AddCommittee extends Component {
     return (
       <div className="Add">
         <WrappedDisplayForm
-          onSuccess={this.onSuccessHandler}
+          handleOnSuccess={this.onSuccessHandler}
           title="Add New Committee"
         />
       </div>

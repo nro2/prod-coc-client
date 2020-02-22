@@ -7,11 +7,6 @@ const { TextArea } = Input;
 class AddCommitteeForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      committeeName: [],
-      description: [],
-      totalSlots: [],
-    };
   }
 
   onSubmitHandler = e => {
@@ -64,7 +59,11 @@ class AddCommitteeForm extends React.Component {
     };
 
     return (
-      <Form onSubmit={this.onSubmitHandler} {...formItemLayout} labelAlign="left">
+      <Form
+        handleOnSubmit={this.onSubmitHandler}
+        {...formItemLayout}
+        labelAlign="left"
+      >
         <h1>Add New Committee</h1>
         <Form.Item label="Committee Name">
           {getFieldDecorator('committeeName', {
