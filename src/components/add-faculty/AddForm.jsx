@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, message } from 'antd';
 import React from 'react';
 import axios from 'axios';
 
@@ -16,7 +16,12 @@ class AddFacultyForm extends React.Component {
     this.fetchDepartments = this.fetchDepartments.bind(this);
   }
 
-  onSubmitHandler = e => {
+  componentDidMount() {
+    this.fetchDivisions();
+    this.fetchDepartments();
+  }
+
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -75,40 +80,62 @@ class AddFacultyForm extends React.Component {
   };
 
   fetchDivisions() {
+    const errorMessages = {
+      404: 'Found no senate divisions',
+      500: 'Unable to retrieve record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     axios
       .get('/api/senate-divisions')
       .then(response => {
         this.setState({
           senateDivisions: response.data,
-          error: {},
         });
       })
       .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-        });
+        handleErrors(err);
       });
   }
 
   fetchDepartments() {
+    const errorMessages = {
+      400: 'Missing field(s) in request',
+      404: 'Found no matching department',
+      500: 'Unable to retrieve record',
+    };
+
+    const handleErrors = error => {
+      const { status } = error.response;
+      const errorMessage = errorMessages[status];
+
+      if (!errorMessage) {
+        message.error('Unknown error');
+      } else {
+        message.error(errorMessage);
+      }
+    };
+
     axios
       .get('/api/departments')
       .then(response => {
         this.setState({
           departments: response.data,
-          error: {},
         });
       })
       .catch(err => {
-        this.setState({
-          error: { message: err.response.data.error, code: err.response.status },
-        });
+        handleErrors(err);
       });
-  }
-
-  componentDidMount() {
-    this.fetchDivisions();
-    this.fetchDepartments();
   }
 
   render() {
@@ -140,7 +167,7 @@ class AddFacultyForm extends React.Component {
     };
 
     return (
-      <Form onSubmit={this.onSubmitHandler} {...formItemLayout} labelAlign="left">
+      <Form onSubmit={this.handleSubmit} {...formItemLayout} labelAlign="left">
         <h1>Add New faculty</h1>
         <Form.Item label="First Name">
           {getFieldDecorator('first', {
