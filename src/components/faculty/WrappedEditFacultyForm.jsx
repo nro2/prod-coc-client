@@ -21,11 +21,17 @@ class EditFacultyForm extends React.Component {
         ? this.props.faculty.senate
         : this.state.selectedSenateDivision;
 
-    const departmentAssociations = form.getFieldValue('departments').map(item => {
-      return {
-        department_id: item,
-      };
-    });
+    const departmentAssociations = [];
+    if (form.getFieldValue('departments').length) {
+      departmentAssociations.push();
+      form.getFieldValue('departments').map(item => {
+        this.props.faculty.departments.forEach(department => {
+          if (item === department.name) {
+            departmentAssociations.push(department.department_id);
+          }
+        });
+      });
+    }
 
     const faculty = {
       ...this.props.faculty,
@@ -112,7 +118,10 @@ class EditFacultyForm extends React.Component {
     const defaultDepartments = [];
     if (this.props.faculty.departments !== null) {
       this.props.faculty.departments.forEach(department => {
-        defaultDepartments.push(department.name);
+        defaultDepartments.push({
+          label: department.name,
+          key: department.department_id,
+        });
       });
       return defaultDepartments;
     }
@@ -147,13 +156,16 @@ class EditFacultyForm extends React.Component {
 
     const defaultDepartments = [];
     if (this.props.faculty.departments !== null) {
-      this.props.faculty.departments.forEach(department => {
-        defaultDepartments.push(department.name);
+      this.props.faculty.departments.map(department => {
+        defaultDepartments.push({
+          label: department.name,
+          value: department.department_id,
+        });
       });
     }
 
     const divisionOptions = this.props.departments.map(department => (
-      <Option key={department.department_id}>{department.name}</Option>
+      <Option key={69}>{department.name}</Option>
     ));
 
     return (
@@ -193,8 +205,8 @@ class EditFacultyForm extends React.Component {
           </Form.Item>
           <Form.Item label="Departments">
             {getFieldDecorator('departments', {
-              valuePropName: 'option',
-              rules: [{ required: false }],
+              initialValue: defaultDepartments.map(opt => opt && opt.label),
+              rules: [{ required: false, type: 'array' }],
             })(
               <Select
                 mode="multiple"
@@ -202,7 +214,6 @@ class EditFacultyForm extends React.Component {
                 placeholder="Select department(s)"
                 optionFilterProp="children"
                 dropdownMatchSelectWidth={false}
-                defaultValue={defaultDepartments}
               >
                 {divisionOptions}
               </Select>
