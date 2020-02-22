@@ -9,8 +9,6 @@ import {
 import { Layout, Menu, Icon } from 'antd';
 import './app.css';
 import AddFaculty from '../add-faculty';
-import Committees from '../committees';
-import GetFaculty from '../get-faculty';
 import Committee from '../committee';
 import Faculty from '../faculty';
 import Home from '../home';
@@ -61,25 +59,15 @@ class App extends Component {
               </Menu.Item>
               <Menu.Item key="3">
                 <Icon type="user" />
-                <span>Get Faculty</span>
-                <Link to="/get-faculty" />
-              </Menu.Item>
-              <Menu.Item key="4">
-                <Icon type="appstore" />
-                <span>Committees</span>
-                <Link to="/committees" />
-              </Menu.Item>
-              <Menu.Item key="5">
-                <Icon type="user" />
                 <span>Faculty Info</span>
                 <Link to="/faculty" />
               </Menu.Item>
-              <Menu.Item key="6">
+              <Menu.Item key="4">
                 <Icon type="user" />
                 <span>Committee Info</span>
                 <Link to="/committee" />
               </Menu.Item>
-              <Menu.Item key="7">
+              <Menu.Item key="5">
                 <Icon type="appstore" />
                 <span>Reports</span>
                 <Link to="/reports" />
@@ -92,8 +80,6 @@ class App extends Component {
               <Switch>
                 <Route path="/home" component={Home} />
                 <Route path="/add-faculty" component={AddFaculty} />
-                <Route path="/get-faculty" component={GetFaculty} />
-                <Route path="/committees" component={Committees} />
                 <Route path="/committee" component={Committee} />
                 <Route path="/faculty" component={Faculty} />
                 <Route path="/reports" component={Reports} />

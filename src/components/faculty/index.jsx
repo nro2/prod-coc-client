@@ -124,6 +124,11 @@ class Faculty extends Component {
           },
         });
       });
+    if (typeof this.props.location.state != 'undefined') {
+      this.setState({
+        selected: this.props.location.state.selected,
+      });
+    }
   }
 
   rerenderParentCallback() {
