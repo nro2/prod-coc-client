@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Result, Select } from 'antd';
 import './faculty.css';
 import FacultyHeader from './FacultyHeader';
-import CommitteeTables from './CommitteeTables';
 import CommitteesTable from './CommitteesTable.jsx';
 import axios from 'axios';
 import SearchDropDown from '../common/SearchDropDown.jsx';
@@ -17,7 +16,6 @@ class Faculty extends Component {
     this.state = {
       selected: '',
       dataLoaded: false,
-      allCommittees: [],
       allDepartments: [],
       allFaculty: [],
       senateDivisions: [],
@@ -53,7 +51,6 @@ class Faculty extends Component {
 
   async componentDidMount() {
     this.fetchFaculty();
-    await this.retrieveCommittees();
     await this.retrieveDepartments();
     await this.retrieveSenateDivisions();
   }
@@ -141,14 +138,6 @@ class Faculty extends Component {
     this.fetchFacultyInfo(value);
   };
 
-  retrieveCommittees = async () => {
-    await axios.get('/api/committees').then(response => {
-      this.setState({
-        allCommittees: response.data,
-      });
-    });
-  };
-
   retrieveDepartments = async () => {
     await axios.get('/api/departments').then(response => {
       this.setState({
@@ -212,13 +201,6 @@ class Faculty extends Component {
               rerenderParentCallback={this.rerenderParentCallback}
             />
             <SurveyTable data={this.state.faculty.recentSurvey} />
-            <CommitteeTables
-              facultiCurrentCommittees={this.state.faculty.currentCommittees}
-              mockData={this.state.data}
-              sayHello={this.sayHello}
-              enableSaveChangesButton={this.enableSaveChangesButton}
-              committees={this.state.allCommittees}
-            />
           </React.Fragment>
         )}
       </div>
