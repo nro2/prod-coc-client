@@ -22,7 +22,7 @@ class AddCommittee extends Component {
         <Redirect
           to={{
             pathname: '/committee',
-            state: { showInfo: true, selected: this.state.selected },
+            state: { selected: this.state.selected },
           }}
         />
       );

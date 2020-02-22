@@ -12,6 +12,11 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
+    let value = 1;
+    if (this.props.location.state !== undefined) {
+      value = this.props.location.state.selected;
+    }
+
     this.state = {
       committee: [],
       committeeId: 1,
@@ -19,7 +24,7 @@ export default class App extends Component {
       committeeSlots: {},
       committees: [],
       dataLoaded: false,
-      selected: 1,
+      selected: value,
     };
 
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
