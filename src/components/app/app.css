@@ -1,4 +1,8 @@
 @import '~antd/dist/antd.css';
+.select {
+  width: 300px;
+}
+
 .aligner {
   display: flex;
   align-items: center;

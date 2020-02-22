@@ -10,14 +10,18 @@ import { Layout, Menu, Icon } from 'antd';
 import './app.css';
 import AddFaculty from '../add-faculty';
 import AddCommittee from '../add-committee';
-import Committees from '../committees';
-import GetFaculty from '../get-faculty';
 import Committee from '../committee';
 import Faculty from '../faculty';
 import Home from '../home';
 import Reports from '../get-reports';
 
 const { Header, Content, Footer, Sider } = Layout;
+
+console.debug = function() {
+  if (!console.debugging) return;
+  console.log.apply(this, arguments);
+};
+console.debugging = process.env.NODE_ENV !== 'production';
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +33,7 @@ class App extends Component {
   }
 
   handleCollapse = collapsed => {
-    console.log(collapsed);
+    console.log('Action', { collapsed });
     this.setState({ collapsed });
   };
 
@@ -61,25 +65,15 @@ class App extends Component {
               </Menu.Item>
               <Menu.Item key="4">
                 <Icon type="user" />
-                <span>Get Faculty</span>
-                <Link to="/get-faculty" />
-              </Menu.Item>
-              <Menu.Item key="5">
-                <Icon type="appstore" />
-                <span>Committees</span>
-                <Link to="/committees" />
-              </Menu.Item>
-              <Menu.Item key="6">
-                <Icon type="user" />
                 <span>Faculty Info</span>
                 <Link to="/faculty" />
               </Menu.Item>
-              <Menu.Item key="7">
+              <Menu.Item key="5">
                 <Icon type="user" />
                 <span>Committee Info</span>
                 <Link to="/committee" />
               </Menu.Item>
-              <Menu.Item key="8">
+              <Menu.Item key="6">
                 <Icon type="appstore" />
                 <span>Reports</span>
                 <Link to="/reports" />
@@ -93,8 +87,6 @@ class App extends Component {
                 <Route path="/home" component={Home} />
                 <Route path="/add-faculty" component={AddFaculty} />
                 <Route path="/add-committee" component={AddCommittee} />
-                <Route path="/get-faculty" component={GetFaculty} />
-                <Route path="/committees" component={Committees} />
                 <Route path="/committee" component={Committee} />
                 <Route path="/faculty" component={Faculty} />
                 <Route path="/reports" component={Reports} />
