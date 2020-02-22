@@ -46,13 +46,6 @@ class AddCommitteeForm extends React.Component {
         sm: { span: 14 },
       },
     };
-    const descriptionConfig = {
-      initialValue: ' ',
-    };
-
-    const totalSlotsConfig = {
-      initialValue: 1,
-    };
 
     return (
       <Form onSubmit={this.handleSubmit} {...formItemLayout} labelAlign="left">
@@ -63,32 +56,30 @@ class AddCommitteeForm extends React.Component {
               {
                 required: true,
                 message: 'Please input committee name',
-                whitespace: true,
                 labelAlign: 'left',
               },
             ],
           })(<Input placeholder="Committee Name" />)}
         </Form.Item>
         <Form.Item label="Description">
-          {getFieldDecorator('description', descriptionConfig, {
+          {getFieldDecorator('description', {
             rules: [
               {
                 required: true,
                 message: 'Please input committee description',
-                whitespace: true,
               },
             ],
-          })(<TextArea rows={4} />)}
+          })(<TextArea rows={4} placeholder="Enter list of responsibilities" />)}
         </Form.Item>
         <Form.Item label="Total Slots">
-          {getFieldDecorator('totalSlots', totalSlotsConfig, {
+          {getFieldDecorator('totalSlots', {
             rules: [
               {
-                type: 'totalSlots',
                 required: true,
+                message: 'Please input total slots',
               },
             ],
-          })(<InputNumber min={1} />)}
+          })(<InputNumber min={1} placeholder="Total slots" />)}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
