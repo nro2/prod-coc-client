@@ -21,7 +21,7 @@ class EditFacultyForm extends React.Component {
 
     const departmentAssociations = [];
     if (form.getFieldValue('departments').length) {
-      form.getFieldValue('departments').map(item => {
+      form.getFieldValue('departments').forEach(item => {
         this.props.departments.forEach(department => {
           if (item === department.name) {
             departmentAssociations.push({
@@ -90,7 +90,7 @@ class EditFacultyForm extends React.Component {
 
     const defaultDepartments = [];
     if (this.props.faculty.departments !== null) {
-      this.props.faculty.departments.map(department => {
+      this.props.faculty.departments.forEach(department => {
         defaultDepartments.push({
           label: department.name,
           value: department.department_id,
