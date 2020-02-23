@@ -7,15 +7,14 @@ import WrappedDisplayForm from './EditHeaderForm';
 class EditCommitteeHeader extends React.Component {
   state = {
     visible: false,
-    selected: '',
   };
 
-  showModal = () => {
+  handleClick = () => {
     this.setState({ visible: true });
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
   };
@@ -85,7 +84,7 @@ class EditCommitteeHeader extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button type="primary" onClick={this.handleClick}>
           {this.props.buttonLabel || 'Add'}
         </Button>
         <WrappedDisplayForm

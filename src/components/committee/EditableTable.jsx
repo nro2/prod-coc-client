@@ -70,7 +70,7 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: this.props.data, editingKey: '' };
+    this.state = { editingKey: '' };
 
     const operations = {
       title: 'Action',

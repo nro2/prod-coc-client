@@ -52,7 +52,6 @@ class EditableTable extends Component {
     this.state = {
       currentCommittees: [],
       editingKey: '',
-      saved: false,
     };
     this.columns = [
       {

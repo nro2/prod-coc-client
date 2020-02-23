@@ -12,6 +12,11 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
+    let value = 1;
+    if (this.props.location.state !== undefined) {
+      value = this.props.location.state.selected;
+    }
+
     this.state = {
       committee: [],
       committeeId: 1,
@@ -19,10 +24,14 @@ export default class App extends Component {
       committeeSlots: {},
       committees: [],
       dataLoaded: false,
-      selected: 1,
+      selected: value,
     };
 
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchCommittees();
   }
 
   rerenderParentCallback() {
@@ -65,22 +74,17 @@ export default class App extends Component {
           });
       })
       .catch(err => {
-        console.log(err);
+        console.debug('Failed to fetch: ', { err });
       });
   }
 
-  changeHandler = value => {
+  handleChange = value => {
     this.setState({
       selected: value,
-      showForm: true,
     });
 
     this.fetchCommitteeInfo(value);
   };
-
-  componentDidMount() {
-    this.fetchCommittees();
-  }
 
   render() {
     const options = this.state.committees.map(committees => (
@@ -95,7 +99,7 @@ export default class App extends Component {
               <SearchDropDown
                 dataMembers={options}
                 placeholder="Search Committees"
-                onChange={this.changeHandler}
+                onChange={this.handleChange}
                 dividerText="Committee Info"
                 default={this.state.defaultCommittee}
                 showInfo={true}

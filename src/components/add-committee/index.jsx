@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
-import WrappedDisplayForm from './AddForm';
+import WrappedDisplayForm from './AddCommitteeForm';
 import { Redirect } from 'react-router-dom';
 
-class AddFaculty extends Component {
+class AddCommittee extends Component {
   state = {
-    redirectToGetFaculty: false,
+    redirectToGetCommittee: false,
     selected: '',
   };
 
   handleSuccess = value => {
     this.setState({
-      redirectToGetFaculty: true,
+      redirectToGetCommittee: true,
       selected: value,
     });
   };
 
   render() {
-    const redirect = this.state.redirectToGetFaculty;
+    const redirect = this.state.redirectToGetCommittee;
     if (redirect === true) {
       return (
         <Redirect
           to={{
-            pathname: '/faculty/',
-            state: { showInfo: true, selected: this.state.selected },
+            pathname: '/committee',
+            state: { selected: this.state.selected },
           }}
         />
       );
@@ -31,11 +31,11 @@ class AddFaculty extends Component {
       <div className="Add">
         <WrappedDisplayForm
           onSuccess={this.handleSuccess}
-          title="Add New Faculty"
+          title="Add New Committee"
         />
       </div>
     );
   }
 }
 
-export default AddFaculty;
+export default AddCommittee;

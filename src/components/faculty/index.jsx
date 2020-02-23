@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Result, Select } from 'antd';
 import './faculty.css';
 import FacultyHeader from './FacultyHeader';
-import CommitteeTables from './CommitteeTables';
 import CommitteesTable from './CommitteesTable.jsx';
 import axios from 'axios';
 import SearchDropDown from '../common/SearchDropDown.jsx';
@@ -16,9 +15,7 @@ class Faculty extends Component {
 
     this.state = {
       selected: '',
-      email: '',
       dataLoaded: false,
-      allCommittees: [],
       allDepartments: [],
       allFaculty: [],
       senateDivisions: [],
@@ -48,8 +45,14 @@ class Faculty extends Component {
       },
     };
 
-    this.updateFaculty = this.updateFaculty.bind(this);
+    this.handleCreate = this.handleCreate.bind(this);
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
+  }
+
+  async componentDidMount() {
+    this.fetchFaculty();
+    await this.retrieveDepartments();
+    await this.retrieveSenateDivisions();
   }
 
   fetchFacultyInfo(email) {
@@ -68,7 +71,6 @@ class Faculty extends Component {
         };
         this.setState({
           faculty,
-          email: faculty.email,
           dataLoaded: true,
         });
       })
@@ -80,7 +82,6 @@ class Faculty extends Component {
             message: data ? data.error : 'Internal Server Error',
             code: data ? data.status : 500,
           },
-          loading: false,
         });
       });
   }
@@ -110,7 +111,6 @@ class Faculty extends Component {
               faculty,
               allFaculty: firstResponse.data,
               selected: faculty.email,
-              email: faculty.email,
               dataLoaded: true,
             });
           });
@@ -122,37 +122,25 @@ class Faculty extends Component {
             message: data ? data.error : 'Internal Server Error',
             code: err.response.status,
           },
-          loading: false,
         });
       });
+    if (typeof this.props.location.state != 'undefined') {
+      this.setState({
+        selected: this.props.location.state.selected,
+      });
+    }
   }
 
   rerenderParentCallback() {
     this.fetchFaculty();
   }
 
-  changeHandler = value => {
+  handleChange = value => {
     this.setState({
       selected: value,
-      showForm: true,
     });
 
     this.fetchFacultyInfo(value);
-  };
-
-  async componentDidMount() {
-    this.fetchFaculty();
-    await this.retrieveCommittees();
-    await this.retrieveDepartments();
-    await this.retrieveSenateDivisions();
-  }
-
-  retrieveCommittees = async () => {
-    await axios.get('/api/committees').then(response => {
-      this.setState({
-        allCommittees: response.data,
-      });
-    });
   };
 
   retrieveDepartments = async () => {
@@ -171,7 +159,7 @@ class Faculty extends Component {
     });
   };
 
-  updateFaculty(faculty) {
+  handleCreate(faculty) {
     this.setState({
       faculty,
     });
@@ -201,13 +189,13 @@ class Faculty extends Component {
             <SearchDropDown
               dataMembers={options}
               placeholder="Search Committees"
-              onChange={this.changeHandler}
+              onChange={this.handleChange}
               dividerText="Faculty Info"
               default={this.state.selected}
               showInfo={true}
             />
             <FacultyHeader
-              onCreate={this.updateFaculty}
+              onCreate={this.handleCreate}
               faculty={this.state.faculty}
               senateDivisions={this.state.senateDivisions}
               departments={this.state.allDepartments}
@@ -218,13 +206,6 @@ class Faculty extends Component {
               rerenderParentCallback={this.rerenderParentCallback}
             />
             <SurveyTable data={this.state.faculty.recentSurvey} />
-            <CommitteeTables
-              facultiCurrentCommittees={this.state.faculty.currentCommittees}
-              mockData={this.state.data}
-              sayHello={this.sayHello}
-              enableSaveChangesButton={this.enableSaveChangesButton}
-              committees={this.state.allCommittees}
-            />
           </React.Fragment>
         )}
       </div>

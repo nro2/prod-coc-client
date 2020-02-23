@@ -7,7 +7,6 @@ class AddCommitteeAssignment extends React.Component {
   state = {
     visible: false,
     dataMembers: [],
-    selected: '',
   };
 
   fetchData = () => {
@@ -39,13 +38,13 @@ class AddCommitteeAssignment extends React.Component {
       });
   };
 
-  showModal = () => {
+  handleClick = () => {
     this.setState({ visible: true });
     this.fetchData();
   };
 
   handleCancel = () => {
-    this.setState({ visible: false, selected: '' });
+    this.setState({ visible: false });
     const { form } = this.formRef.props;
     form.resetFields();
   };
@@ -115,7 +114,7 @@ class AddCommitteeAssignment extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" className="add-button" onClick={this.showModal}>
+        <Button type="primary" className="add-button" onClick={this.handleClick}>
           {this.props.buttonLabel || 'Add'}
         </Button>
         <WrappedDisplayForm
