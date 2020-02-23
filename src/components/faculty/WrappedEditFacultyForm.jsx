@@ -19,20 +19,16 @@ class EditFacultyForm extends React.Component {
         ? this.props.faculty.senate
         : this.state.selectedSenateDivision;
 
-    const departmentAssociations = [];
-    if (form.getFieldValue('departments').length) {
-      form.getFieldValue('departments').forEach(item => {
-        this.props.departments.forEach(department => {
-          if (item === department.name) {
-            departmentAssociations.push({
-              department_id: department.department_id,
-              name: department.name,
-              description: department.description,
-            });
-          }
-        });
-      });
-    }
+    const selectedDepartments = form.getFieldValue('departments');
+    const departmentAssociations = this.props.departments.filter(department => {
+      if (selectedDepartments.includes(department.name)) {
+        return {
+          department_id: department.department_id,
+          name: department.name,
+          description: department.description,
+        };
+      }
+    });
 
     const faculty = {
       ...this.props.faculty,
