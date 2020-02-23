@@ -115,7 +115,6 @@ class EditFacultyForm extends React.Component {
           <Form.Item label="Name">
             {getFieldDecorator('name', {
               initialValue: faculty.name,
-              valuePropName: 'option',
               rules: [
                 {
                   required: true,
