@@ -26,6 +26,8 @@ class EditFacultyForm extends React.Component {
           if (item === department.name) {
             departmentAssociations.push({
               department_id: department.department_id,
+              name: department.name,
+              description: department.description,
             });
           }
         });
