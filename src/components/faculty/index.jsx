@@ -46,89 +46,68 @@ class Faculty extends Component {
     };
 
     this.handleCreate = this.handleCreate.bind(this);
+    this.fetchFaculty = this.fetchFaculty.bind(this);
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
 
   async componentDidMount() {
     this.fetchFaculty();
-    await this.retrieveDepartments();
-    await this.retrieveSenateDivisions();
-  }
-
-  fetchFacultyInfo(email) {
-    axios
-      .get(`/api/faculty/info/${email}`)
-      .then(response => {
-        const faculty = {
-          currentCommittees: response.data['committees'],
-          recentSurvey: response.data['surveys'],
-          departments: response.data['departments'],
-          name: response.data.full_name,
-          email: response.data.email,
-          phone: response.data.phone_num,
-          job: response.data.job_title,
-          senate: response.data.senate_division_short_name,
-        };
-        this.setState({
-          faculty,
-          dataLoaded: true,
-        });
-      })
-      .catch(err => {
-        const data = err.response;
-        console.log(err);
-        this.setState({
-          error: {
-            message: data ? data.error : 'Internal Server Error',
-            code: data ? data.status : 500,
-          },
-        });
-      });
   }
 
   fetchFaculty() {
     axios
       .get('/api/faculty')
-      .then(firstResponse => {
+      .then(facultyResponse => {
         axios
           .get(
             `/api/faculty/info/${this.state.selected ||
-              firstResponse.data[0].email}`
+              facultyResponse.data[0].email}`
           )
-          .then(secondResponse => {
-            const faculty = {
-              currentCommittees: secondResponse.data['committees'],
-              recentSurvey: secondResponse.data['surveys'],
-              departments: secondResponse.data['departments'],
-              name: secondResponse.data.full_name,
-              email: secondResponse.data.email,
-              phone: secondResponse.data.phone_num,
-              job: secondResponse.data.job_title,
-              senate: secondResponse.data.senate_division_short_name,
-            };
+          .then(facultyInfo => {
+            axios.get('/api/departments').then(departments => {
+              axios.get('/api/senate-divisions').then(senateDivisions => {
+                const faculty = {
+                  currentCommittees: facultyInfo.data['committees'],
+                  recentSurvey: facultyInfo.data['surveys'],
+                  departments: facultyInfo.data['departments'],
+                  name: facultyInfo.data.full_name,
+                  email: facultyInfo.data.email,
+                  phone: facultyInfo.data.phone_num,
+                  job: facultyInfo.data.job_title,
+                  senate: facultyInfo.data.senate_division_short_name,
+                };
 
-            this.setState({
-              faculty,
-              allFaculty: firstResponse.data,
-              selected: faculty.email,
-              dataLoaded: true,
+                let selectedValue;
+                if (typeof this.props.location.state != 'undefined') {
+                  selectedValue = this.props.location.state.selected;
+                } else {
+                  selectedValue = faculty.email;
+                }
+
+                this.setState({
+                  faculty,
+                  allFaculty: facultyResponse.data,
+                  allDepartments: departments.data,
+                  senateDivisions: senateDivisions.data,
+                  selected: selectedValue,
+                  dataLoaded: true,
+                });
+              });
             });
           });
       })
       .catch(err => {
         const data = err.response;
+        const message = data.data.error ? data.data.error : data.data;
+
         this.setState({
           error: {
-            message: data ? data.error : 'Internal Server Error',
-            code: err.response.status,
+            code: data ? data.status.toString() : '',
+            title: data ? data.statusText : 'Internal Server Error',
+            message: message ? message : 'Unknown Error',
           },
         });
       });
-    if (typeof this.props.location.state != 'undefined') {
-      this.setState({
-        selected: this.props.location.state.selected,
-      });
-    }
   }
 
   rerenderParentCallback() {
@@ -140,23 +119,7 @@ class Faculty extends Component {
       selected: value,
     });
 
-    this.fetchFacultyInfo(value);
-  };
-
-  retrieveDepartments = async () => {
-    await axios.get('/api/departments').then(response => {
-      this.setState({
-        allDepartments: response.data,
-      });
-    });
-  };
-
-  retrieveSenateDivisions = async () => {
-    await axios.get('/api/senate-divisions').then(response => {
-      this.setState({
-        senateDivisions: response.data,
-      });
-    });
+    this.fetchFaculty();
   };
 
   handleCreate(faculty) {
@@ -170,8 +133,8 @@ class Faculty extends Component {
       return (
         <div className="aligner-item">
           <Result
-            status="500"
-            title={this.state.error.code}
+            status={this.state.error.code}
+            title={this.state.error.title}
             subTitle={this.state.error.message}
           />
         </div>
