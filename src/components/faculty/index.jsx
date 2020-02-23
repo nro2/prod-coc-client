@@ -51,63 +51,54 @@ class Faculty extends Component {
   }
 
   async componentDidMount() {
-    this.fetchFaculty();
+    await this.fetchFaculty().catch(err => {
+      const data = err.response;
+      const message = data.data.error ? data.data.error : data.data;
+
+      this.setState({
+        error: {
+          code: data ? data.status.toString() : '',
+          title: data ? data.statusText : 'Internal Server Error',
+          message: message ? message : 'Unknown Error',
+        },
+      });
+    });
   }
 
-  fetchFaculty() {
-    axios
-      .get('/api/faculty')
-      .then(facultyResponse => {
-        axios
-          .get(
-            `/api/faculty/info/${this.state.selected ||
-              facultyResponse.data[0].email}`
-          )
-          .then(facultyInfo => {
-            axios.get('/api/departments').then(departments => {
-              axios.get('/api/senate-divisions').then(senateDivisions => {
-                const faculty = {
-                  currentCommittees: facultyInfo.data['committees'],
-                  recentSurvey: facultyInfo.data['surveys'],
-                  departments: facultyInfo.data['departments'],
-                  name: facultyInfo.data.full_name,
-                  email: facultyInfo.data.email,
-                  phone: facultyInfo.data.phone_num,
-                  job: facultyInfo.data.job_title,
-                  senate: facultyInfo.data.senate_division_short_name,
-                };
+  async fetchFaculty() {
+    const facultyResponse = await axios.get('/api/faculty');
+    const facultyInfo = await axios.get(
+      `/api/faculty/info/${this.state.selected || facultyResponse.data[0].email}`
+    );
+    const departments = await axios.get('/api/departments');
+    const senateDivisions = await axios.get('/api/senate-divisions');
 
-                let selectedValue;
-                if (typeof this.props.location.state != 'undefined') {
-                  selectedValue = this.props.location.state.selected;
-                } else {
-                  selectedValue = faculty.email;
-                }
+    const faculty = {
+      currentCommittees: facultyInfo.data['committees'],
+      recentSurvey: facultyInfo.data['surveys'],
+      departments: facultyInfo.data['departments'],
+      name: facultyInfo.data.full_name,
+      email: facultyInfo.data.email,
+      phone: facultyInfo.data.phone_num,
+      job: facultyInfo.data.job_title,
+      senate: facultyInfo.data.senate_division_short_name,
+    };
 
-                this.setState({
-                  faculty,
-                  allFaculty: facultyResponse.data,
-                  allDepartments: departments.data,
-                  senateDivisions: senateDivisions.data,
-                  selected: selectedValue,
-                  dataLoaded: true,
-                });
-              });
-            });
-          });
-      })
-      .catch(err => {
-        const data = err.response;
-        const message = data.data.error ? data.data.error : data.data;
+    let selectedValue;
+    if (typeof this.props.location.state != 'undefined') {
+      selectedValue = this.props.location.state.selected;
+    } else {
+      selectedValue = faculty.email;
+    }
 
-        this.setState({
-          error: {
-            code: data ? data.status.toString() : '',
-            title: data ? data.statusText : 'Internal Server Error',
-            message: message ? message : 'Unknown Error',
-          },
-        });
-      });
+    this.setState({
+      faculty,
+      allFaculty: facultyResponse.data,
+      allDepartments: departments.data,
+      senateDivisions: senateDivisions.data,
+      selected: selectedValue,
+      dataLoaded: true,
+    });
   }
 
   rerenderParentCallback() {
