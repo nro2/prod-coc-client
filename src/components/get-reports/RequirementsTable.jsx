@@ -33,7 +33,7 @@ export default class RequirementsTable extends Component {
           Requirements
         </Divider>
         <Table
-          rowKey="senateShortname"
+          rowKey="senate_division"
           bordered
           dataSource={this.props.data}
           columns={reqColumns}
