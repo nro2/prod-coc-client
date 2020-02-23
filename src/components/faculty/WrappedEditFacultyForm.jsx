@@ -22,7 +22,7 @@ class EditFacultyForm extends React.Component {
     const departmentAssociations = [];
     if (form.getFieldValue('departments').length) {
       form.getFieldValue('departments').map(item => {
-        this.props.faculty.departments.forEach(department => {
+        this.props.departments.forEach(department => {
           if (item === department.name) {
             departmentAssociations.push({
               department_id: department.department_id,
