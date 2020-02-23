@@ -20,15 +20,9 @@ class EditFacultyForm extends React.Component {
         : this.state.selectedSenateDivision;
 
     const selectedDepartments = form.getFieldValue('departments');
-    const departmentAssociations = this.props.departments.filter(department => {
-      if (selectedDepartments.includes(department.name)) {
-        return {
-          department_id: department.department_id,
-          name: department.name,
-          description: department.description,
-        };
-      }
-    });
+    const departmentAssociations = this.props.departments.filter(department =>
+      selectedDepartments.includes(department.name)
+    );
 
     const faculty = {
       ...this.props.faculty,
