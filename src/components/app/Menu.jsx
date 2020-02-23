@@ -5,7 +5,12 @@ import { Menu, Icon } from 'antd';
 const Linkmenu = withRouter(props => {
   const { location } = props;
   return (
-    <Menu theme="dark" mode="inline" selectedKeys={[location.pathname]}>
+    <Menu
+      theme="dark"
+      mode="inline"
+      selectedKeys={[location.pathname]}
+      defaultSelectedKeys={['/home']}
+    >
       <Menu.Item key="/home">
         <Icon type="home" />
         <span>Home</span>

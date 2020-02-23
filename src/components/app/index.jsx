@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { Layout } from 'antd';
 import './app.css';
 import AddFaculty from '../add-faculty';
@@ -48,6 +48,8 @@ class App extends Component {
             <Header className="header" />
             <Content className="aligner content">
               <Switch>
+                <Route exact path="/" render={() => <Redirect to="/home" />} />
+
                 <Route path="/home" component={Home} />
                 <Route path="/add-faculty" component={AddFaculty} />
                 <Route path="/add-committee" component={AddCommittee} />
