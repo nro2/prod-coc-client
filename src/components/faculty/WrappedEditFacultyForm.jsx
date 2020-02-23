@@ -6,8 +6,6 @@ const { Option } = Select;
 class EditFacultyForm extends React.Component {
   state = {
     selectedSenateDivision: '',
-    selectedDepartments: [],
-    initialDepartments: [],
   };
 
   /**
@@ -23,11 +21,12 @@ class EditFacultyForm extends React.Component {
 
     const departmentAssociations = [];
     if (form.getFieldValue('departments').length) {
-      departmentAssociations.push();
       form.getFieldValue('departments').map(item => {
         this.props.faculty.departments.forEach(department => {
           if (item === department.name) {
-            departmentAssociations.push(department.department_id);
+            departmentAssociations.push({
+              department_id: department.department_id,
+            });
           }
         });
       });
@@ -72,73 +71,6 @@ class EditFacultyForm extends React.Component {
     );
   };
 
-  renderDepartments = () => {
-    /*const handleChange = (value, option) => {
-      const departments = value.map((name, index) => {
-        const { key: department_id } = option[index];
-        const { description } = option[index].props;
-        return { department_id, name, description };
-      });
-
-      this.setState({
-        selectedDepartments: departments,
-      });
-    };*/
-    /*const defaultDepartments = [];
-    if (this.props.faculty.departments !== null) {
-      this.props.faculty.departments.forEach(department => {
-        defaultDepartments.push(department.name);
-      });
-    }*/
-    /*const divisionOptions = this.props.departments.map(department => (
-      <Option
-        key={department.department_id}
-        value={department.name}
-        description={department.description}
-      >
-        {department.name}
-      </Option>
-    ));*/
-    /*return (
-      <Select
-        mode="multiple"
-        showSearch
-        placeholder="Select department(s)"
-        defaultValue={defaultDepartments}
-        optionFilterProp="children"
-        onChange={handleChange}
-        dropdownMatchSelectWidth={false}
-      >
-        {divisionOptions}
-      </Select>
-    );*/
-  };
-
-  initializeDepartments = () => {
-    const defaultDepartments = [];
-    if (this.props.faculty.departments !== null) {
-      this.props.faculty.departments.forEach(department => {
-        defaultDepartments.push({
-          label: department.name,
-          key: department.department_id,
-        });
-      });
-      return defaultDepartments;
-    }
-  };
-
-  /*handleChange = (value, option) => {
-    const departments = value.map((name, index) => {
-      const { key: department_id } = option[index];
-      const { description } = option[index].props;
-      return { department_id, name, description };
-    });
-
-    this.setState({
-      selectedDepartments: departments,
-    });
-  };*/
-
   render() {
     const { visible, form, title, faculty } = this.props;
     const { getFieldDecorator } = form;
@@ -165,7 +97,7 @@ class EditFacultyForm extends React.Component {
     }
 
     const divisionOptions = this.props.departments.map(department => (
-      <Option key={69}>{department.name}</Option>
+      <Option key={department.name}>{department.name}</Option>
     ));
 
     return (
