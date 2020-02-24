@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-  Link,
-} from 'react-router-dom';
-import { Layout, Menu, Icon } from 'antd';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Layout } from 'antd';
 import './app.css';
 import AddFaculty from '../add-faculty';
 import AddCommittee from '../add-committee';
@@ -14,6 +8,7 @@ import Committee from '../committee';
 import Faculty from '../faculty';
 import Home from '../home';
 import Reports from '../get-reports';
+import LinkMenu from './Menu.jsx';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -47,43 +42,14 @@ class App extends Component {
             onCollapse={this.handleCollapse}
           >
             <div className="logo" />
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-              <Menu.Item key="1">
-                <Icon type="home" />
-                <span>Home</span>
-                <Link to="/home" />
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Icon type="usergroup-add" />
-                <span>Add Faculty</span>
-                <Link to="/add-faculty" />
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Icon type="usergroup-add" />
-                <span>Add Committee</span>
-                <Link to="/add-committee" />
-              </Menu.Item>
-              <Menu.Item key="4">
-                <Icon type="user" />
-                <span>Faculty Info</span>
-                <Link to="/faculty" />
-              </Menu.Item>
-              <Menu.Item key="5">
-                <Icon type="user" />
-                <span>Committee Info</span>
-                <Link to="/committee" />
-              </Menu.Item>
-              <Menu.Item key="6">
-                <Icon type="appstore" />
-                <span>Reports</span>
-                <Link to="/reports" />
-              </Menu.Item>
-            </Menu>
+            <LinkMenu location={this.location} />
           </Sider>
           <Layout>
             <Header className="header" />
             <Content className="aligner content">
               <Switch>
+                <Route exact path="/" render={() => <Redirect to="/home" />} />
+
                 <Route path="/home" component={Home} />
                 <Route path="/add-faculty" component={AddFaculty} />
                 <Route path="/add-committee" component={AddCommittee} />
@@ -91,7 +57,6 @@ class App extends Component {
                 <Route path="/faculty" component={Faculty} />
                 <Route path="/reports" component={Reports} />
               </Switch>
-              <Redirect to="/home" />
             </Content>
             <Footer className="footer">Ant Design ©2016 Created by Ant UED</Footer>
           </Layout>
