@@ -69,9 +69,6 @@ class Faculty extends Component {
     const selectedValue = this.props.location.state
       ? this.props.location.state.selected
       : '';
-    //{
-    //  selectedValue = this.props.location.state.selected;
-    //}
 
     const facultyResponse = await axios.get('/api/faculty');
     const facultyInfo = await axios.get(
