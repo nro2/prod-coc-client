@@ -66,14 +66,13 @@ class Faculty extends Component {
   }
 
   async fetchFaculty() {
+    const facultyResponse = await axios.get('/api/faculty');
+
     const selectedValue = this.props.location.state
       ? this.props.location.state.selected
-      : '';
+      : facultyResponse.data[0].email;
 
-    const facultyResponse = await axios.get('/api/faculty');
-    const facultyInfo = await axios.get(
-      `/api/faculty/info/${selectedValue || facultyResponse.data[0].email}`
-    );
+    const facultyInfo = await axios.get(`/api/faculty/info/${selectedValue}`);
     const departments = await axios.get('/api/departments');
     const senateDivisions = await axios.get('/api/senate-divisions');
 
