@@ -109,15 +109,14 @@ export default class App extends Component {
                 committeeId={this.state.committeeId}
                 rerenderParentCallback={this.rerenderParentCallback}
               />
-
-              <RequirementsTable
-                data={this.state.committeeSlots}
-                committeeId={this.state.committeeId}
-                rerenderParentCallback={this.rerenderParentCallback}
-              />
               <MembersTable
                 data={this.state.committeeAssignment}
                 id={this.state.committeeId}
+                rerenderParentCallback={this.rerenderParentCallback}
+              />
+              <RequirementsTable
+                data={this.state.committeeSlots}
+                committeeId={this.state.committeeId}
                 rerenderParentCallback={this.rerenderParentCallback}
               />
             </React.Fragment>
