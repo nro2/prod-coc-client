@@ -65,11 +65,16 @@ class Faculty extends Component {
     });
   }
 
-  async fetchFaculty() {
+  async fetchFaculty(email) {
     const facultyResponse = await axios.get('/api/faculty');
-    const facultyInfo = await axios.get(
-      `/api/faculty/info/${this.state.selected || facultyResponse.data[0].email}`
-    );
+
+    const selectedValue = this.props.location.state
+      ? this.props.location.state.selected
+      : email
+      ? email
+      : facultyResponse.data[0].email;
+
+    const facultyInfo = await axios.get(`/api/faculty/info/${selectedValue}`);
     const departments = await axios.get('/api/departments');
     const senateDivisions = await axios.get('/api/senate-divisions');
 
@@ -83,13 +88,6 @@ class Faculty extends Component {
       job: facultyInfo.data.job_title,
       senate: facultyInfo.data.senate_division_short_name,
     };
-
-    let selectedValue;
-    if (typeof this.props.location.state != 'undefined') {
-      selectedValue = this.props.location.state.selected;
-    } else {
-      selectedValue = faculty.email;
-    }
 
     this.setState({
       faculty,
@@ -110,7 +108,7 @@ class Faculty extends Component {
       selected: value,
     });
 
-    this.fetchFaculty();
+    this.fetchFaculty(value);
   };
 
   handleCreate(faculty) {
