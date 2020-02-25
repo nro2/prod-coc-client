@@ -65,11 +65,13 @@ class Faculty extends Component {
     });
   }
 
-  async fetchFaculty() {
+  async fetchFaculty(email) {
     const facultyResponse = await axios.get('/api/faculty');
 
     const selectedValue = this.props.location.state
       ? this.props.location.state.selected
+      : email
+      ? email
       : facultyResponse.data[0].email;
 
     const facultyInfo = await axios.get(`/api/faculty/info/${selectedValue}`);
@@ -106,7 +108,7 @@ class Faculty extends Component {
       selected: value,
     });
 
-    this.fetchFaculty();
+    this.fetchFaculty(value);
   };
 
   handleCreate(faculty) {
