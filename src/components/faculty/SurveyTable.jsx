@@ -18,22 +18,34 @@ export default class SurveyTable extends Component {
         inputType: 'text',
       },
     ];
-    const keys = ['Survey Date', 'Is Interested', 'Expertise'];
+    //const keys = ['Survey Date', 'Is Interested', 'Expertise'];
     const items = [];
-    let i = 0;
+    //let i = 0;
     if (this.props.data !== null) {
       Object.entries(this.props.data).forEach(([key, value]) => {
         if (key !== 'choices') {
           if (typeof value === 'boolean') {
             value = 'yes';
           }
+          let label = '';
+          switch (key) {
+            case 'survey_date':
+              label = 'Survey Date';
+              break;
+            case 'is_interested':
+              label = 'Is Interested';
+              break;
+            case 'expertise':
+              label = 'Expertise';
+              break;
+          }
           items.push(
-            <Descriptions.Item key={key} label={keys[i]}>
+            <Descriptions.Item key={key} label={label}>
               {value}
             </Descriptions.Item>
           );
         }
-        i++;
+        //i++;
       });
     }
 
