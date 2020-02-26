@@ -55,12 +55,14 @@ export default class CommitteesTable extends Component {
             endpoint="api/committees"
             email={this.props.email}
             rerenderParentCallback={this.rerenderParentCallback}
+            pagination={false}
           />
           <EditableCommitteeTable
             data={this.props.data}
             email={this.props.email}
             columns={columns}
             rerenderParentCallback={this.rerenderParentCallback}
+            pagination={false}
           />
         </div>
       </div>

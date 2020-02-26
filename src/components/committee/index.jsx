@@ -113,6 +113,7 @@ export default class App extends Component {
                 data={this.state.committeeAssignment}
                 id={this.state.committeeId}
                 rerenderParentCallback={this.rerenderParentCallback}
+                pagination={false}
               />
               <RequirementsTable
                 data={this.state.committeeSlots}
