@@ -18,9 +18,7 @@ export default class SurveyTable extends Component {
         inputType: 'text',
       },
     ];
-    //const keys = ['Survey Date', 'Is Interested', 'Expertise'];
     const items = [];
-    //let i = 0;
     if (this.props.data !== null) {
       Object.entries(this.props.data).forEach(([key, value]) => {
         if (key !== 'choices') {
@@ -45,7 +43,6 @@ export default class SurveyTable extends Component {
             </Descriptions.Item>
           );
         }
-        //i++;
       });
     }
 
