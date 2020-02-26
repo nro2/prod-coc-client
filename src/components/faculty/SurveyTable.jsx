@@ -3,6 +3,20 @@ import { Divider, Table, Descriptions } from 'antd';
 import 'antd/dist/antd.css';
 
 export default class SurveyTable extends Component {
+  labelConverter(key) {
+    let label = '';
+    switch (key) {
+      case 'survey_date':
+        label = 'Survey Date';
+        return label;
+      case 'is_interested':
+        label = 'Is Interested';
+        return label;
+      case 'expertise':
+        label = 'Expertise';
+        return label;
+    }
+  }
   render() {
     const columns = [
       {
@@ -25,18 +39,7 @@ export default class SurveyTable extends Component {
           if (typeof value === 'boolean') {
             value = 'yes';
           }
-          let label = '';
-          switch (key) {
-            case 'survey_date':
-              label = 'Survey Date';
-              break;
-            case 'is_interested':
-              label = 'Is Interested';
-              break;
-            case 'expertise':
-              label = 'Expertise';
-              break;
-          }
+          const label = this.labelConverter(key);
           items.push(
             <Descriptions.Item key={key} label={label}>
               {value}
