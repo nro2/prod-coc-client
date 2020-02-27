@@ -1,73 +1,57 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This application is the front end web app for the committee of committees (coc).
+It is a web-app powered by React and used in conjunction with the coc back-end
+server application. This project was bootstrapped with
+[Create React App](https://github.com/facebook/create-react-app).
 
-In the project directory, you can run:
+## Requirements
+
+1. Node.js and npm:
+   [Install instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+2. Coc server for building the end-to-end application:
+   [coc-server](https://bitbucket.org/CapstoneFall19/prod-coc-server/)
+
+## Building the application
+
+### Clone and Install back-end application
+
+For the front end application to work you must first install, build and seed the
+back-end database. Full instructions for this setup are located in the README
+file in the server repo
+[here.](https://bitbucket.org/CapstoneFall19/prod-coc-server/)
+
+### Building front end assets
+
+In order to serve the front-end application from the back-end server, the
+front-end assets must be built and copied to the back-end.
+
+1. Build the static assets: `npm run build`
+2. Copy the `build/` directory created by this command into the coc-server.
+3. On the server, run `npm start` and visit http://localhost:8080/; the
+   front-end page should be visible
+
+### Running the front-end
 
 ### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the app in the development mode. Open
+[http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+The page will reload if you make edits. You will also see any lint errors in the
+console.
+
+### Running application end-to-end
+
+1. F om the prod-coc-server project run: `docker-compose up -d` 1b. If you are
+   having issues running this on windows run without -d option.
+2. From the prod-coc-server directory run: `node index.js`
+3. From the prod-coc-client directory run: `npm start`
+
+## Testing
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-### Running application end-to-end
-1) run docker-compose up -d from the prod-coc-server project
-2) run node index.js from the prod-coc-server directory 2b. If you are having issues running this on windows run without -d option
-3) run npm start from the prod-coc-client directory
+Launches the test runner in the interactive watch mode. See the section about
+[running tests](https://facebook.github.io/create-react-app/docs/running-tests)
+for more information.
