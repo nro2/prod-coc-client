@@ -12,8 +12,6 @@ import {
 import moment from 'moment';
 import axios from 'axios';
 
-const pageSize = 30;
-
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -253,7 +251,7 @@ class EditableTable extends React.Component {
           dataSource={this.props.data}
           columns={columns}
           rowClassName="editable-row"
-          pagination={1 > pageSize && { pageSize }}
+          pagination={false}
         />
       </EditableContext.Provider>
     );

@@ -93,7 +93,7 @@ class EditCommitteeHeader extends React.Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           okText="Save"
-          title="Update committee info"
+          title="Update Committee Info"
           data={this.props.data}
           committeeId={this.props.committeeId}
         />
