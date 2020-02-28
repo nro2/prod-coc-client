@@ -23,6 +23,21 @@ class SearchDropDown extends React.Component {
     return (
       <div>
         <div>
+          {this.props.filter && (
+            <Select
+              showSearch
+              className="aligner-item aligner-item-center select"
+              placeholder={this.props.filterPlaceholder || 'Enter text here'}
+              optionFilterProp="children"
+              onChange={this.handleChange}
+              dropdownMatchSelectWidth={false}
+              size="large"
+              loading={this.state.loading}
+              defaultValue={this.props.default}
+            >
+              {this.props.filter}
+            </Select>
+          )}
           <Select
             showSearch
             className="aligner-item aligner-item-center select"
