@@ -123,7 +123,7 @@ class EditableTable extends React.Component {
 
   validateSlotRequirement = (rule, value, callback) => {
     if (value < 1) {
-      callback('Slot requirement must be greater than 0');
+      callback('Please input a valid slot requirement; A integer value above 0');
     } else {
       callback();
     }
