@@ -49,6 +49,14 @@ class AddMemberAssignmentForm extends React.Component {
     }
   };
 
+  humanize(str) {
+    const frags = str.split('_');
+    for (let i = 0; i < frags.length; i++) {
+      frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+    }
+    return frags.join(' ');
+  }
+
   render() {
     const { visible, form, layout, okText, title } = this.props;
     const { getFieldDecorator } = form;
@@ -67,7 +75,7 @@ class AddMemberAssignmentForm extends React.Component {
       Object.entries(committee).forEach(([key, value]) => {
         if (key === 'name' || key === 'total_slots') {
           items.push(
-            <Descriptions.Item key={key} label={key}>
+            <Descriptions.Item key={key} label={this.humanize(key)}>
               {value}
             </Descriptions.Item>
           );
