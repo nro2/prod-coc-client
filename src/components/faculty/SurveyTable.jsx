@@ -60,7 +60,12 @@ export default class SurveyTable extends Component {
         </Divider>
         <Descriptions>{items}</Descriptions>
         <div style={{ marginBottom: 16 }}>
-          <Table rowKey="choice_id" dataSource={choices} columns={columns} />
+          <Table
+            rowKey="choice_id"
+            dataSource={choices}
+            columns={columns}
+            pagination={false}
+          />
         </div>
       </div>
     );

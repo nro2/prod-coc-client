@@ -119,6 +119,7 @@ export default class App extends Component {
                 data={this.state.committeeSlots}
                 committeeId={this.state.committeeId}
                 rerenderParentCallback={this.rerenderParentCallback}
+                pagination={false}
               />
             </React.Fragment>
           )}
