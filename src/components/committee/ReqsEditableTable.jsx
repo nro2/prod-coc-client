@@ -88,7 +88,10 @@ class EditableTable extends React.Component {
                 </Button>
               )}
             </EditableContext.Consumer>
-            <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel()}>
+            <Popconfirm
+              title="Cancel without saving?"
+              onConfirm={() => this.cancel()}
+            >
               <Button type="link">Cancel</Button>
             </Popconfirm>
           </span>
@@ -103,7 +106,7 @@ class EditableTable extends React.Component {
             </Button>
             <Divider type="vertical" />
             <Popconfirm
-              title="Sure to delete?"
+              title="Delete this field?"
               onConfirm={() =>
                 this.delete(record.senateShortname, this.props.committeeId)
               }
