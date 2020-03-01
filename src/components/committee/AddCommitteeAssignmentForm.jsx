@@ -54,7 +54,9 @@ class AddCommitteeAssignmentForm extends React.Component {
     const { getFieldDecorator } = form;
 
     const options = this.props.dataMembers.map(faculty => (
-      <Option key={faculty.email}>{faculty.full_name}</Option>
+      <Option key={faculty.email} title={faculty.senate_division_short_name}>
+        {faculty.full_name}
+      </Option>
     ));
 
     const senateDivisions = this.props.senateDivisions.map(divisions => (

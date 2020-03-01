@@ -6,6 +6,8 @@ class SearchDropDown extends React.Component {
     super(props);
     this.state = {
       showInfo: this.props.showInfo,
+      filtered: false,
+      filteredList: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -19,6 +21,16 @@ class SearchDropDown extends React.Component {
     this.props.onChange(event);
   }
 
+  handleFilter = value => {
+    const filteredList = this.props.dataMembers.filter(
+      faculty => faculty.props.title === value
+    );
+    this.setState({
+      filtered: true,
+      filteredList: filteredList,
+    });
+  };
+
   render() {
     return (
       <div>
@@ -29,7 +41,7 @@ class SearchDropDown extends React.Component {
               className="aligner-item aligner-item-center select"
               placeholder={this.props.filterPlaceholder || 'Enter text here'}
               optionFilterProp="children"
-              onChange={this.handleChange}
+              onChange={this.handleFilter}
               dropdownMatchSelectWidth={false}
               size="large"
               loading={this.state.loading}
@@ -49,7 +61,7 @@ class SearchDropDown extends React.Component {
             loading={this.state.loading}
             defaultValue={this.props.default}
           >
-            {this.props.dataMembers}
+            {this.state.filtered ? this.state.filteredList : this.props.dataMembers}
           </Select>
           {this.state.showInfo && (
             <div>
