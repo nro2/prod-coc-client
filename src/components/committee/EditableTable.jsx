@@ -276,9 +276,7 @@ class EditableTable extends React.Component {
           dataSource={this.props.data}
           columns={columns}
           rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
+          pagination={false}
         />
       </EditableContext.Provider>
     );

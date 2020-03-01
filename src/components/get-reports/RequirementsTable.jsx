@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Divider } from 'antd';
 
-const pageSize = 30; // Page size to show pagination
 const reqColumns = [
   {
     title: 'Senate',
@@ -37,7 +36,7 @@ export default class RequirementsTable extends Component {
           bordered
           dataSource={this.props.data}
           columns={reqColumns}
-          pagination={1 > pageSize && { pageSize }}
+          pagination={false}
           size="small"
         />
       </div>
