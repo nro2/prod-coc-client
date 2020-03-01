@@ -8,9 +8,12 @@ class SearchDropDown extends React.Component {
       showInfo: this.props.showInfo,
       filtered: false,
       filteredList: [],
+      selected: undefined,
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(event) {
@@ -28,12 +31,14 @@ class SearchDropDown extends React.Component {
     this.setState({
       filtered: true,
       filteredList: filteredList,
+      selected: value,
     });
   };
 
   handleClick = () => {
     this.setState({
       filtered: false,
+      selected: undefined,
     });
   };
 
@@ -52,6 +57,7 @@ class SearchDropDown extends React.Component {
             size="large"
             loading={this.state.loading}
             defaultValue={this.props.default}
+            value={this.state.selected}
           >
             {this.props.filter}
           </Select>
