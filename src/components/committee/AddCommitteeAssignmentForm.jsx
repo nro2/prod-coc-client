@@ -62,7 +62,15 @@ class AddCommitteeAssignmentForm extends React.Component {
     const { getFieldDecorator } = form;
 
     const options = this.props.dataMembers.map(faculty => (
-      <Option key={faculty.email}>{faculty.full_name}</Option>
+      <Option key={faculty.email} title={faculty.senate_division_short_name}>
+        {faculty.full_name}
+      </Option>
+    ));
+
+    const senateDivisions = this.props.senateDivisions.map(divisions => (
+      <Option key={divisions.senate_division_short_name}>
+        {divisions.senate_division_short_name}
+      </Option>
     ));
 
     const faculty = this.props.dataMembers.find(
@@ -96,6 +104,8 @@ class AddCommitteeAssignmentForm extends React.Component {
         destroyOnClose
       >
         <SearchDropDown
+          filter={senateDivisions}
+          filterPlaceholder="Filter by Senate Division"
           dataMembers={options}
           onChange={this.handleChange}
           placeholder="Select Faculty"

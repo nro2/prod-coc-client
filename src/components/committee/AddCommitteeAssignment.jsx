@@ -7,6 +7,7 @@ class AddCommitteeAssignment extends React.Component {
   state = {
     visible: false,
     dataMembers: [],
+    senateDivisions: [],
   };
 
   fetchData = () => {
@@ -31,6 +32,17 @@ class AddCommitteeAssignment extends React.Component {
       .then(response => {
         this.setState({
           dataMembers: response.data,
+        });
+      })
+      .catch(err => {
+        handleErrors(err);
+      });
+
+    axios
+      .get('api/senate-divisions')
+      .then(response => {
+        this.setState({
+          senateDivisions: response.data,
         });
       })
       .catch(err => {
@@ -125,6 +137,7 @@ class AddCommitteeAssignment extends React.Component {
           okText="Add"
           title="Add New Committee Member"
           dataMembers={this.state.dataMembers}
+          senateDivisions={this.state.senateDivisions}
           committeeId={this.props.committeeId}
         />
       </div>

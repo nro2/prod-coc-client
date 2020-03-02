@@ -17,7 +17,7 @@ const Linkmenu = withRouter(props => {
         <Link to="/home" />
       </Menu.Item>
       <Menu.Item key="/add-faculty">
-        <Icon type="usergroup-add" />
+        <Icon type="user-add" />
         <span>Add Faculty</span>
         <Link to="/add-faculty" />
       </Menu.Item>
@@ -32,7 +32,7 @@ const Linkmenu = withRouter(props => {
         <Link to="/faculty" />
       </Menu.Item>
       <Menu.Item key="/committee">
-        <Icon type="user" />
+        <Icon type="team" />
         <span>Committee Info</span>
         <Link to="/committee" />
       </Menu.Item>
