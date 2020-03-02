@@ -9,8 +9,7 @@ server application. This project was bootstrapped with
 
 1. Node.js and npm:
    [Install instructions](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
-2. Coc server for building the end-to-end application:
-   [coc-server](https://bitbucket.org/CapstoneFall19/prod-coc-server/)
+2. Coc server for building the end-to-end application
 
 ## Building the application
 
@@ -18,18 +17,7 @@ server application. This project was bootstrapped with
 
 For the front end application to work you must first install, build and seed the
 back-end database. Full instructions for this setup are located in the README
-file in the server repo
-[here.](https://bitbucket.org/CapstoneFall19/prod-coc-server/)
-
-### Building front end assets
-
-In order to serve the front-end application from the back-end server, the
-front-end assets must be built and copied to the back-end.
-
-1. Build the static assets: `npm run build`
-2. Copy the `build/` directory created by this command into the coc-server.
-3. On the server, run `npm start` and visit http://localhost:8080/; the
-   front-end page should be visible
+file in the server repository.
 
 ### Running the front-end
 
@@ -55,3 +43,15 @@ console.
 Launches the test runner in the interactive watch mode. See the section about
 [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 for more information.
+
+## Deployment
+
+### Building front end assets
+
+In order to serve the front-end application from the back-end server, the
+front-end assets must be built and copied to the back-end.
+
+1. Build the static assets: `npm run build`
+2. Copy the `build/` directory created by this command into the coc-server.
+3. On the server, run `npm start` and visit http://localhost:8080/; the
+   front-end page should be visible
