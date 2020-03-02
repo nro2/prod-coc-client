@@ -200,9 +200,7 @@ class EditableTable extends Component {
           dataSource={this.state.currentCommittees}
           columns={columns}
           rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
+          pagination={false}
         />
       </EditableContext.Provider>
     );

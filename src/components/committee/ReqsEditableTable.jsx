@@ -12,8 +12,6 @@ import {
 import moment from 'moment';
 import axios from 'axios';
 
-const pageSize = 30;
-
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -90,7 +88,10 @@ class EditableTable extends React.Component {
                 </Button>
               )}
             </EditableContext.Consumer>
-            <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel()}>
+            <Popconfirm
+              title="Cancel without saving?"
+              onConfirm={() => this.cancel()}
+            >
               <Button type="link">Cancel</Button>
             </Popconfirm>
           </span>
@@ -105,7 +106,7 @@ class EditableTable extends React.Component {
             </Button>
             <Divider type="vertical" />
             <Popconfirm
-              title="Sure to delete?"
+              title="Delete this field?"
               onConfirm={() =>
                 this.delete(record.senateShortname, this.props.committeeId)
               }
@@ -125,7 +126,7 @@ class EditableTable extends React.Component {
 
   validateSlotRequirement = (rule, value, callback) => {
     if (value < 1) {
-      callback('Slot requirement must be greater than 0');
+      callback('The minimum slot requirement must be greater than 0');
     } else {
       callback();
     }
@@ -253,7 +254,7 @@ class EditableTable extends React.Component {
           dataSource={this.props.data}
           columns={columns}
           rowClassName="editable-row"
-          pagination={1 > pageSize && { pageSize }}
+          pagination={false}
         />
       </EditableContext.Provider>
     );

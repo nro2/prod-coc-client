@@ -34,7 +34,7 @@ class EditHeaderForm extends React.Component {
         {
           type: 'number',
           required: true,
-          message: 'Please select a requirement!',
+          message: 'Please select a requirement',
         },
       ],
     };
@@ -52,6 +52,12 @@ class EditHeaderForm extends React.Component {
 
     const descriptionConfig = {
       initialValue: this.props.data['description'],
+      rules: [
+        {
+          required: true,
+          message: 'Please enter responsibilities',
+        },
+      ],
     };
 
     const { TextArea } = Input;

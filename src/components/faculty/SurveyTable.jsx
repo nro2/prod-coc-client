@@ -3,6 +3,20 @@ import { Divider, Table, Descriptions } from 'antd';
 import 'antd/dist/antd.css';
 
 export default class SurveyTable extends Component {
+  labelConverter(key) {
+    let label = '';
+    switch (key) {
+      case 'survey_date':
+        label = 'Survey Date';
+        return label;
+      case 'is_interested':
+        label = 'Is Interested';
+        return label;
+      case 'expertise':
+        label = 'Expertise';
+        return label;
+    }
+  }
   render() {
     const columns = [
       {
@@ -18,7 +32,6 @@ export default class SurveyTable extends Component {
         inputType: 'text',
       },
     ];
-
     const items = [];
     if (this.props.data !== null) {
       Object.entries(this.props.data).forEach(([key, value]) => {
@@ -26,8 +39,9 @@ export default class SurveyTable extends Component {
           if (typeof value === 'boolean') {
             value = 'yes';
           }
+          const label = this.labelConverter(key);
           items.push(
-            <Descriptions.Item key={key} label={key}>
+            <Descriptions.Item key={key} label={label}>
               {value}
             </Descriptions.Item>
           );
@@ -46,7 +60,12 @@ export default class SurveyTable extends Component {
         </Divider>
         <Descriptions>{items}</Descriptions>
         <div style={{ marginBottom: 16 }}>
-          <Table rowKey="choice_id" dataSource={choices} columns={columns} />
+          <Table
+            rowKey="choice_id"
+            dataSource={choices}
+            columns={columns}
+            pagination={false}
+          />
         </div>
       </div>
     );
